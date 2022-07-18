@@ -11,6 +11,20 @@ const String sendText = "Send";
 const String selectPlant = "Select Your Plant";
 const String loginWithFinger = "Login With Finger";
 
+const String dashboardText = "Dashboard";
+const String companiesText = "Companies";
+const String businessesText = "Businesses";
+const String plantsText = "Plants";
+const String departmentsText = "Departments";
+const String machinesText = "Machines";
+const String clitaActivityListText = "CLITA Activity List";
+const String clitaFillFormText = "CLITA Fill Form";
+const String clitaNoListText = "CLITA No List";
+const String abnormalityFormText = "Abnormality Form";
+const String assignedFormText = "Assigned Form";
+const String kaizenFormText = "Kaizen Form";
+const String userManagementText = "User Management";
+
 const String notEmptyFieldMessage = "Field must not be empty";
 const String enterValidUsername = "Please Enter valid username";
 const String registerEmailMsg = "Please enter your registered email id.";

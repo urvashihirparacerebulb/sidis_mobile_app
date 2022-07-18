@@ -5,8 +5,8 @@ import '../../common_widgets/common_widget.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/color_utility.dart';
 import '../../utility/constants.dart';
-import '../../utility/screen_utility.dart';
 import '../plant_dashboard/plant_dashboard_view.dart';
+import 'menu_screen.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -21,15 +21,14 @@ class _DashboardViewState extends State<DashboardView> {
     return commonStructure(
         context: context,
         bgColor: blackColor,
-        appBar: commonAppbar(context: context,title: "Hello, John",isLeadingCCustom: true,centerTitle: true),
-        child: Container(
-          width: getScreenWidth(context),
-          height: getScreenHeight(context),
-          margin: const EdgeInsets.only(top: 10),
-          decoration: const BoxDecoration(
-              color: whiteColor,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
-          ),
+        appBar: commonAppbar(context: context,title: "Hello, John",isLeadingCCustom: true,centerTitle: true,leadingWidget: InkWell(
+          onTap: (){
+            Get.to(() => const MenuScreen());
+          },
+          child: Image(image: menuIconImage),
+        )),
+        child: commonRoundedContainer(
+         context: context,
           child: ListView.builder(
             itemCount: 15,
             shrinkWrap: true,

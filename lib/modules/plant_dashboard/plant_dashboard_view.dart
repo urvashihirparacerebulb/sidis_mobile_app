@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import '../../common_widgets/common_widget.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/color_utility.dart';
-import '../../utility/screen_utility.dart';
 
 class PlantDashboardView extends StatefulWidget {
   const PlantDashboardView({Key? key}) : super(key: key);
@@ -21,14 +20,8 @@ class _PlantDashboardViewState extends State<PlantDashboardView> {
         context: context,
         bgColor: blackColor,
         appBar: commonAppbar(context: context,title: "JH"),
-        child: Container(
-          width: getScreenWidth(context),
-          height: getScreenHeight(context),
-          margin: const EdgeInsets.only(top: 10),
-          decoration: const BoxDecoration(
-              color: whiteColor,
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
-          ),
+        child: commonRoundedContainer(
+          context: context,
           child: Padding(
             padding: const EdgeInsets.all(24.0),
             child: Stack(

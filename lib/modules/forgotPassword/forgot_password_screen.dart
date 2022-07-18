@@ -37,14 +37,8 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         child: ListView(
           shrinkWrap: true,
           children: [
-            Container(
-              width: getScreenWidth(context),
-              height: getScreenHeight(context),
-              margin: const EdgeInsets.only(top: 10),
-              decoration: const BoxDecoration(
-                color: whiteColor,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
-              ),
+            commonRoundedContainer(
+             context: context,
               child: Padding(
                 padding: const EdgeInsets.all(24.0),
                 child: Column(

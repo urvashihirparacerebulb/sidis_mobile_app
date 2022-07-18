@@ -95,12 +95,15 @@ commonHorizontalSpacing({double spacing = 10}){
   return SizedBox(width: spacing);
 }
 
-AppBar commonAppbar({BuildContext? context,String title = "",bool isLeadingCCustom = false,bool centerTitle = false}){
+AppBar commonAppbar({BuildContext? context,String title = "",
+  bool isLeadingCCustom = false,
+  Widget? leadingWidget,
+  bool centerTitle = false}){
   return AppBar(
     backgroundColor: blackColor,
     centerTitle: centerTitle,
     title: commonHeaderTitle(title: title,fontSize: 1.3,fontWeight: 2),
-    leading: isLeadingCCustom ? Image(image: menuIconImage) : InkWell(
+    leading: isLeadingCCustom ? leadingWidget! : InkWell(
       onTap: (){
         Get.back();
       },
@@ -120,4 +123,17 @@ AppBar commonAppbar({BuildContext? context,String title = "",bool isLeadingCCust
       ),
     ],
   );
+}
+
+Widget commonRoundedContainer({BuildContext? context,Widget? child}){
+ return Container(
+   width: getScreenWidth(context!),
+   height: getScreenHeight(context),
+   margin: const EdgeInsets.only(top: 30),
+   decoration: const BoxDecoration(
+       color: whiteColor,
+       borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))
+   ),
+   child: child,
+ );
 }
