@@ -125,11 +125,11 @@ AppBar commonAppbar({BuildContext? context,String title = "",
   );
 }
 
-Widget commonRoundedContainer({BuildContext? context,Widget? child}){
+Widget commonRoundedContainer({BuildContext? context,Widget? child, double commonMargin = 20}){
  return Container(
    width: getScreenWidth(context!),
    height: getScreenHeight(context),
-   margin: const EdgeInsets.only(top: 30),
+   margin: EdgeInsets.only(top: commonMargin),
    decoration: const BoxDecoration(
        color: whiteColor,
        borderRadius: BorderRadius.only(topLeft: Radius.circular(15),topRight: Radius.circular(15))

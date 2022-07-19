@@ -5,6 +5,11 @@ import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/constants.dart';
 
 import '../../common_widgets/common_widget.dart';
+import 'abnormality_form/add_abnormaliry_view.dart';
+import 'assigned_form/add_assigned_form_view.dart';
+import 'clita module/add_clita_activity_list_view.dart';
+import 'clita module/add_clita_fill_form_view.dart';
+import 'clita module/add_clita_no_list_view.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);
@@ -15,13 +20,35 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
 
-  iconTitleView({ExactAssetImage? image, String title = ""}){
-    return Row(
-      children: [
-        Image(image: image!),
-        commonHorizontalSpacing(),
-        commonHeaderTitle(title: title,color: fontColor,fontSize: 1.2)
-      ],
+  iconTitleView({int? index,ExactAssetImage? image, String title = ""}){
+    return InkWell(
+      onTap: (){
+        if(index == 6){
+          Get.to(() => const CLITActivityListFormScreen());
+        }
+        if(index == 7){
+          Get.to(() => const CLITAFillFormView());
+        }
+        if(index == 8){
+          Get.to(() => const CLITANoListView());
+        }
+        if(index == 9){
+          Get.to(() => const AddAbnormalityFormView());
+        }
+        if(index == 10){
+          Get.to(() => const AddAssignedFormView());
+        }
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Image(image: image!),
+            commonHorizontalSpacing(),
+            commonHeaderTitle(title: title,color: fontColor,fontSize: 1.2)
+          ],
+        ),
+      ),
     );
   }
 
@@ -111,6 +138,7 @@ class _MenuScreenState extends State<MenuScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 80),
             child: commonRoundedContainer(
+              commonMargin: 30,
               context: context,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -122,18 +150,20 @@ class _MenuScreenState extends State<MenuScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        commonHeaderTitle(title: "John Deo",color: fontColor,fontWeight: 2,fontSize: 1.3),
+                        commonHeaderTitle(title: "John Deo",color: fontColor,fontWeight: 2,fontSize: 1.4),
                         commonVerticalSpacing(spacing: 3),
                         commonHeaderTitle(title: "Worker",color: const Color(0xff1C1B1B).withOpacity(0.5))
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 8,left: 16,right: 16),
-                    child: ListView.builder(
-                      itemCount: 12,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) => iconTitleView(image: getMenuIcon(index),title: getMenuTitle(index)),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 8,left: 16,right: 16),
+                      child: ListView.builder(
+                        itemCount: 13,
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => iconTitleView(index: index,image: getMenuIcon(index),title: getMenuTitle(index)),
+                      ),
                     ),
                   ),
                 ],
@@ -151,7 +181,7 @@ class _MenuScreenState extends State<MenuScreen> {
               color: blackColor
             ),
             child: Container(
-              margin: const EdgeInsets.all(10.0),
+              margin: const EdgeInsets.all(8.0),
               decoration: const BoxDecoration(
                 color: whiteColor,
                 shape: BoxShape.circle,

@@ -157,7 +157,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
           borderRadius: commonBorderRadius,
         ) : textFormFieldBorderStyle,
         hintText: widget.hintText,
-        fillColor: widget.isChangeFillColor ? Colors.grey.withOpacity(0.1) : whiteColor,
+        fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : whiteColor,
         helperText: widget.helperText ?? "",
         helperStyle: white14PxNormal.copyWith(
             color: Theme.of(context).focusColor.withOpacity(0.7),
