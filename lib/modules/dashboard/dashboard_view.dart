@@ -33,52 +33,57 @@ class _DashboardViewState extends State<DashboardView> {
             itemCount: 15,
             shrinkWrap: true,
             itemBuilder: (context, index) {
-              return Card(
-                margin: const EdgeInsets.all(10),
-                color: whiteColor,
-                elevation: 7.0,
-                shadowColor: greyColor.withOpacity(0.7),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Stack(
-                        children: <Widget>[
-                          Padding(padding: const EdgeInsets.only(right: 10,top: 8),child:
-                            commonHeaderTitle(title: "RM",color: blackColor,fontWeight: 2,fontSize: 1.2),
-                          ),
-                          Positioned(
-                            right: 0,
-                            top: 0,
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Color(0xffFF7777),
-                                shape: BoxShape.circle
-                              ),
-                              constraints: const BoxConstraints(
-                                minWidth: 12,
-                                minHeight: 12,
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  '10',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 8,
+              return InkWell(
+                onTap: (){
+                  Get.to(() => const PlantDashboardView());
+                },
+                child: Card(
+                  margin: const EdgeInsets.all(10),
+                  color: whiteColor,
+                  elevation: 7.0,
+                  shadowColor: greyColor.withOpacity(0.3),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Stack(
+                          children: <Widget>[
+                            Padding(padding: const EdgeInsets.only(right: 10,top: 8),child:
+                              commonHeaderTitle(title: "RM",color: blackColor,fontWeight: 2,fontSize: 1.2),
+                            ),
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Color(0xffFF7777),
+                                  shape: BoxShape.circle
+                                ),
+                                constraints: const BoxConstraints(
+                                  minWidth: 12,
+                                  minHeight: 12,
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    '10',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 8,
+                                    ),
+                                    textAlign: TextAlign.center,
                                   ),
-                                  textAlign: TextAlign.center,
                                 ),
                               ),
-                            ),
-                          )
-                        ],
-                      ),
-                      Image(image: nextPageArrowImage)
-                    ],
+                            )
+                          ],
+                        ),
+                        Image(image: nextPageArrowImage)
+                      ],
+                    ),
                   ),
                 ),
               );

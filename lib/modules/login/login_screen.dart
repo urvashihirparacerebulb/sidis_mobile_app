@@ -21,6 +21,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   TextEditingController userNameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  bool isRemember = true;
 
   @override
   Widget build(BuildContext context) {
@@ -65,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   CommonTextFiled(
                     fieldTitleText: userName,
                     hintText: userName,
-                    isBorderEnable: false,
+                    // isBorderEnable: false,
                     textEditingController: userNameController,
                     preFixIcon: Image(image: userNameImage),
                     onChangedFunction: (String value){
@@ -75,10 +76,11 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? notEmptyFieldMessage
                           : null;
                     },),
+                  commonVerticalSpacing(spacing: 20),
                   CommonTextFiled(
                     fieldTitleText: passwordText,
                     hintText: passwordText,
-                    isBorderEnable: false,
+                    // isBorderEnable: false,
                     isPassword: true,
                     textEditingController: passwordController,
                     preFixIcon: Image(image: passwordImage,height: 40),
@@ -89,16 +91,23 @@ class _LoginScreenState extends State<LoginScreen> {
                           ? notEmptyFieldMessage
                           : null;
                     },),
+                  commonVerticalSpacing(spacing: 20),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
+                      StatefulBuilder(builder: (context, newSetState) => Row(
                         children: [
-                          Image(image: checkedImage,width: 20,height: 20),
+                          InkWell(
+                            onTap: (){
+                              newSetState((){
+                                isRemember = !isRemember;
+                              });
+                            },
+                              child: Image(image: isRemember ? checkedImage : unCheckedImage,width: 20,height: 20)),
                           commonHorizontalSpacing(spacing: 6),
                           commonHeaderTitle(title: reMemberMe,fontSize: 0.95),
                         ],
-                      ),
+                      )),
                       InkWell(
                         onTap: (){
                           Get.to(() => const ForgotPasswordView());

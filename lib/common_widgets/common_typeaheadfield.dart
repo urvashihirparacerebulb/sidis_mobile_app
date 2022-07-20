@@ -38,7 +38,7 @@ class _CommonTypeAheadTextFieldState extends State<CommonTypeAheadTextField> {
         dropdownDecoratorProps: DropDownDecoratorProps(
             dropdownSearchDecoration: InputDecoration(
               hintText: widget.hintText,
-                hintStyle: TextStyle(color: blackColor.withOpacity(0.4),fontSize: 14,fontWeight: FontWeight.w500),
+                hintStyle: TextStyle(color: blackColor.withOpacity(0.4),fontSize: 14,fontWeight: FontWeight.w500,fontFamily: "Arial"),
                 focusedBorder: textFieldBorderStyle,
                 disabledBorder: textFieldBorderStyle,
                 enabledBorder: textFieldBorderStyle,

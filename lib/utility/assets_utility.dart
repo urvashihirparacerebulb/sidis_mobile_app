@@ -8,6 +8,7 @@ ExactAssetImage userNameImage = const ExactAssetImage('assets/images/user_name.p
 ExactAssetImage passwordImage = const ExactAssetImage('assets/images/password.png');
 ExactAssetImage hidePasswordImage = const ExactAssetImage('assets/images/hide.png');
 ExactAssetImage checkedImage = const ExactAssetImage('assets/images/remember_checked.png');
+ExactAssetImage unCheckedImage = const ExactAssetImage('assets/images/remember_unchecked.png');
 ExactAssetImage backIconImage = const ExactAssetImage('assets/images/back_icon.png');
 ExactAssetImage forgotPasswordImage = const ExactAssetImage('assets/images/forgot_passs_word.png');
 ExactAssetImage menuIconImage = const ExactAssetImage('assets/images/menu_icon.png');

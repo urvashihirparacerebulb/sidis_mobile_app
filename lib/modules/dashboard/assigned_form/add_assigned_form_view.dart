@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_projects/utility/constants.dart';
 
+import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../utility/color_utility.dart';
 
@@ -12,6 +13,16 @@ class AddAssignedFormView extends StatefulWidget {
 }
 
 class _AddAssignedFormViewState extends State<AddAssignedFormView> {
+  TextEditingController searchController = TextEditingController();
+  List<AssignedSelection> assignedFilters = [
+    AssignedSelection("All", true),
+    AssignedSelection("Maintenance", false),
+    AssignedSelection("Process", false),
+    AssignedSelection("Quality", false),
+    AssignedSelection("Procurement", false),
+    AssignedSelection("Test New", false),
+    AssignedSelection("Test Short", false),
+  ];
 
   Widget assignedCardView({int? index}){
     return Card(
@@ -130,31 +141,73 @@ class _AddAssignedFormViewState extends State<AddAssignedFormView> {
         child: commonRoundedContainer(
           context: context,
           child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
-                child: Stack(
-                  alignment: Alignment.topCenter,
+                child: Column(
+                  // alignment: Alignment.topCenter,
                   children: [
+                    Row(
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        commonHeaderTitle(title: "Departments",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
+                        commonHorizontalSpacing(),
+                        Expanded(
+                          child: SizedBox(
+                            height: 40,
+                            child: CommonTextFiled(
+                              fieldTitleText: "Search here..",
+                              hintText: "Search here..",
+                              // isBorderEnable: false,
+                              isChangeFillColor: true,
+                              textEditingController: searchController,
+                              onChangedFunction: (String value){
+                              },
+                              validationFunction: (String value) {
+                                return value.toString().isEmpty
+                                    ? notEmptyFieldMessage
+                                    : null;
+                              },),
+                          ),
+                        )
+                      ],
+                    ),
+                    commonVerticalSpacing(spacing: 20),
+                    SizedBox(
+                      height: 40,
+                        child: StatefulBuilder(
+                          builder: (context, newSetState) => ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: assignedFilters.length,
+                              scrollDirection: Axis.horizontal,
+                              itemBuilder: (context, index) => InkWell(
+                                onTap: (){
+                                  newSetState((){
+                                    assignedFilters[index].isSelection = !assignedFilters[index].isSelection;
+                                  });
+                                },
+                                child: Container(
+                                  margin: const EdgeInsets.only(right: 10),
+                                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      color: assignedFilters[index].isSelection ? primaryColor : bgColor.withOpacity(0.8),
+                                      borderRadius: BorderRadius.circular(16)
+                                  ),
+                                  child: Center(
+                                    child: commonHeaderTitle(title: assignedFilters[index].title ?? "",fontSize: 1.2,
+                                        color: blackColor),
+                                  ),
+                                ),
+                              )),
+                        )
+                    ),
+                    commonVerticalSpacing(spacing: 20),
                     ListView.builder(
-                      physics: const NeverScrollableScrollPhysics(),
                         itemCount: 10,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => assignedCardView(index: index)),
-                    // Positioned(
-                    //   bottom: 20,
-                    //   right: 10,left: 10,
-                    //   child: Container(
-                    //     height: 65,
-                    //     decoration: BoxDecoration(
-                    //       image: DecorationImage(
-                    //         image: watermarkImage,
-                    //         fit: BoxFit.contain,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
               ),
@@ -163,4 +216,10 @@ class _AddAssignedFormViewState extends State<AddAssignedFormView> {
         )
     );
   }
+}
+
+class AssignedSelection{
+  String? title;
+  bool isSelection = false;
+  AssignedSelection(this.title,this.isSelection);
 }

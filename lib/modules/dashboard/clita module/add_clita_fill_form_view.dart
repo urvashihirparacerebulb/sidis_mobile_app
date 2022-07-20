@@ -87,9 +87,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                     ),
                     commonVerticalSpacing(spacing: 20),
                     CommonTextFiled(
-                      fieldTitleText: userName,
-                      hintText: userName,
-                      isBorderEnable: false,
+                      fieldTitleText: "Select Date",
+                      hintText: "Select Date",
+                      // isBorderEnable: false,
                       isChangeFillColor: true,
                       textEditingController: dateController,
                       suffixIcon: InkWell(

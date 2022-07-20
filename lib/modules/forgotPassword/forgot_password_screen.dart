@@ -44,6 +44,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     commonVerticalSpacing(spacing: 30),
                     Center(child: Image(image: forgotPasswordImage)),
@@ -55,7 +56,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     CommonTextFiled(
                       fieldTitleText: "Email",
                       hintText: "Email",
-                      isBorderEnable: false,
+                      // isBorderEnable: false,
                       isChangeFillColor: true,
                       textEditingController: emailController,
                       preFixIcon: const Icon(Icons.email,color: blackColor),

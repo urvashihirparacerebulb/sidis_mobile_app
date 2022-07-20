@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../utility/color_utility.dart';
+import 'package:my_projects/utility/color_utility.dart';
 import '../utility/theme_utility.dart';
 import 'common_widget.dart';
 
-OutlineInputBorder textFormFieldBorderStyle = OutlineInputBorder(
-  borderSide: const BorderSide(color: whiteColor),
+OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
+  borderSide: const BorderSide(color: Colors.transparent),
   borderRadius: commonBorderRadius,
 );
 
 class CommonTextFiled extends StatefulWidget {
   final String fieldTitleText;
   final String hintText;
-  final String? helperText;
   final bool isPassword;
   final bool isRequired;
   final TextEditingController textEditingController;
@@ -26,7 +24,6 @@ class CommonTextFiled extends StatefulWidget {
   final Function? onChangedFunction;
   final List<TextInputFormatter>? inputFormatter;
   final bool isEnabled;
-  final bool isBorderEnable;
   final bool isReadOnly;
   final int? errorMaxLines;
   final int? maxLine;
@@ -34,40 +31,40 @@ class CommonTextFiled extends StatefulWidget {
   final GlobalKey<FormFieldState>? formFieldKey;
   final TextAlign align;
   final Widget? suffixIcon;
+  final Color fontColor;
   final Widget? preFixIcon;
   final bool isShowTitle;
-  final bool isFloatingLabel;
+  final Color? fillColor;
   final bool isChangeFillColor;
 
-  const CommonTextFiled({
-    required this.fieldTitleText,
-    required this.hintText,
-    this.isPassword = false,
-    this.isRequired = true,
-    required this.textEditingController,
-    this.validationFunction,
-    this.helperText,
-    this.maxLength,
-    this.onSavedFunction,
-    this.onFieldSubmit,
-    this.keyboardType,
-    this.onTapFunction,
-    this.onChangedFunction,
-    this.inputFormatter,
-    this.isEnabled = true,
-    this.isReadOnly = false,
-    this.isBorderEnable = false,
-    this.isChangeFillColor = false,
-    this.errorMaxLines,
-    this.maxLine,
-    this.textFocusNode,
-    this.formFieldKey,
-    this.align = TextAlign.start,
-    this.suffixIcon,
-    this.preFixIcon,
-    this.isFloatingLabel = false,
-    this.isShowTitle = false,
-  });
+
+  const CommonTextFiled(
+      {required this.fieldTitleText,
+        required this.hintText,
+        this.isPassword = false,
+        this.isRequired = true,
+        required this.textEditingController,
+        this.validationFunction,
+        this.maxLength,
+        this.onSavedFunction,
+        this.onFieldSubmit,
+        this.keyboardType,
+        this.onTapFunction,
+        this.onChangedFunction,
+        this.isChangeFillColor = false,
+        this.inputFormatter,
+        this.isEnabled = true,
+        this.isReadOnly = false,
+        this.errorMaxLines,
+        this.maxLine,
+        this.textFocusNode,
+        this.formFieldKey,
+        this.align = TextAlign.start,
+        this.suffixIcon,
+        this.preFixIcon,
+        this.isShowTitle = false,
+        this.fontColor = primaryColor,
+        this.fillColor});
 
   @override
   _CommonTextFiledState createState() => _CommonTextFiledState();
@@ -105,22 +102,28 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
         }
       },
       validator: (value) {
-        return widget.validationFunction != null ? widget
-            .validationFunction!(value) : null;
+        return widget.validationFunction != null
+            ? widget.validationFunction!(value)
+            : null;
       },
       // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
       onSaved: (value) {
-        widget.onSavedFunction != null ? widget
-            .onSavedFunction!(value) : null;
+        // ignore: void_checks
+        return widget.onSavedFunction != null
+            ? widget.onSavedFunction!(value)
+            : null;
       },
       onFieldSubmitted: (value) {
-        widget.onFieldSubmit != null ? widget.onFieldSubmit!(
-            value) : null;
+        // ignore: void_checks
+        return widget.onFieldSubmit != null
+            ? widget.onFieldSubmit!(value)
+            : null;
       },
       maxLines: widget.maxLine ?? 1,
       keyboardType: widget.keyboardType,
       controller: widget.textEditingController,
-      cursorColor: primaryColor,
+      cursorColor: widget.fontColor,
+      // initialValue: initialText,
       obscureText: passwordVisible!,
       style: black15PxW800.copyWith(
           color: blackColor,fontWeight: FontWeight.normal),
@@ -129,48 +132,21 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
         labelStyle: black15PxW800.copyWith(
             fontWeight: FontWeight.w500,
             color: blackColor.withOpacity(0.4)),
-        labelText: widget.hintText,
+        labelText: widget.fieldTitleText,
         alignLabelWithHint: true,
-        floatingLabelBehavior: widget.isFloatingLabel ? FloatingLabelBehavior.auto : FloatingLabelBehavior.never,
-        errorMaxLines: widget
-            .errorMaxLines ?? 1,
+        floatingLabelBehavior: FloatingLabelBehavior.never,
+        errorMaxLines: widget.errorMaxLines ?? 1,
         filled: true,
-        contentPadding: const EdgeInsets.all(10.0),
-        focusedBorder: widget.isBorderEnable ? OutlineInputBorder(
-          borderSide:  BorderSide(color: Theme.of(context).focusColor),
-          borderRadius: commonBorderRadius,
-        ) : textFormFieldBorderStyle,
-        disabledBorder: widget.isBorderEnable ? OutlineInputBorder(
-          borderSide:  BorderSide(color: Theme.of(context).focusColor),
-          borderRadius: commonBorderRadius,
-        ) : textFormFieldBorderStyle,
-        enabledBorder: widget.isBorderEnable ? OutlineInputBorder(
-          borderSide:  BorderSide(color: Theme.of(context).focusColor),
-          borderRadius: commonBorderRadius,
-        ) : textFormFieldBorderStyle,
-        errorBorder: widget.isBorderEnable ? OutlineInputBorder(
-          borderSide:  BorderSide(color: Theme.of(context).focusColor),
-          borderRadius: commonBorderRadius,
-        ) : textFormFieldBorderStyle,
-        focusedErrorBorder: widget.isBorderEnable ? OutlineInputBorder(
-          borderSide:  BorderSide(color: Theme.of(context).focusColor),
-          borderRadius: commonBorderRadius,
-        ) : textFormFieldBorderStyle,
+        contentPadding: const EdgeInsets.only(top: 10, left: 15),
+        focusedBorder: textFieldBorderStyle,
+        disabledBorder: textFieldBorderStyle,
+        enabledBorder: textFieldBorderStyle,
+        errorBorder: textFieldBorderStyle,
+        focusedErrorBorder: textFieldBorderStyle,
         hintText: widget.hintText,
         fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : whiteColor,
-        helperText: widget.helperText ?? "",
-        helperStyle: white14PxNormal.copyWith(
-            color: Theme.of(context).focusColor.withOpacity(0.7),
-            fontSize:12),
-        helperMaxLines: 3,
         hintStyle: white14PxNormal.copyWith(
             color: blackColor.withOpacity(0.4)),
-        prefixIcon: widget.preFixIcon != null
-            ? Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: widget.preFixIcon,
-        )
-            : null,
         suffixIcon: widget.isPassword
             ? InkWell(
             onTap: () {
@@ -179,11 +155,23 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
               });
             },
             child: passwordVisible!
-                ? Icon(Icons.visibility_off_outlined,
-                color: Theme.of(context).colorScheme.secondary)
-                : Icon(Icons.visibility_outlined,
-                color:  Theme.of(context).colorScheme.secondary))
+                ? const Icon(
+              Icons.visibility_off,
+              color: blackColor,
+            )
+                : const Icon(
+              Icons.remove_red_eye_sharp,
+              color: blackColor,
+            ))
             : widget.suffixIcon,
-      ),);
+        prefixIcon: widget.preFixIcon != null
+            ? Padding(
+          padding: const EdgeInsets.all(6.0),
+          child: widget.preFixIcon,
+        )
+            : null,
+      ),
+    );
   }
 }
+

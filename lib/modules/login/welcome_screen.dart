@@ -42,7 +42,6 @@ class _WelcomeViewState extends State<WelcomeView> {
                 title: goToLogin,
                 width: getScreenWidth(context) / 2 - 40,
                 height: 50,
-                isLightButton: true,
                 tapOnButton: () {
                   Get.to(() => const LoginScreen());
                 },
@@ -64,11 +63,36 @@ class _WelcomeViewState extends State<WelcomeView> {
                     child: commonHeaderTitle(title: welcomeTo,fontSize: 1.2),
                   ),
                 ),
-
-                Image(image: appLogo,
-                    width: getScreenWidth(context)/4,
-                    height: getScreenHeight(context)/4,fit: BoxFit.contain,
+                commonVerticalSpacing(spacing: 20),
+                Container(
+                  width: getScreenWidth(context)/4.5,
+                  height: getScreenWidth(context)/4.5,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: appLogo,
+                      fit: BoxFit.contain
+                    )
+                  ),
                 ),
+                Container(
+                  width: getScreenWidth(context)/4.7,
+                  color: blackColor.withOpacity(0.3),
+                  child: commonHeaderTitle(title: "SKAPS",
+                      fontStyle: FontStyle.italic,
+                      fontSize: 1.2,color: primaryColor,
+                      fontWeight: 2,
+                      align: TextAlign.center),
+                ),
+                commonVerticalSpacing(spacing: 40),
+                Padding(padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: commonHeaderTitle(title: "Speak Less, Listen More. Don't Form Hasty Conclusion. If you Decide, Decide. Calculate your Responses. Don't betray your own.",
+                      fontStyle: FontStyle.italic,
+                      align: TextAlign.center,
+                      fontSize: 1.4,
+                      height: 1.6,
+                      fontWeight: 2
+                  ),
+                )
               ],
             ),
           ),

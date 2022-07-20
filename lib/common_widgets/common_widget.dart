@@ -77,14 +77,84 @@ Widget commonFillButtonView(
         style: black15PxW800.copyWith(
             color: blackColor,
             fontWeight: isLightButton ? FontWeight.w500 : FontWeight.bold,
-            fontSize: height! >= 50.0 ? 15 : 12),
+            fontSize: height! >= 50.0 ? 16 : 12),
       )
     )
   );
 }
 
-commonHeaderTitle({String title = "",double fontSize = 1,int fontWeight = 0,Color color = whiteColor,TextAlign align = TextAlign.start}){
-  return Text(title,style: white14PxNormal.apply(fontSizeFactor: fontSize,fontWeightDelta: fontWeight,color: color),textAlign: align);
+Widget commonBorderButtonView(
+    {required BuildContext context,
+      required String title,
+      required Function tapOnButton,
+      required bool isLoading,
+      Color? color,
+      double height = 50,
+      IconData? iconData}) {
+  return SizedBox(
+    width: MediaQuery.of(context).size.width - (commonHorizontalPadding * 2),
+    height: height,
+    child: ElevatedButton(
+      onPressed: () {
+        if (!isLoading) {
+          tapOnButton();
+        }
+      },
+      style: ElevatedButton.styleFrom(
+        alignment: Alignment.center,
+        primary: Colors.transparent,
+        side: const BorderSide(
+          color: blackColor,
+          width: 1.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: commonBorderRadius,
+        ),
+        padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
+        elevation: 0.0,
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            title,
+            style: black15PxW800.copyWith(
+                color: blackColor,
+                fontWeight: FontWeight.bold,
+                fontSize: height >= 50.0 ? 16 : 12),
+          ),
+          iconData != null ? commonHorizontalSpacing() : const SizedBox(),
+          iconData != null
+              ? Icon(
+            iconData,
+            size: 20,
+            color: blackColor,
+          )
+              : const SizedBox(),
+        ],
+      ),
+    ),
+  );
+}
+
+commonHeaderTitle({String title = "",
+  double height = 1.0,
+  double fontSize = 1,int fontWeight = 0,Color color = whiteColor,
+  TextAlign align = TextAlign.start,
+  FontStyle fontStyle = FontStyle.normal}){
+  return Text(
+    title,
+    style: white14PxNormal
+        .apply(
+        color: color,
+        fontStyle: fontStyle,
+        fontSizeFactor: fontSize,
+        fontFamily: "Arial",
+        fontWeightDelta: fontWeight)
+        .merge(TextStyle(height: height)),
+    textAlign: align,
+  );
 }
 
 commonVerticalSpacing({double spacing = 10}){
