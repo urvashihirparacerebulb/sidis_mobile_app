@@ -37,7 +37,6 @@ class CommonTextFiled extends StatefulWidget {
   final Color? fillColor;
   final bool isChangeFillColor;
 
-
   const CommonTextFiled(
       {required this.fieldTitleText,
         required this.hintText,

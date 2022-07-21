@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_projects/utility/constants.dart';
+import 'package:my_projects/utility/screen_utility.dart';
 
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
@@ -142,7 +143,6 @@ class _AddAssignedFormViewState extends State<AddAssignedFormView> {
           context: context,
           child: ListView(
             physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
             children: [
               Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -155,59 +155,65 @@ class _AddAssignedFormViewState extends State<AddAssignedFormView> {
                         commonHeaderTitle(title: "Departments",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
                         commonHorizontalSpacing(),
                         Expanded(
-                          child: SizedBox(
-                            height: 40,
-                            child: CommonTextFiled(
-                              fieldTitleText: "Search here..",
-                              hintText: "Search here..",
-                              // isBorderEnable: false,
-                              isChangeFillColor: true,
-                              textEditingController: searchController,
-                              onChangedFunction: (String value){
-                              },
-                              validationFunction: (String value) {
-                                return value.toString().isEmpty
-                                    ? notEmptyFieldMessage
-                                    : null;
-                              },),
-                          ),
+                          child: CommonTextFiled(
+                            fieldTitleText: "Search here..",
+                            hintText: "Search here..",
+                            // isBorderEnable: false,
+                            isChangeFillColor: true,
+                            textEditingController: searchController,
+                            onChangedFunction: (String value){
+                            },
+                            validationFunction: (String value) {
+                              return value.toString().isEmpty
+                                  ? notEmptyFieldMessage
+                                  : null;
+                            },),
                         )
                       ],
                     ),
                     commonVerticalSpacing(spacing: 20),
                     SizedBox(
                       height: 40,
-                        child: StatefulBuilder(
-                          builder: (context, newSetState) => ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: assignedFilters.length,
-                              scrollDirection: Axis.horizontal,
-                              itemBuilder: (context, index) => InkWell(
-                                onTap: (){
-                                  newSetState((){
-                                    assignedFilters[index].isSelection = !assignedFilters[index].isSelection;
-                                  });
-                                },
-                                child: Container(
-                                  margin: const EdgeInsets.only(right: 10),
-                                  padding: const EdgeInsets.symmetric(horizontal: 15),
-                                  decoration: BoxDecoration(
-                                      color: assignedFilters[index].isSelection ? primaryColor : bgColor.withOpacity(0.8),
-                                      borderRadius: BorderRadius.circular(16)
-                                  ),
-                                  child: Center(
-                                    child: commonHeaderTitle(title: assignedFilters[index].title ?? "",fontSize: 1.2,
-                                        color: blackColor),
-                                  ),
+                        width: getScreenWidth(context),
+                        child:ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: assignedFilters.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) => InkWell(
+                              onTap: (){
+                                for (var element in assignedFilters) {
+                                  element.isSelection = false;
+                                }
+                                setState((){
+                                  assignedFilters[index].isSelection = !assignedFilters[index].isSelection;
+                                });
+
+                                // if(assignedFilters.where((element) => element.isSelection).toList().isEmpty){
+                                //   assignedFilters.first.isSelection = true;
+                                // }
+                              },
+                              child: Container(
+                                margin: const EdgeInsets.only(right: 10),
+                                padding: const EdgeInsets.symmetric(horizontal: 15),
+                                decoration: BoxDecoration(
+                                    color: assignedFilters[index].isSelection ? primaryColor : bgColor.withOpacity(0.8),
+                                    borderRadius: BorderRadius.circular(24)
                                 ),
-                              )),
-                        )
+                                child: Center(
+                                  child: commonHeaderTitle(title: assignedFilters[index].title ?? "",fontSize: 1.2,fontWeight: 1,
+                                      color: blackColor),
+                                ),
+                              ),
+                            ))
                     ),
                     commonVerticalSpacing(spacing: 20),
-                    ListView.builder(
-                        itemCount: 10,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) => assignedCardView(index: index)),
+                    SizedBox(
+                      height: getScreenHeight(context) - 230,
+                      child: ListView.builder(
+                          itemCount: 10,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) => assignedCardView(index: index)),
+                    ),
                   ],
                 ),
               ),

@@ -29,9 +29,18 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
         bottomNavigation: Container(
           color: whiteColor,
           child: Padding(
-              padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16),
+              padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10,top: 10),
               child: Row(
                 children: [
+                  Expanded(child: commonBorderButtonView(
+                      context: context,
+                      title: "Cancel",
+                      height: 50,
+                      tapOnButton: () {
+                        Get.back();
+                      },
+                      isLoading: false)),
+                  commonHorizontalSpacing(),
                   Expanded(child: commonFillButtonView(
                       context: context,
                       title: "Save",
@@ -40,15 +49,6 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                       tapOnButton: () {
                       },
                       isLoading: false)),
-                  commonHorizontalSpacing(),
-                  Expanded(child: commonBorderButtonView(
-                      context: context,
-                      title: "Cancel",
-                      height: 50,
-                      tapOnButton: () {
-                        Get.back();
-                      },
-                      isLoading: false))
                 ],
               ),
           ),

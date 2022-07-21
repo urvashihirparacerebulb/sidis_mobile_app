@@ -67,10 +67,11 @@ Widget commonFillButtonView(
         }
       },
       style: ElevatedButton.styleFrom(
+        shadowColor: blackColor.withOpacity(0.8),
         primary: primaryColor,
         shape: RoundedRectangleBorder(borderRadius: commonButtonBorderRadius),
         padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
-        elevation: 0.0,
+        elevation: 5.0,
       ),
       child: Text(
         title,
@@ -101,8 +102,9 @@ Widget commonBorderButtonView(
         }
       },
       style: ElevatedButton.styleFrom(
+        shadowColor: blackColor.withOpacity(0.8),
         alignment: Alignment.center,
-        primary: Colors.transparent,
+        primary: whiteColor,
         side: const BorderSide(
           color: blackColor,
           width: 1.0,
@@ -111,7 +113,7 @@ Widget commonBorderButtonView(
           borderRadius: commonBorderRadius,
         ),
         padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
-        elevation: 0.0,
+        elevation: 5.0,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
