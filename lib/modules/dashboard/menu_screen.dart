@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/utility/assets_utility.dart';
 import 'package:my_projects/utility/color_utility.dart';
-import 'package:my_projects/utility/constants.dart';
+import 'package:my_projects/utility/common_methods.dart';
 
 import '../../common_widgets/common_widget.dart';
+import '../../controllers/authentication_controller.dart';
+import '../login/login_screen.dart';
 import 'abnormality_form/add_abnormaliry_view.dart';
 import 'assigned_form/add_assigned_form_view.dart';
 import 'clita module/add_clita_activity_list_view.dart';
@@ -56,66 +58,68 @@ class _MenuScreenState extends State<MenuScreen> {
     switch (index) {
       case 0:
         return dashboardImage;
+      // case 1:
+      //   return companiesImage;
+      // case 2:
+      //   return businessesImage;
+      // case 3:
+      //   return plantsImage;
+      // case 4:
+      //   return departmentsImage;
+      // case 5:
+      //   return machinesImage;
+      // case 6:
+      //   return clitaActivityListImage;
       case 1:
-        return companiesImage;
-      case 2:
-        return businessesImage;
-      case 3:
-        return plantsImage;
-      case 4:
-        return departmentsImage;
-      case 5:
-        return machinesImage;
-      case 6:
-        return clitaActivityListImage;
-      case 7:
         return clitaFillFormImage;
-      case 8:
+      case 2:
         return clitaNoListImage;
-      case 9:
+      case 3:
         return abnormalityFormImage;
-      case 10:
+      case 4:
         return assignedFormImage;
-      case 11:
+      case 5:
         return kaizenFormImage;
-      case 12:
-        return userManagementImage;
+      // case 12:
+      //   return userManagementImage;
       default:
         return dashboardImage;
     }
   }
 
   String getMenuTitle(int index) {
-    switch (index) {
-      case 0:
-        return dashboardText;
-      case 1:
-        return companiesText;
-      case 2:
-        return businessesText;
-      case 3:
-        return plantsText;
-      case 4:
-        return departmentsText;
-      case 5:
-        return machinesText;
-      case 6:
-        return clitaActivityListText;
-      case 7:
-        return clitaFillFormText;
-      case 8:
-        return clitaNoListText;
-      case 9:
-        return abnormalityFormText;
-      case 10:
-        return assignedFormText;
-      case 11:
-        return kaizenFormText;
-      case 12:
-        return userManagementText;
-      default:
-        return "";
-    }
+    return getLoginData()!.allMenus?[index].menuName ?? "";
+
+    // switch (index) {
+    //   case 0:
+    //     return getLoginData()!.allMenus[index].menuName ?? "";
+    //   case 1:
+    //     return companiesText;
+    //   case 2:
+    //     return businessesText;
+    //   case 3:
+    //     return plantsText;
+    //   case 4:
+    //     return departmentsText;
+    //   case 5:
+    //     return machinesText;
+    //   case 6:
+    //     return clitaActivityListText;
+    //   case 7:
+    //     return clitaFillFormText;
+    //   case 8:
+    //     return clitaNoListText;
+    //   case 9:
+    //     return abnormalityFormText;
+    //   case 10:
+    //     return assignedFormText;
+    //   case 11:
+    //     return kaizenFormText;
+    //   case 12:
+    //     return userManagementText;
+    //   default:
+    //     return "";
+    // }
   }
 
   @override
@@ -150,9 +154,9 @@ class _MenuScreenState extends State<MenuScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        commonHeaderTitle(title: "John Deo",color: fontColor,fontWeight: 2,fontSize: 1.4),
+                        commonHeaderTitle(title: getLoginData()!.userdata?.first.sessionName ?? "",color: fontColor,fontWeight: 2,fontSize: 1.4),
                         commonVerticalSpacing(spacing: 3),
-                        commonHeaderTitle(title: "Worker",color: const Color(0xff1C1B1B).withOpacity(0.5))
+                        commonHeaderTitle(title: getLoginData()!.userdata?.first.groupName ?? "",color: const Color(0xff1C1B1B).withOpacity(0.5))
                       ],
                     ),
                   ),
@@ -160,9 +164,11 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 8,left: 16,right: 16),
                       child: ListView.builder(
-                        itemCount: 13,
+                        itemCount: getLoginData()!.allMenus?.length,
                         shrinkWrap: true,
-                        itemBuilder: (context, index) => iconTitleView(index: index,image: getMenuIcon(index),title: getMenuTitle(index)),
+                        itemBuilder: (context, index) => iconTitleView(
+                            index: index,image: getMenuIcon(index),
+                            title: getMenuTitle(index)),
                       ),
                     ),
                   ),
@@ -192,8 +198,14 @@ class _MenuScreenState extends State<MenuScreen> {
           Positioned(
               right: 20,
               top: 90,
-              child: Image(
-                image: logoutImage,
+              child: InkWell(
+                onTap: (){
+                  AuthenticationController.to.clearPref();
+                  Get.offAll(() => const LoginScreen());
+                },
+                child: Image(
+                  image: logoutImage,
+                ),
               )
           )
         ],

@@ -142,7 +142,8 @@ Widget commonBorderButtonView(
 
 commonHeaderTitle({String title = "",
   double height = 1.0,
-  double fontSize = 1,int fontWeight = 0,Color color = whiteColor,
+  double fontSize = 1,int fontWeight = 0,
+  Color color = whiteColor,
   TextAlign align = TextAlign.start,
   FontStyle fontStyle = FontStyle.normal}){
   return Text(
@@ -167,7 +168,8 @@ commonHorizontalSpacing({double spacing = 10}){
   return SizedBox(width: spacing);
 }
 
-AppBar commonAppbar({BuildContext? context,String title = "",
+AppBar commonAppbar({BuildContext? context,
+  String title = "",
   bool isLeadingCCustom = false,
   Widget? leadingWidget,
   bool centerTitle = false}){

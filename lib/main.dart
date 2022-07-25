@@ -1,11 +1,24 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
+import 'controllers/app_binding/app_binding_controllers.dart';
+import 'modules/dashboard/dashboard_view.dart';
+import 'modules/login/login_screen.dart';
 import 'modules/login/welcome_screen.dart';
 import 'modules/splash_screen.dart';
+import 'utility/common_methods.dart';
+
+final getPreferences = GetStorage();
+
+pref() async {
+  await GetStorage.init();
+}
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  pref();
   runApp(const MyApp());
 }
 
@@ -19,9 +32,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       title: 'SIDIS App',
       useInheritedMediaQuery: true,
-      // locale: DevicePreview.locale(context),
-      // builder: DevicePreview.appBuilder,
       debugShowCheckedModeBanner: false,
+      initialBinding: AppBinding(),
       theme: ThemeData(
         fontFamily: 'Arial',
         textTheme: const TextTheme(
@@ -52,6 +64,11 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     Timer(const Duration(seconds: 2), () {
       Get.off(() => const WelcomeView(), transition: Transition.cupertinoDialog);
+      if (getIsLogin()) {
+        Get.off(() => const DashboardView());
+      } else {
+        Get.off(() => const LoginScreen());
+      }
     });
     super.initState();
   }

@@ -1,3 +1,4 @@
+const String appName = "SIDIS App";
 const String welcomeTo = "Welcome to";
 const String goToLogin = "Go to Login";
 const String infoMsg = "Skaps Industries Data Information System";
