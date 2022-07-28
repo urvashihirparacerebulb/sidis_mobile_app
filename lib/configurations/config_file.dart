@@ -2,6 +2,12 @@ class ApiConfig {
 
   static const String baseURL = "https://sidis.cerebulb.com/api/";
   static const String loginURL = "${baseURL}ajax-login";
+  static const String businessListURL = "${baseURL}fetch-bussiness";
+  static const String plantsListURL = "${baseURL}fetch-plant-bussiness";
+  static const String machineListURL = "${baseURL}fetch-machine";
+  static const String subMachineListURL = "${baseURL}fetch-sub-machine";
+  static const String activityListURL = "${baseURL}activity-check-list";
+  static const String intervalListURL = "${baseURL}interval-list";
   static const String methodPOST = "post";
   static const String methodGET = "get";
   static const String methodPUT = "put";

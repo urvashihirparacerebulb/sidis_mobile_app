@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:my_projects/controllers/dropdown_data_controller.dart';
 import 'package:my_projects/utility/constants.dart';
 
 import '../../../common_widgets/common_typeaheadfield.dart';
@@ -16,6 +19,12 @@ class CLITActivityListFormScreen extends StatefulWidget {
 
 class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen> {
 
+  TextEditingController businessController = TextEditingController();
+  TextEditingController plantsController = TextEditingController();
+  TextEditingController machineController = TextEditingController();
+  TextEditingController subMachineController = TextEditingController();
+  TextEditingController intervalController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return commonStructure(
@@ -32,6 +41,8 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
                 Column(
                   children: [
                     CommonTypeAheadTextField(
+                      myItems: [],
+                      controller: businessController,
                       hintText: "Select Business",
                       clearCallback: (){
 
@@ -45,6 +56,8 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
                     ),
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
+                      controller: plantsController,
                       hintText: "Select COMPANY_BUSINESS_PLANTS",
                       clearCallback: (){
 
@@ -59,7 +72,9 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
 
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
                       hintText: "Select Machine",
+                      controller: machineController,
                       clearCallback: (){
 
                       },
@@ -72,6 +87,8 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
                     ),
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
+                      controller: intervalController,
                       hintText: "Select Interval",
                       clearCallback: (){
 

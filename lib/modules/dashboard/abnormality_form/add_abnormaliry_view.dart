@@ -17,9 +17,17 @@ class AddAbnormalityFormView extends StatefulWidget {
 
 class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   TextEditingController abnormalityController = TextEditingController();
+  TextEditingController abnormalityTitleController = TextEditingController();
+  TextEditingController abnormalityTypeController = TextEditingController();
+  TextEditingController departmentController = TextEditingController();
+  TextEditingController subDepartmentController = TextEditingController();
   TextEditingController partNameController = TextEditingController();
   TextEditingController possibleSolutionController = TextEditingController();
-
+  TextEditingController businessController = TextEditingController();
+  TextEditingController plantsController = TextEditingController();
+  TextEditingController machineController = TextEditingController();
+  TextEditingController subMachineController = TextEditingController();
+  TextEditingController intervalController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return commonStructure(
@@ -70,6 +78,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         commonHeaderTitle(title: "Where is Abnormality?",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          myItems: [],
+                          controller: businessController,
                           hintText: "Select Business*",
                           clearCallback: (){
 
@@ -83,6 +93,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         ),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          controller: plantsController,
+                          myItems: [],
                           hintText: "Select COMPANY_BUSINESS_PLANTS",
                           clearCallback: (){
 
@@ -97,6 +109,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
 
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          myItems: [],
+                          controller: departmentController,
                           hintText: "Select Department*",
                           clearCallback: (){
 
@@ -110,6 +124,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         ),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          myItems: [],
+                          controller: subDepartmentController,
                           hintText: "Select Sub Department*",
                           clearCallback: (){
 
@@ -125,7 +141,9 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         commonHeaderTitle(title: "Machine Detail",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          myItems: [],
                           hintText: "Select Machine*",
+                          controller: machineController,
                           clearCallback: (){
 
                           },
@@ -138,6 +156,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         ),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          controller: subMachineController,
+                          myItems: [],
                           hintText: "Select Sub Machine*",
                           clearCallback: (){
 
@@ -167,6 +187,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         commonHeaderTitle(title: "Abnormality Detail",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          myItems: [],
+                          controller: abnormalityTitleController,
                           hintText: "Abnormality Title*",
                           clearCallback: (){
 
@@ -180,6 +202,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         ),
                         commonVerticalSpacing(spacing: 20),
                         CommonTypeAheadTextField(
+                          controller: abnormalityTypeController,
+                          myItems: [],
                           hintText: "Abnormality Type*",
                           clearCallback: (){
 

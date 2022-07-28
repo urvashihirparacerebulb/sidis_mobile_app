@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:my_projects/controllers/general_controller.dart';
 import 'package:my_projects/utility/color_utility.dart';
+import '../theme/convert_theme_colors.dart';
 import '../utility/theme_utility.dart';
 import 'common_widget.dart';
 
@@ -84,93 +87,122 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      enabled: !widget.isEnabled ? false : true,
-      textAlign: widget.align,
-      showCursor: !widget.isReadOnly,
-      onTap: () {
-        if (widget.onTapFunction != null) {
-          widget.onTapFunction!();
-        }
-      },
-      key: widget.key,
-      focusNode: widget.textFocusNode,
-      onChanged: (value) {
-        if (widget.onChangedFunction != null) {
-          widget.onChangedFunction!(value);
-        }
-      },
-      validator: (value) {
-        return widget.validationFunction != null
-            ? widget.validationFunction!(value)
-            : null;
-      },
-      // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
-      onSaved: (value) {
-        // ignore: void_checks
-        return widget.onSavedFunction != null
-            ? widget.onSavedFunction!(value)
-            : null;
-      },
-      onFieldSubmitted: (value) {
-        // ignore: void_checks
-        return widget.onFieldSubmit != null
-            ? widget.onFieldSubmit!(value)
-            : null;
-      },
-      maxLines: widget.maxLine ?? 1,
-      keyboardType: widget.keyboardType,
-      controller: widget.textEditingController,
-      cursorColor: widget.fontColor,
-      // initialValue: initialText,
-      obscureText: passwordVisible!,
-      style: black15PxW800.copyWith(
-          color: blackColor,fontWeight: FontWeight.normal),
-      inputFormatters: widget.inputFormatter,
-      decoration: InputDecoration(
-        labelStyle: black15PxW800.copyWith(
-            fontWeight: FontWeight.w500,
-            color: blackColor.withOpacity(0.4)),
-        labelText: widget.fieldTitleText,
-        alignLabelWithHint: true,
-        floatingLabelBehavior: FloatingLabelBehavior.never,
-        errorMaxLines: widget.errorMaxLines ?? 1,
-        filled: true,
-        contentPadding: const EdgeInsets.only(top: 10, left: 15),
-        focusedBorder: textFieldBorderStyle,
-        disabledBorder: textFieldBorderStyle,
-        enabledBorder: textFieldBorderStyle,
-        errorBorder: textFieldBorderStyle,
-        focusedErrorBorder: textFieldBorderStyle,
-        hintText: widget.hintText,
-        fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : whiteColor,
-        hintStyle: white14PxNormal.copyWith(
-            color: blackColor.withOpacity(0.4)),
-        suffixIcon: widget.isPassword
-            ? InkWell(
-            onTap: () {
-              setState(() {
-                passwordVisible = !passwordVisible!;
-              });
-            },
-            child: passwordVisible!
-                ? const Icon(
-              Icons.visibility_off,
-              color: blackColor,
-            )
-                : const Icon(
-              Icons.remove_red_eye_sharp,
-              color: blackColor,
-            ))
-            : widget.suffixIcon,
-        prefixIcon: widget.preFixIcon != null
-            ? Padding(
-          padding: const EdgeInsets.all(6.0),
-          child: widget.preFixIcon,
-        )
-            : null,
+    return Obx(() => Container(
+        decoration: BoxDecoration(
+          boxShadow: GeneralController.to.isDarkMode.value ? [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.1),
+              offset: const Offset(-6.0, -6.0),
+              blurRadius: 16.0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.4),
+              offset: const Offset(6.0, 6.0),
+              blurRadius: 16.0,
+            ),
+          ] : [
+            BoxShadow(
+              color: Colors.white.withOpacity(0.8),
+              offset: const Offset(-6.0, -6.0),
+              blurRadius: 16.0,
+            ),
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              offset: const Offset(6.0, 6.0),
+              blurRadius: 16.0,
+            ),
+          ],
+          color: ConvertTheme().getTextFiledBackGroundColor(),
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+      child: TextFormField(
+        enabled: !widget.isEnabled ? false : true,
+        textAlign: widget.align,
+        showCursor: !widget.isReadOnly,
+        onTap: () {
+          if (widget.onTapFunction != null) {
+            widget.onTapFunction!();
+          }
+        },
+        key: widget.key,
+        focusNode: widget.textFocusNode,
+        onChanged: (value) {
+          if (widget.onChangedFunction != null) {
+            widget.onChangedFunction!(value);
+          }
+        },
+        validator: (value) {
+          return widget.validationFunction != null
+              ? widget.validationFunction!(value)
+              : null;
+        },
+        // onSaved: onSavedFunction != null ? onSavedFunction : (value) {},
+        onSaved: (value) {
+          // ignore: void_checks
+          return widget.onSavedFunction != null
+              ? widget.onSavedFunction!(value)
+              : null;
+        },
+        onFieldSubmitted: (value) {
+          // ignore: void_checks
+          return widget.onFieldSubmit != null
+              ? widget.onFieldSubmit!(value)
+              : null;
+        },
+        maxLines: widget.maxLine ?? 1,
+        keyboardType: widget.keyboardType,
+        controller: widget.textEditingController,
+        cursorColor: widget.fontColor,
+        // initialValue: initialText,
+        obscureText: passwordVisible!,
+        style: black15PxW800.copyWith(
+            color: blackColor,fontWeight: FontWeight.normal),
+        inputFormatters: widget.inputFormatter,
+        decoration: InputDecoration(
+          labelStyle: black15PxW800.copyWith(
+              fontWeight: FontWeight.w500,
+              color: blackColor.withOpacity(0.4)),
+          labelText: widget.fieldTitleText,
+          alignLabelWithHint: true,
+          floatingLabelBehavior: FloatingLabelBehavior.never,
+          errorMaxLines: widget.errorMaxLines ?? 1,
+          filled: true,
+          contentPadding: const EdgeInsets.only(top: 22, left: 15),
+          focusedBorder: textFieldBorderStyle,
+          disabledBorder: textFieldBorderStyle,
+          enabledBorder: textFieldBorderStyle,
+          errorBorder: textFieldBorderStyle,
+          focusedErrorBorder: textFieldBorderStyle,
+          hintText: widget.hintText,
+          fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : ConvertTheme().getTextFiledBackGroundColor(),
+          hintStyle: white14PxNormal.copyWith(
+              color: blackColor.withOpacity(0.4),fontSize: 16),
+          suffixIcon: widget.isPassword
+              ? InkWell(
+              onTap: () {
+                setState(() {
+                  passwordVisible = !passwordVisible!;
+                });
+              },
+              child: passwordVisible!
+                  ? const Icon(
+                Icons.visibility_off,
+                color: blackColor,
+              )
+                  : const Icon(
+                Icons.remove_red_eye_sharp,
+                color: blackColor,
+              ))
+              : widget.suffixIcon,
+          prefixIcon: widget.preFixIcon != null
+              ? Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: widget.preFixIcon,
+          )
+              : null,
+        ),
       ),
-    );
+    ));
   }
 }
 

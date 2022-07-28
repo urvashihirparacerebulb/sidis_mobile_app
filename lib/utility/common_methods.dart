@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import '../configurations/config_file.dart';
 import '../main.dart';
 import '../models/login_response_model.dart';
+import 'constants.dart';
 
 isNotEmptyString(String? string) {
   return string != null && string.isNotEmpty;
@@ -24,6 +25,22 @@ showSnackBar({required String title, required String message}) {
           : Colors.red,
       textColor: Colors.white,
       fontSize: 12.0);
+}
+
+writeThemePref({required value}) {
+  getPreferences.write("theme", value);
+}
+
+readThemePref() {
+  return getPreferences.read("theme") ?? ThemeSettingEnum.SystemDefault;
+}
+
+writeDataInPref({required String key, required bool value}) {
+  getPreferences.write(key, value);
+}
+
+bool readDataFromPref(String key) {
+  return getPreferences.read(key) ?? false;
 }
 
 setIsLogin({required bool isLogin}) {

@@ -15,6 +15,11 @@ class CLITANoListView extends StatefulWidget {
 }
 
 class _CLITANoListViewState extends State<CLITANoListView> {
+  TextEditingController businessController = TextEditingController();
+  TextEditingController plantsController = TextEditingController();
+  TextEditingController machineController = TextEditingController();
+  TextEditingController subMachineController = TextEditingController();
+  TextEditingController intervalController = TextEditingController();
   TextEditingController dateController = TextEditingController();
 
   @override
@@ -33,7 +38,9 @@ class _CLITANoListViewState extends State<CLITANoListView> {
                 Column(
                   children: [
                     CommonTypeAheadTextField(
+                      myItems: [],
                       hintText: "Select Business",
+                      controller: businessController,
                       clearCallback: (){
 
                       },
@@ -46,7 +53,9 @@ class _CLITANoListViewState extends State<CLITANoListView> {
                     ),
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
                       hintText: "Select COMPANY_BUSINESS_PLANTS",
+                      controller: plantsController,
                       clearCallback: (){
 
                       },
@@ -60,6 +69,8 @@ class _CLITANoListViewState extends State<CLITANoListView> {
 
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
+                      controller: machineController,
                       hintText: "Select Machine",
                       clearCallback: (){
 
@@ -73,6 +84,8 @@ class _CLITANoListViewState extends State<CLITANoListView> {
                     ),
                     commonVerticalSpacing(spacing: 20),
                     CommonTypeAheadTextField(
+                      myItems: [],
+                      controller: intervalController,
                       hintText: "Select Interval",
                       clearCallback: (){
 

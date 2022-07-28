@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-ExactAssetImage splashBgImage = const ExactAssetImage('assets/images/splash_bg@2x.png');
 ExactAssetImage appLogoWithNameImage = const ExactAssetImage('assets/images/logo@2x.png');
-ExactAssetImage welcomeBgImage = const ExactAssetImage('assets/images/welcome_logo_top@3x.png',scale: 2.8);
+ExactAssetImage horizontalAppLogoDark = const ExactAssetImage('assets/images/horizontal_logo_name_dark.png',scale: 2.6);
+ExactAssetImage horizontalAppLogoLight = const ExactAssetImage('assets/images/horizontal_logo_name_light.png',scale: 2.6);
 ExactAssetImage appLogo = const ExactAssetImage('assets/images/sidis_logo@3x.png');
 ExactAssetImage userNameImage = const ExactAssetImage('assets/images/user_name@2x.png',scale: 2);
 ExactAssetImage passwordImage = const ExactAssetImage('assets/images/password@2x.png',scale: 2);

@@ -32,7 +32,10 @@ dependencies:
   cupertino_icons: ^1.0.2
   get: ^4.6.1
   get_storage: ^2.0.3
-  dropdown_search: ^5.0.0
+  flutter_typeahead: ^4.0.0
+  flutter_spinkit: ^5.0.0 # For Loader on Button
+  flutter_neumorphic: ^3.2.0
+  #  dropdown_search: ^5.0.0
   local_auth: ^2.1.0
   fluttertoast: ^8.0.9
   dio: ^4.0.6
@@ -52,12 +55,26 @@ flutter:
     - assets/images/
     - assets/icons/
   fonts:
-    - family: Arial
+    - family: Poppins
       fonts:
-        - asset: fonts/Arial/arial.ttf
+        - asset: fonts/Poppins/Poppins-ExtraLight.ttf
+          weight: 200
+        - asset: fonts/Poppins/Poppins-Regular.ttf
           weight: 400
-        - asset: fonts/Arial/arialbd.ttf
+        - asset: fonts/Poppins/Poppins-Light.ttf
+          weight: 300
+        - asset: fonts/Poppins/Poppins-Medium.ttf
           weight: 500
+        - asset: fonts/Poppins/Poppins-SemiBold.ttf
+          weight: 600
+        - asset: fonts/Poppins/Poppins-Bold.ttf
+          weight: 700
+        - asset: fonts/Poppins/Poppins-ExtraBold.ttf
+          weight: 800
+        - asset: fonts/Poppins/Poppins-Black.ttf
+          weight: 900
+        - asset: fonts/Poppins/Poppins-ThinItalic.ttf
+          style: italic
 
   # To add assets to your application, add an assets section, like this:
   # assets:

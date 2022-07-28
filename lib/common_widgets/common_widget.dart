@@ -3,13 +3,18 @@ import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
 
 import '../modules/dashboard/dashboard_view.dart';
+import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
 import '../utility/screen_utility.dart';
 import '../utility/theme_utility.dart';
 
 double commonHorizontalPadding = 10.0;
 BorderRadius commonButtonBorderRadius = BorderRadius.circular(10.0);
-BorderRadius commonBorderRadius = BorderRadius.circular(8.0);
+BorderRadius commonBorderRadius = BorderRadius.circular(12.0);
+OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
+  borderSide: const BorderSide(color: bgColor),
+  borderRadius: commonButtonBorderRadius,
+);
 
 Widget commonStructure({
   required BuildContext context,
@@ -17,17 +22,18 @@ Widget commonStructure({
   AppBar? appBar,
   Color bgColor = whiteColor,
   Widget? bottomNavigation,
+  Widget? floatingAction,
 }) {
   ///Pass null in appbar when it's optional ex = appBar : null
   return Stack(
     children: [
-      commonAppBackground(bgColor: bgColor),
+      commonAppBackground(),
       Scaffold(
         backgroundColor: Colors.transparent,
         resizeToAvoidBottomInset: true,
         appBar: appBar,
         bottomNavigationBar: bottomNavigation,
-
+        floatingActionButton: floatingAction,
         ///adding listView cause scroll issue
         body: Container(
           height: getScreenHeight(context),
@@ -39,12 +45,14 @@ Widget commonStructure({
   );
 }
 
-Widget commonAppBackground({Color? bgColor}) {
-  return Container(
-    decoration: BoxDecoration(
-      color: bgColor
-    ),
-  );
+Widget commonAppBackground() {
+  return Obx(() {
+    return Container(
+      decoration: BoxDecoration(
+        color: ConvertTheme().getBackGroundColor(),
+      ),
+    );
+  });
 }
 
 Widget commonFillButtonView(
@@ -144,20 +152,21 @@ commonHeaderTitle({String title = "",
   double height = 1.0,
   double fontSize = 1,int fontWeight = 0,
   Color color = whiteColor,
+  bool isChangeColor = false,
   TextAlign align = TextAlign.start,
   FontStyle fontStyle = FontStyle.normal}){
-  return Text(
+  return Obx(() => Text(
     title,
     style: white14PxNormal
         .apply(
-        color: color,
+        color: isChangeColor ? color : ConvertTheme().getWhiteToFontColor(),
         fontStyle: fontStyle,
         fontSizeFactor: fontSize,
-        fontFamily: "Arial",
+        fontFamily: "Poppins",
         fontWeightDelta: fontWeight)
         .merge(TextStyle(height: height)),
     textAlign: align,
-  );
+  ));
 }
 
 commonVerticalSpacing({double spacing = 10}){

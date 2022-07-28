@@ -6,10 +6,10 @@ import 'package:my_projects/utility/common_methods.dart';
 
 import '../../common_widgets/common_widget.dart';
 import '../../controllers/authentication_controller.dart';
+import '../../utility/constants.dart';
 import '../login/login_screen.dart';
 import 'abnormality_form/add_abnormaliry_view.dart';
 import 'assigned_form/add_assigned_form_view.dart';
-import 'clita module/add_clita_activity_list_view.dart';
 import 'clita module/add_clita_fill_form_view.dart';
 import 'clita module/add_clita_no_list_view.dart';
 
@@ -22,22 +22,22 @@ class MenuScreen extends StatefulWidget {
 
 class _MenuScreenState extends State<MenuScreen> {
 
-  iconTitleView({int? index,ExactAssetImage? image, String title = ""}){
+  iconTitleView({ExactAssetImage? image, String title = ""}){
     return InkWell(
       onTap: (){
-        if(index == 6){
-          Get.to(() => const CLITActivityListFormScreen());
-        }
-        if(index == 7){
+        // if(title == ){
+        //   Get.to(() => const CLITActivityListFormScreen());
+        // }
+        if(title == clitaFillFormText){
           Get.to(() => const CLITAFillFormView());
         }
-        if(index == 8){
+        if(title == clitaNoListText){
           Get.to(() => const CLITANoListView());
         }
-        if(index == 9){
+        if(title == abnormalityFormText){
           Get.to(() => const AddAbnormalityFormView());
         }
-        if(index == 10){
+        if(title == assignedFormText){
           Get.to(() => const AddAssignedFormView());
         }
       },
@@ -167,7 +167,7 @@ class _MenuScreenState extends State<MenuScreen> {
                         itemCount: getLoginData()!.allMenus?.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => iconTitleView(
-                            index: index,image: getMenuIcon(index),
+                            image: getMenuIcon(index),
                             title: getMenuTitle(index)),
                       ),
                     ),
