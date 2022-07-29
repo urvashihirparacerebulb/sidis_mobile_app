@@ -23,16 +23,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
     return commonStructure(
         context: context,
         bgColor: blackColor,
-        appBar: AppBar(
-          backgroundColor: blackColor,
-          title: commonHeaderTitle(title: forgotPassword,fontSize: 1.3,fontWeight: 2),
-          leading: Image(image: backIconImage),
-          actions: const [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10.0),
-              child: Icon(Icons.notifications,color: whiteColor,size: 22),
-            )
-          ],
+        appBar: commonAppbar(
+            context: context,title: forgotPassword,
+            centerTitle: true,
         ),
         child: ListView(
           shrinkWrap: true,

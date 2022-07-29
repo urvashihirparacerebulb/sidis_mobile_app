@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 
 import '../configurations/config_file.dart';
 import '../main.dart';
@@ -69,4 +71,41 @@ LoginResponseModel? getLoginData() {
   } else {
     return null;
   }
+}
+
+confirmationAlertDialog({String? title, required String message, Function? buttonCallBack, Function? noButtonCallBack}) {
+  Get.dialog(
+    CupertinoAlertDialog(
+      title: Text(
+        isNotEmptyString(title) ? title! : appName.capitalize!,
+        // style: primary18PxW700,
+      ),
+      content: Text(
+        message,
+        // style: black14PxNormal,
+      ),
+      actions: [
+        CupertinoDialogAction(
+          isDefaultAction: true,
+          child: const Text("No"),
+          onPressed: () {
+            Get.back();
+            if (noButtonCallBack != null) {
+              noButtonCallBack();
+            }
+          },
+        ),
+        CupertinoDialogAction(
+            isDefaultAction: true,
+            child: const Text("Yes"),
+            onPressed: () {
+              buttonCallBack!();
+            }
+        ),
+      ],
+    ),
+    barrierDismissible: false,
+    transitionCurve: Curves.easeInCubic,
+    transitionDuration: const Duration(milliseconds: 400),
+  );
 }

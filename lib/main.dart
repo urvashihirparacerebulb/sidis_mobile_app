@@ -8,6 +8,7 @@ import 'package:my_projects/utility/constants.dart';
 import '../utility/common_methods.dart';
 import 'controllers/app_binding/app_binding_controllers.dart';
 import 'controllers/general_controller.dart';
+import 'modules/dashboard/common_dashboard.dart';
 import 'modules/dashboard/dashboard_view.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/splash_screen.dart';
@@ -77,7 +78,7 @@ class _MyHomePageState extends State<MyHomePage> with WidgetsBindingObserver{
     });
     Timer(const Duration(seconds: 2), () {
       if (getIsLogin()) {
-        Get.off(() => const DashboardView());
+        Get.off(() => const CommonDashboard());
       } else {
         Get.off(() => const LoginScreen());
       }

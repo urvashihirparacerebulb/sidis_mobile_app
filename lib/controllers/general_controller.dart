@@ -4,4 +4,5 @@ class GeneralController extends GetxController {
   static GeneralController get to => Get.find();
 
   RxBool isDarkMode = false.obs;
+  RxInt dashboardIndex = 0.obs;
 }

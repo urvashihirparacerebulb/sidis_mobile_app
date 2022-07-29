@@ -154,9 +154,9 @@ class _MenuScreenState extends State<MenuScreen> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        commonHeaderTitle(title: getLoginData()!.userdata?.first.sessionName ?? "",color: fontColor,fontWeight: 2,fontSize: 1.4),
+                        commonHeaderTitle(title: getLoginData() == null ? "" : getLoginData()!.userdata?.first.sessionName ?? "",color: fontColor,fontWeight: 2,fontSize: 1.4),
                         commonVerticalSpacing(spacing: 3),
-                        commonHeaderTitle(title: getLoginData()!.userdata?.first.groupName ?? "",color: const Color(0xff1C1B1B).withOpacity(0.5))
+                        commonHeaderTitle(title: getLoginData() == null ? "" : getLoginData()!.userdata?.first.groupName ?? "",color: const Color(0xff1C1B1B).withOpacity(0.5))
                       ],
                     ),
                   ),
@@ -164,7 +164,7 @@ class _MenuScreenState extends State<MenuScreen> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 8,left: 16,right: 16),
                       child: ListView.builder(
-                        itemCount: getLoginData()!.allMenus?.length,
+                        itemCount: getLoginData() == null ? 0 : getLoginData()!.allMenus?.length,
                         shrinkWrap: true,
                         itemBuilder: (context, index) => iconTitleView(
                             image: getMenuIcon(index),

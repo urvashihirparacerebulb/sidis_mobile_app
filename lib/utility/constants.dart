@@ -30,6 +30,7 @@ const String assignedFormText = "Assigned Form";
 const String kaizenFormText = "Kaizen Form";
 const String userManagementText = "User Management";
 
+const String exitMessage = "Do you want to exit from app?";
 const String notEmptyFieldMessage = "Field must not be empty";
 const String enterValidUsername = "Please Enter valid username";
 const String registerEmailMsg = "Please enter your registered email id.";

@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../common_widgets/common_widget.dart';
-import '../../utility/assets_utility.dart';
 import '../../utility/color_utility.dart';
 import '../../utility/constants.dart';
 import '../plant_dashboard/plant_dashboard_view.dart';
-import 'menu_screen.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -16,80 +14,175 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+
+  commonCardView({String title = "", String subTitle = ""}){
+    return commonNeumorphicView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 24.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 5),
+              child: commonHeaderTitle(title: title,
+                  fontSize: 1.8,fontWeight: 1),
+            ),
+            Container(
+              padding: const EdgeInsets.all(8.0),
+              decoration: const BoxDecoration(
+                  color: primaryColor,
+                  shape: BoxShape.circle
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: commonHeaderTitle(title: subTitle,fontSize: 0.85,
+                    fontWeight: 2,color: blackColor,
+                    isChangeColor: true,align: TextAlign.center),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return commonStructure(
-        context: context,
-        bgColor: blackColor,
-        appBar: commonAppbar(context: context,title: "Hello, John",isLeadingCCustom: true,centerTitle: true,leadingWidget: InkWell(
-          onTap: (){
-            Get.to(() => const MenuScreen());
-          },
-          child: Image(image: menuIconImage),
-        )),
-        child: commonRoundedContainer(
-         context: context,
-          child: ListView.builder(
-            itemCount: 15,
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return InkWell(
-                onTap: (){
-                  Get.to(() => const PlantDashboardView());
-                },
-                child: Card(
-                  margin: const EdgeInsets.all(10),
-                  color: whiteColor,
-                  elevation: 7.0,
-                  shadowColor: greyColor.withOpacity(0.3),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Stack(
-                          children: <Widget>[
-                            Padding(padding: const EdgeInsets.only(right: 10,top: 8),child:
-                              commonHeaderTitle(title: "RM",color: blackColor,fontWeight: 2,fontSize: 1.2),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Color(0xffFF7777),
-                                  shape: BoxShape.circle
-                                ),
-                                constraints: const BoxConstraints(
-                                  minWidth: 12,
-                                  minHeight: 12,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '10',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 8,
-                                    ),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ),
-                            )
-                          ],
-                        ),
-                        Image(image: nextPageArrowImage)
-                      ],
-                    ),
-                  ),
-                ),
-              );
-          },),
-        )
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 24),
+      child: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  commonHeaderTitle(title: "Hello,",
+                      isChangeColor: true,
+                      color: lightFontColor,fontSize: 1.4,fontWeight: 1),
+                  commonVerticalSpacing(spacing: 5),
+                  commonHeaderTitle(title: "Anna",
+                      fontSize: 2,fontWeight: 3),
+                ],
+              ),
+              Row(
+                children: actionIcons(context),
+              )
+            ],
+          ),
+          commonVerticalSpacing(spacing: 25),
+          Row(
+            children: [
+              Expanded(child: commonCardView(title: "JH",subTitle: "99+")),
+              commonHorizontalSpacing(spacing: 20),
+              Expanded(child: commonCardView(title: "KK",subTitle: "50"))
+            ],
+          ),
+          commonVerticalSpacing(spacing: 27),
+          Row(
+            children: [
+              Expanded(child: commonCardView(title: "PM",subTitle: "99+")),
+              commonHorizontalSpacing(spacing: 20),
+              Expanded(child: commonCardView(title: "QM",subTitle: "50"))
+            ],
+          ),
+          commonVerticalSpacing(spacing: 27),
+          Row(
+            children: [
+              Expanded(child: commonCardView(title: "E&T",subTitle: "99+")),
+              commonHorizontalSpacing(spacing: 20),
+              Expanded(child: commonCardView(title: "SHE",subTitle: "50"))
+            ],
+          ),
+          commonVerticalSpacing(spacing: 27),
+          Row(
+            children: [
+              Expanded(child: commonCardView(title: "OTPM",subTitle: "99+")),
+              commonHorizontalSpacing(spacing: 20),
+              Expanded(child: commonCardView(title: "DM",subTitle: "50"))
+            ],
+          ),
+          commonVerticalSpacing(spacing: 27),
+          commonCardView(title: "GENERAL",subTitle: "5"),
+        ],
+      ),
     );
+    // return commonStructure(
+    //     context: context,
+    //     bgColor: blackColor,
+    //     appBar: commonAppbar(
+    //         context: context,title: "Hello, John",
+    //         isLeadingCCustom: true,
+    //         centerTitle: true,
+    //         leadingWidget: InkWell(
+    //       onTap: (){
+    //         Get.to(() => const MenuScreen());
+    //       },
+    //       child: Image(image: menuIconImage),
+    //     )),
+    //     child: ListView.builder(
+    //       itemCount: 15,
+    //       shrinkWrap: true,
+    //       itemBuilder: (context, index) {
+    //         return InkWell(
+    //           onTap: (){
+    //             Get.to(() => const PlantDashboardView());
+    //           },
+    //           child: Card(
+    //             margin: const EdgeInsets.all(10),
+    //             color: whiteColor,
+    //             elevation: 7.0,
+    //             shadowColor: greyColor.withOpacity(0.3),
+    //             shape: RoundedRectangleBorder(
+    //               borderRadius: BorderRadius.circular(10),
+    //             ),
+    //             child: Padding(
+    //               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
+    //               child: Row(
+    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //                 children: [
+    //                   Stack(
+    //                     children: <Widget>[
+    //                       Padding(padding: const EdgeInsets.only(right: 10,top: 8),child:
+    //                       commonHeaderTitle(title: "RM",color: blackColor,fontWeight: 2,fontSize: 1.2),
+    //                       ),
+    //                       Positioned(
+    //                         right: 0,
+    //                         top: 0,
+    //                         child: Container(
+    //                           decoration: const BoxDecoration(
+    //                               color: Color(0xffFF7777),
+    //                               shape: BoxShape.circle
+    //                           ),
+    //                           constraints: const BoxConstraints(
+    //                             minWidth: 12,
+    //                             minHeight: 12,
+    //                           ),
+    //                           child: const Center(
+    //                             child: Text(
+    //                               '10',
+    //                               style: TextStyle(
+    //                                 color: Colors.white,
+    //                                 fontSize: 8,
+    //                               ),
+    //                               textAlign: TextAlign.center,
+    //                             ),
+    //                           ),
+    //                         ),
+    //                       )
+    //                     ],
+    //                   ),
+    //                   Image(image: nextPageArrowImage)
+    //                 ],
+    //               ),
+    //             ),
+    //           ),
+    //         );
+    //       },)
+    // );
   }
 }
 

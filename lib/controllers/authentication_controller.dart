@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:my_projects/modules/dashboard/common_dashboard.dart';
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import '../models/boolean_response_model.dart';
@@ -21,7 +22,7 @@ class AuthenticationController extends GetxController {
             LoginResponseModel.fromJson(jsonDecode(response.data));
         setObject(ApiConfig.loginPref, loginResponseModel);
         setIsLogin(isLogin: true);
-        Get.offAll(() => const DashboardView());
+        Get.offAll(() => const CommonDashboard());
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
 
+import '../controllers/general_controller.dart';
 import '../modules/dashboard/dashboard_view.dart';
 import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
@@ -16,10 +18,39 @@ OutlineInputBorder textFieldBorderStyle = OutlineInputBorder(
   borderRadius: commonButtonBorderRadius,
 );
 
+BoxDecoration neurmorphicBoxDecoration = BoxDecoration(
+  boxShadow: GeneralController.to.isDarkMode.value ? [
+    BoxShadow(
+      color: Colors.white.withOpacity(0.1),
+      offset: const Offset(-6.0, -6.0),
+      blurRadius: 16.0,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(0.4),
+      offset: const Offset(6.0, 6.0),
+      blurRadius: 16.0,
+    ),
+  ] : [
+    BoxShadow(
+      color: Colors.white.withOpacity(0.8),
+      offset: const Offset(-6.0, -6.0),
+      blurRadius: 16.0,
+    ),
+    BoxShadow(
+      color: Colors.black.withOpacity(0.1),
+      offset: const Offset(6.0, 6.0),
+      blurRadius: 16.0,
+    ),
+  ],
+  color: ConvertTheme().getBackGroundColor(),
+  borderRadius: BorderRadius.circular(12.0),
+);
+
+
 Widget commonStructure({
   required BuildContext context,
   required Widget child,
-  AppBar? appBar,
+  PreferredSize? appBar,
   Color bgColor = whiteColor,
   Widget? bottomNavigation,
   Widget? floatingAction,
@@ -155,7 +186,7 @@ commonHeaderTitle({String title = "",
   bool isChangeColor = false,
   TextAlign align = TextAlign.start,
   FontStyle fontStyle = FontStyle.normal}){
-  return Obx(() => Text(
+  return Text(
     title,
     style: white14PxNormal
         .apply(
@@ -166,7 +197,7 @@ commonHeaderTitle({String title = "",
         fontWeightDelta: fontWeight)
         .merge(TextStyle(height: height)),
     textAlign: align,
-  ));
+  );
 }
 
 commonVerticalSpacing({double spacing = 10}){
@@ -177,35 +208,42 @@ commonHorizontalSpacing({double spacing = 10}){
   return SizedBox(width: spacing);
 }
 
-AppBar commonAppbar({BuildContext? context,
+PreferredSize commonAppbar({BuildContext? context,
   String title = "",
   bool isLeadingCCustom = false,
   Widget? leadingWidget,
   bool centerTitle = false}){
-  return AppBar(
-    backgroundColor: blackColor,
-    centerTitle: centerTitle,
-    title: commonHeaderTitle(title: title,fontSize: 1.3,fontWeight: 2),
-    leading: isLeadingCCustom ? leadingWidget! : InkWell(
+   return PreferredSize(
+       preferredSize: const Size.fromHeight(56.0),
+       child: Obx(() {
+       return AppBar(
+         backgroundColor: ConvertTheme().getBackGroundColor(),
+         centerTitle: centerTitle,
+         elevation: 0.0,
+         title: commonHeaderTitle(title: title,fontSize: 1.3,fontWeight: 2),
+         leading: isLeadingCCustom ? leadingWidget! : InkWell(
+             onTap: (){
+               Get.back();
+             },
+             child: Image(image: backIconImage)),
+         actions: actionIcons(context!),
+       );
+     }),
+   );
+}
+
+List<Widget> actionIcons(BuildContext context){
+  return [
+    InkWell(
       onTap: (){
-        Get.back();
+        showDialog(context: context, builder: (BuildContext context) => const CustomDialog());
       },
-        child: Image(image: backIconImage)),
-    actions: [
-      InkWell(
-        onTap: (){
-          showDialog(context: context!, builder: (BuildContext context) => const CustomDialog());
-        },
-        child: Image
-          (image: plantIconImage,height: 30,width: 30),
-      ),
-      commonHorizontalSpacing(),
-      const Padding(
-        padding: EdgeInsets.only(right: 10.0),
-        child: Icon(Icons.notifications,color: whiteColor),
-      ),
-    ],
-  );
+      child: Image
+        (image: plantIconImage,color: ConvertTheme().getWhiteToFontColor()),
+    ),
+    commonHorizontalSpacing(spacing: 15),
+    Icon(Icons.notifications,color: ConvertTheme().getWhiteToFontColor(),size: 32),
+  ];
 }
 
 Widget commonRoundedContainer({BuildContext? context,Widget? child, double commonMargin = 20}){
@@ -219,4 +257,10 @@ Widget commonRoundedContainer({BuildContext? context,Widget? child, double commo
    ),
    child: child,
  );
+}
+
+Widget commonNeumorphicView({Widget? child}){
+  return Container(
+      decoration: neurmorphicBoxDecoration,
+      child: child);
 }

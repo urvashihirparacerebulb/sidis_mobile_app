@@ -10,6 +10,8 @@ import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/constants.dart';
+import '../dashboard/common_dashboard.dart';
+import '../dashboard/dashboard_view.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -42,14 +44,15 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           child: const Icon(Icons.navigate_next_outlined, size: 30),
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                Map<String, dynamic> params = {
-                  "loginemail": userNameController.text,
-                  "loginpassword": passwordController.text,
-                };
-                AuthenticationController.to.loginAPI(params);
-              }
+              Get.to(() => const CommonDashboard());
+              // if (_formKey.currentState!.validate()) {
+              //   _formKey.currentState!.save();
+              //   Map<String, dynamic> params = {
+              //     "loginemail": userNameController.text,
+              //     "loginpassword": passwordController.text,
+              //   };
+              //   AuthenticationController.to.loginAPI(params);
+              // }
             },
           ),
         ),
@@ -153,49 +156,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 commonVerticalSpacing(spacing: 30),
                 commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2),
                 commonVerticalSpacing(),
-                // InkWell(
-                //   onTap: (){
-                //     Get.to(() => const MyLockView());
-                //     // showModalBottomSheet(
-                //     //   context: context,
-                //     //   builder: (context) {
-                //     //     return Container(
-                //     //       margin: const EdgeInsets.all(30),
-                //     //       child: Wrap(
-                //     //         crossAxisAlignment: WrapCrossAlignment.center,
-                //     //         alignment: WrapAlignment.center,
-                //     //         children: [
-                //     //           Row(
-                //     //             mainAxisAlignment: MainAxisAlignment.center,
-                //     //             crossAxisAlignment: CrossAxisAlignment.center,
-                //     //             children: [
-                //     //               commonHeaderTitle(title: "Use ",color: blackColor,fontSize: 1.3),
-                //     //               commonHeaderTitle(title: "Finger Print ",color: blackColor,fontWeight: 2,fontSize: 1.3),
-                //     //               commonHeaderTitle(title: "to log in",color: blackColor,fontSize: 1.3),
-                //     //             ],
-                //     //           ),
-                //     //
-                //     //           commonVerticalSpacing(spacing: 80),
-                //     //           InkWell(
-                //     //             onTap: (){},
-                //     //               child: const Icon(Icons.fingerprint,size: 80,color: primaryColor,))
-                //     //         ],
-                //     //       ),
-                //     //     );
-                //     //   },
-                //     // );
-                //   },
-                //   child: Container(
-                //     width: 30,
-                //     height: 40,
-                //     decoration: BoxDecoration(
-                //         color: primaryColor,
-                //         borderRadius: commonBorderRadius
-                //     ),
-                //     child: const Icon(Icons.fingerprint),
-                //   ),
-                // ),
-
                 Neumorphic(
                     style: NeumorphicStyle(
                         shape: NeumorphicShape.concave,

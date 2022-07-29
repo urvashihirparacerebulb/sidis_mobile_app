@@ -15,7 +15,11 @@ ExactAssetImage nextPageArrowImage = const ExactAssetImage('assets/images/next_p
 ExactAssetImage watermarkImage = const ExactAssetImage('assets/images/watermark_logo.png');
 ExactAssetImage assignedAbnormalityImage = const ExactAssetImage('assets/images/assigned_abnormality_icon@2x.png',scale: 2);
 ExactAssetImage clitaActivityImage = const ExactAssetImage('assets/images/clita_activity@2x.png',scale: 2);
-ExactAssetImage plantIconImage = const ExactAssetImage('assets/images/plant_icon@2x.png',scale: 2.5);
+ExactAssetImage plantIconImage = const ExactAssetImage('assets/images/plant_icon@2x.png',scale: 2.0);
+ExactAssetImage dashboardIconImage = const ExactAssetImage('assets/icons/dashboardIcon.png',scale: 2.2);
+ExactAssetImage listingIconImage = const ExactAssetImage('assets/icons/listing.png',scale: 2.2);
+ExactAssetImage profileIconImage = const ExactAssetImage('assets/icons/profile.png',scale: 2.2);
+ExactAssetImage defaultGraphImage = const ExactAssetImage('assets/images/defualt_graph.png');
 
 ExactAssetImage dashboardImage = const ExactAssetImage('assets/icons/Dashboard.png');
 ExactAssetImage companiesImage = const ExactAssetImage('assets/icons/Companies@2x.png',scale: 2);

@@ -88,33 +88,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => Container(
-        decoration: BoxDecoration(
-          boxShadow: GeneralController.to.isDarkMode.value ? [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.1),
-              offset: const Offset(-6.0, -6.0),
-              blurRadius: 16.0,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.4),
-              offset: const Offset(6.0, 6.0),
-              blurRadius: 16.0,
-            ),
-          ] : [
-            BoxShadow(
-              color: Colors.white.withOpacity(0.8),
-              offset: const Offset(-6.0, -6.0),
-              blurRadius: 16.0,
-            ),
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              offset: const Offset(6.0, 6.0),
-              blurRadius: 16.0,
-            ),
-          ],
-          color: ConvertTheme().getTextFiledBackGroundColor(),
-          borderRadius: BorderRadius.circular(12.0),
-        ),
+        decoration: neurmorphicBoxDecoration,
       child: TextFormField(
         enabled: !widget.isEnabled ? false : true,
         textAlign: widget.align,
