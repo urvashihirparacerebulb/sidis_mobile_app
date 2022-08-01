@@ -1,17 +1,50 @@
+import 'dart:convert';
 
-class BusinessDataResponse {
-  BusinessDataResponse({
-    this.bussinessData,
+BusinessDataResponseModel welcomeFromJson(String str) => BusinessDataResponseModel.fromJson(json.decode(str));
+
+String welcomeToJson(BusinessDataResponseModel data) => json.encode(data.toJson());
+
+class BusinessDataResponseModel {
+  BusinessDataResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
   });
 
-  List<BusinessData>? bussinessData;
+  int? statusCode;
+  bool? status;
+  String? message;
+  BusinessDataResponse? data;
 
-  factory BusinessDataResponse.fromJson(Map<String, dynamic> json) => BusinessDataResponse(
-    bussinessData: List<BusinessData>.from(json["bussiness_data"].map((x) => BusinessData.fromJson(x))),
+  factory BusinessDataResponseModel.fromJson(Map<String, dynamic> json) => BusinessDataResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: BusinessDataResponse.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
-    "bussiness_data": bussinessData == null ? [] : List<dynamic>.from(bussinessData!.map((x) => x.toJson())),
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class BusinessDataResponse {
+  BusinessDataResponse({
+    this.data,
+  });
+
+  List<BusinessData>? data;
+
+  factory BusinessDataResponse.fromJson(Map<String, dynamic> json) => BusinessDataResponse(
+    data: List<BusinessData>.from(json["data"].map((x) => BusinessData.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
   };
 }
 

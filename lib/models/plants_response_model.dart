@@ -1,7 +1,36 @@
+class PlantsResponse {
+  PlantsResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  PlantsResponseModel? data;
+
+  factory PlantsResponse.fromJson(Map<String, dynamic> json) => PlantsResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: PlantsResponseModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
 class PlantsResponseModel {
   PlantsResponseModel({
     this.companyBusinessPlants,
   });
+
 
   List<CompanyBusinessPlant>? companyBusinessPlants;
 

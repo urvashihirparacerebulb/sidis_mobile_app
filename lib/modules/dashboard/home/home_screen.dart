@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:get/get.dart';
 import 'package:my_projects/utility/screen_utility.dart';
 import '../../../common_widgets/common_widget.dart';
-import '../../../controllers/general_controller.dart';
 import '../../../utility/assets_utility.dart';
 import '../../../utility/color_utility.dart';
 
@@ -21,23 +19,29 @@ class _HomeScreenState extends State<HomeScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 24),
       child: ListView(
         children: [
+          commonVerticalSpacing(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Obx(() => Image(image: GeneralController.to.isDarkMode.value ? horizontalAppLogoDark : horizontalAppLogoLight,height: 60),),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  commonHeaderTitle(title: "Current Working Plant",
+                      isChangeColor: true,
+                      color: lightFontColor,fontSize: 0.90,fontWeight: 1),
+                  commonVerticalSpacing(spacing: 5),
+                  commonHeaderTitle(title: "SKAPS_Woven_Unit2(102)",
+                      fontSize: 1,fontWeight: 1),
+                ],
+              ),
+              commonHorizontalSpacing(),
               Row(
                 children: actionIcons(context),
               )
             ],
           ),
           commonVerticalSpacing(spacing: 20),
-          commonHeaderTitle(title: "Current Working Plant",
-              isChangeColor: true,
-              color: lightFontColor,fontSize: 0.90,fontWeight: 1),
-          commonVerticalSpacing(spacing: 5),
-          commonHeaderTitle(title: "SKAPS_Woven_Unit2(102)",
-              fontSize: 1,fontWeight: 1),
-          commonVerticalSpacing(spacing: 17),
           commonNeumorphicView(child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(

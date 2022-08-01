@@ -10,8 +10,6 @@ import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/constants.dart';
-import '../dashboard/common_dashboard.dart';
-import '../dashboard/dashboard_view.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -44,15 +42,15 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           child: const Icon(Icons.navigate_next_outlined, size: 30),
             onPressed: () {
-              Get.to(() => const CommonDashboard());
-              // if (_formKey.currentState!.validate()) {
-              //   _formKey.currentState!.save();
-              //   Map<String, dynamic> params = {
-              //     "loginemail": userNameController.text,
-              //     "loginpassword": passwordController.text,
-              //   };
-              //   AuthenticationController.to.loginAPI(params);
-              // }
+              // Get.to(() => const CommonDashboard());
+              if (_formKey.currentState!.validate()) {
+                _formKey.currentState!.save();
+                Map<String, dynamic> params = {
+                  "loginemail": userNameController.text,
+                  "loginpassword": passwordController.text,
+                };
+                AuthenticationController.to.loginAPI(params);
+              }
             },
           ),
         ),
@@ -73,110 +71,97 @@ class _LoginScreenState extends State<LoginScreen> {
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
             key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                commonVerticalSpacing(),
-                Obx(() => Image(image: GeneralController.to.isDarkMode.value ? horizontalAppLogoDark : horizontalAppLogoLight,height: 80),),
-                commonVerticalSpacing(spacing: 20),
-                commonHeaderTitle(title: infoMsg,fontSize: 1.4,align: TextAlign.center,height: 1.3,fontWeight: 3),
-                commonVerticalSpacing(spacing: 40),
-                CommonTextFiled(
-                  fieldTitleText: userName,
-                  hintText: userName,
-                  textEditingController: userNameController,
-                  onChangedFunction: (String value){
-                  },
-                  validationFunction: (String value) {
-                    return value.toString().isEmpty
-                        ? notEmptyFieldMessage
-                        : null;
-                  },),
-                commonVerticalSpacing(spacing: 25),
-                CommonTextFiled(
-                  fieldTitleText: passwordText,
-                  hintText: passwordText,
-                  isPassword: true,
-                  textEditingController: passwordController,
-                  onChangedFunction: (String value){
-                  },
-                  validationFunction: (String value) {
-                    return value.toString().isEmpty
-                        ? notEmptyFieldMessage
-                        : null;
-                  },),
-                commonVerticalSpacing(spacing: 25),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    StatefulBuilder(builder: (context, newSetState) => Row(
-                      children: [
-                        InkWell(
-                            onTap: (){
-                              newSetState((){
-                                isRemember = !isRemember;
-                              });
-                            },
-                            child: Image(image: isRemember ? checkedImage : unCheckedImage,
-                                width: 20,height: 20,
-                                color: ConvertTheme().getWhiteToFontColor())
+            child: Align(
+              alignment: Alignment.center,
+              child: ListView(
+                // mainAxisSize: MainAxisSize.min,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                // crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  commonVerticalSpacing(spacing: 20),
+                  Obx(() => Image(image: GeneralController.to.isDarkMode.value ? horizontalAppLogoDark : horizontalAppLogoLight,height: 80),),
+                  commonVerticalSpacing(spacing: 20),
+                  commonHeaderTitle(title: infoMsg,fontSize: 1.4,align: TextAlign.center,height: 1.3,fontWeight: 3),
+                  commonVerticalSpacing(spacing: 40),
+                  CommonTextFiled(
+                    fieldTitleText: userName,
+                    hintText: userName,
+                    textEditingController: userNameController,
+                    onChangedFunction: (String value){
+                    },
+                    validationFunction: (String value) {
+                      return value.toString().isEmpty
+                          ? notEmptyFieldMessage
+                          : null;
+                    },),
+                  commonVerticalSpacing(spacing: 25),
+                  CommonTextFiled(
+                    fieldTitleText: passwordText,
+                    hintText: passwordText,
+                    isPassword: true,
+                    textEditingController: passwordController,
+                    onChangedFunction: (String value){
+                    },
+                    validationFunction: (String value) {
+                      return value.toString().isEmpty
+                          ? notEmptyFieldMessage
+                          : null;
+                    },),
+                  commonVerticalSpacing(spacing: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      StatefulBuilder(builder: (context, newSetState) => Row(
+                        children: [
+                          InkWell(
+                              onTap: (){
+                                newSetState((){
+                                  isRemember = !isRemember;
+                                });
+                              },
+                              child: Image(image: isRemember ? checkedImage : unCheckedImage,
+                                  width: 20,height: 20,
+                                  color: ConvertTheme().getWhiteToFontColor())
+                          ),
+                          commonHorizontalSpacing(spacing: 6),
+                          commonHeaderTitle(title: reMemberMe,fontSize: 1,fontWeight: 1),
+                        ],
+                      )),
+                      InkWell(
+                        onTap: (){
+                          Get.to(() => const ForgotPasswordView());
+                        },
+                        child: commonHeaderTitle(title: "$forgotPassword?",fontSize: 1,fontWeight: 1),
+                      )
+                    ],
+                  ),
+                  commonVerticalSpacing(spacing: 30),
+                  commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2,align: TextAlign.center),
+                  commonVerticalSpacing(),
+                  Center(
+                    child: Neumorphic(
+                        style: NeumorphicStyle(
+                            shape: NeumorphicShape.concave,
+                            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                            depth: 8,
+                            color: Colors.grey
                         ),
-                        commonHorizontalSpacing(spacing: 6),
-                        commonHeaderTitle(title: reMemberMe,fontSize: 1,fontWeight: 1),
-                      ],
-                    )),
-                    InkWell(
-                      onTap: (){
-                        Get.to(() => const ForgotPasswordView());
-                      },
-                      child: commonHeaderTitle(title: "$forgotPassword?",fontSize: 1,fontWeight: 1),
-                    )
-                  ],
-                ),
-                // commonVerticalSpacing(spacing: 30),
-                // commonFillButtonView(
-                //     context: context,
-                //     title: signIn,
-                //     width: getScreenWidth(context) - 40,
-                //     height: 50,
-                //     tapOnButton: () {
-                //       if (_formKey.currentState!.validate()) {
-                //         _formKey.currentState!.save();
-                //         Map<String, dynamic> params = {
-                //           "loginemail": userNameController.text,
-                //           "loginpassword": passwordController.text,
-                //         };
-                //         AuthenticationController.to.loginAPI(params);
-                //       }
-                //     },
-                //     isLoading: false
-                // ),
-                commonVerticalSpacing(spacing: 30),
-                commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2),
-                commonVerticalSpacing(),
-                Neumorphic(
-                    style: NeumorphicStyle(
-                        shape: NeumorphicShape.concave,
-                        boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-                        depth: 8,
-                        color: Colors.grey
+                        child: Container(
+                          width: 30,
+                          height: 40,
+                          decoration: BoxDecoration(
+                              color: ConvertTheme().getWhiteToFontColor(),
+                              borderRadius: commonBorderRadius
+                          ),
+                          child: Icon(Icons.fingerprint,color: ConvertTheme().getFontToWhiteColor()),
+                        ),
                     ),
-                    child: Container(
-                      width: 30,
-                      height: 40,
-                      decoration: BoxDecoration(
-                          color: ConvertTheme().getWhiteToFontColor(),
-                          borderRadius: commonBorderRadius
-                      ),
-                      child: Icon(Icons.fingerprint,color: ConvertTheme().getFontToWhiteColor()),
-                    ),
-                ),
-                commonVerticalSpacing(spacing: 15),
-                commonHeaderTitle(title: loginWithFinger,fontWeight: 2,fontSize: 1),
-                commonVerticalSpacing(spacing: 60),
-              ],
+                  ),
+                  commonVerticalSpacing(spacing: 15),
+                  commonHeaderTitle(title: loginWithFinger,fontWeight: 2,fontSize: 1,align: TextAlign.center),
+                  commonVerticalSpacing(spacing: 60),
+                ],
+              ),
             ),
           ),
         ),

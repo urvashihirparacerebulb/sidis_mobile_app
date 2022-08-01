@@ -30,9 +30,9 @@ class DropDownDataController extends GetxController {
       },
       serviceUrl: ApiConfig.businessListURL,
       success: (dio.Response<dynamic> response) {
-        BusinessDataResponse businessDataResponse =
-        BusinessDataResponse.fromJson(jsonDecode(response.data));
-        bussinessData!.addAll(businessDataResponse.bussinessData ?? []);
+        BusinessDataResponseModel businessDataResponse =
+        BusinessDataResponseModel.fromJson(jsonDecode(response.data));
+        bussinessData!.addAll(businessDataResponse.data?.data ?? []);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -52,9 +52,9 @@ class DropDownDataController extends GetxController {
       },
       serviceUrl: ApiConfig.plantsListURL,
       success: (dio.Response<dynamic> response) {
-        PlantsResponseModel plantsResponseModel =
-        PlantsResponseModel.fromJson(jsonDecode(response.data));
-        companyBusinessPlants!.addAll(plantsResponseModel.companyBusinessPlants ?? []);
+        PlantsResponse plantsResponseModel =
+        PlantsResponse.fromJson(jsonDecode(response.data));
+        companyBusinessPlants!.addAll(plantsResponseModel.data?.companyBusinessPlants ?? []);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -74,9 +74,9 @@ class DropDownDataController extends GetxController {
       },
       serviceUrl: ApiConfig.machineListURL,
       success: (dio.Response<dynamic> response) {
-        MachineResponseModel machineResponseModel =
-        MachineResponseModel.fromJson(jsonDecode(response.data));
-        machinesList!.addAll(machineResponseModel.machineData ?? []);
+        MachineResponse machineResponseModel =
+        MachineResponse.fromJson(jsonDecode(response.data));
+        machinesList!.addAll(machineResponseModel.data?.machineData ?? []);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -97,9 +97,9 @@ class DropDownDataController extends GetxController {
       },
       serviceUrl: ApiConfig.subMachineListURL,
       success: (dio.Response<dynamic> response) {
-        SubMachineResponseModel subMachineResponseModel =
-        SubMachineResponseModel.fromJson(jsonDecode(response.data));
-        subMachinesList!.addAll(subMachineResponseModel.submachineArray ?? []);
+        SubMachineResponse subMachineResponseModel =
+        SubMachineResponse.fromJson(jsonDecode(response.data));
+        subMachinesList!.addAll(subMachineResponseModel.data?.submachineArray ?? []);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

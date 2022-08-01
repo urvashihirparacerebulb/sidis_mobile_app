@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../common_widgets/common_widget.dart';
-import '../../utility/color_utility.dart';
-import '../../utility/constants.dart';
-import '../plant_dashboard/plant_dashboard_view.dart';
+import '../../../common_widgets/common_widget.dart';
+import '../../../utility/color_utility.dart';
+import '../../../utility/constants.dart';
+import '../../plant_dashboard/plant_dashboard_view.dart';
+import 'list_dashboard_view.dart';
 
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
@@ -17,31 +18,36 @@ class _DashboardViewState extends State<DashboardView> {
 
   commonCardView({String title = "", String subTitle = ""}){
     return commonNeumorphicView(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 24.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 5),
-              child: commonHeaderTitle(title: title,
-                  fontSize: 1.8,fontWeight: 1),
-            ),
-            Container(
-              padding: const EdgeInsets.all(8.0),
-              decoration: const BoxDecoration(
-                  color: primaryColor,
-                  shape: BoxShape.circle
-              ),
-              child: Padding(
+      child: InkWell(
+        onTap: (){
+          Get.to(() => const ListDashboardView());
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: commonHeaderTitle(title: subTitle,fontSize: 0.85,
-                    fontWeight: 2,color: blackColor,
-                    isChangeColor: true,align: TextAlign.center),
+                child: commonHeaderTitle(title: title,
+                    fontSize: 1.8,fontWeight: 1),
               ),
-            ),
-          ],
+              Container(
+                padding: const EdgeInsets.all(8.0),
+                decoration: const BoxDecoration(
+                    color: primaryColor,
+                    shape: BoxShape.circle
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: commonHeaderTitle(title: subTitle,fontSize: 0.85,
+                      fontWeight: 2,color: blackColor,
+                      isChangeColor: true,align: TextAlign.center),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

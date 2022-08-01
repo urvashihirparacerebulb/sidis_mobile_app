@@ -1,3 +1,32 @@
+
+class MachineResponse {
+  MachineResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  MachineResponseModel? data;
+
+  factory MachineResponse.fromJson(Map<String, dynamic> json) => MachineResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: MachineResponseModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
 class MachineResponseModel {
   MachineResponseModel({
     this.machineData,
@@ -11,6 +40,34 @@ class MachineResponseModel {
 
   Map<String, dynamic> toJson() => {
     "machine_data": machineData == null ? [] : List<dynamic>.from(machineData!.map((x) => x.toJson())),
+  };
+}
+
+class SubMachineResponse {
+  SubMachineResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  SubMachineResponseModel? data;
+
+  factory SubMachineResponse.fromJson(Map<String, dynamic> json) => SubMachineResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: SubMachineResponseModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
   };
 }
 

@@ -87,8 +87,8 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
 
   @override
   Widget build(BuildContext context) {
-    return Obx(() => Container(
-        decoration: neurmorphicBoxDecoration,
+    return Container(
+      decoration: neurmorphicBoxDecoration,
       child: TextFormField(
         enabled: !widget.isEnabled ? false : true,
         textAlign: widget.align,
@@ -176,7 +176,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
               : null,
         ),
       ),
-    ));
+    );
   }
 }
 

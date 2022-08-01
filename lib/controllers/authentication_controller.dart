@@ -2,12 +2,12 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:my_projects/modules/dashboard/common_dashboard.dart';
+import 'package:my_projects/modules/dashboard/dashboard_listing/common_dashboard.dart';
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import '../models/boolean_response_model.dart';
 import '../models/login_response_model.dart';
-import '../modules/dashboard/dashboard_view.dart';
+import '../modules/dashboard/dashboard_listing/dashboard_view.dart';
 import '../utility/common_methods.dart';
 
 class AuthenticationController extends GetxController {

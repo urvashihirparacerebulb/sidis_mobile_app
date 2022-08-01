@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:my_projects/controllers/general_controller.dart';
 import 'package:my_projects/utility/assets_utility.dart';
 
-import '../../theme/convert_theme_colors.dart';
-import '../../utility/color_utility.dart';
-import '../../utility/common_methods.dart';
-import '../../utility/constants.dart';
+import '../../../theme/convert_theme_colors.dart';
+import '../../../utility/color_utility.dart';
+import '../../../utility/common_methods.dart';
+import '../../../utility/constants.dart';
 import 'dashboard_view.dart';
-import 'home/home_screen.dart';
+import '../home/home_screen.dart';
 
 class CommonDashboard extends StatefulWidget {
   const CommonDashboard({Key? key}) : super(key: key);

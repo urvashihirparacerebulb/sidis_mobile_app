@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
 
 import '../controllers/general_controller.dart';
-import '../modules/dashboard/dashboard_view.dart';
+import '../modules/dashboard/dashboard_listing/dashboard_view.dart';
 import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
 import '../utility/screen_utility.dart';
@@ -225,7 +225,7 @@ PreferredSize commonAppbar({BuildContext? context,
              onTap: (){
                Get.back();
              },
-             child: Image(image: backIconImage)),
+             child: Image(image: backIconImage,color: ConvertTheme().getWhiteToFontColor())),
          actions: actionIcons(context!),
        );
      }),

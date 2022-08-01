@@ -4,14 +4,14 @@ import 'package:my_projects/utility/assets_utility.dart';
 import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/common_methods.dart';
 
-import '../../common_widgets/common_widget.dart';
-import '../../controllers/authentication_controller.dart';
-import '../../utility/constants.dart';
-import '../login/login_screen.dart';
-import 'abnormality_form/add_abnormaliry_view.dart';
-import 'assigned_form/add_assigned_form_view.dart';
-import 'clita module/add_clita_fill_form_view.dart';
-import 'clita module/add_clita_no_list_view.dart';
+import '../../../common_widgets/common_widget.dart';
+import '../../../controllers/authentication_controller.dart';
+import '../../../utility/constants.dart';
+import '../../login/login_screen.dart';
+import '../abnormality_form/add_abnormaliry_view.dart';
+import '../assigned_form/add_assigned_form_view.dart';
+import '../clita module/add_clita_fill_form_view.dart';
+import '../clita module/add_clita_no_list_view.dart';
 
 class MenuScreen extends StatefulWidget {
   const MenuScreen({Key? key}) : super(key: key);

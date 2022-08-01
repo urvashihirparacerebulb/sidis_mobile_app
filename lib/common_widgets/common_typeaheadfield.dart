@@ -67,60 +67,63 @@ class _CommonTypeAheadTextFieldState extends State<CommonTypeAheadTextField> {
     //     ),
     //   ),
     // );
-    return TypeAheadFormField(
-      textFieldConfiguration: TextFieldConfiguration(
-        controller: widget.controller,
-        style: white14PxNormal.apply(color: blackColor,fontSizeFactor: 1.2),
-        autofocus: false,
-        decoration: InputDecoration(
-            fillColor: bgColor.withOpacity(0.8),
-            filled: true,
-            focusedBorder: textFieldBorderStyle,
-            disabledBorder: textFieldBorderStyle,
-            enabledBorder: textFieldBorderStyle,
-            errorBorder: textFieldBorderStyle,
-            focusedErrorBorder: textFieldBorderStyle,
-            hintText: widget.hintText,
-            contentPadding: const EdgeInsets.fromLTRB(10.0,0,10,20),
-            hintStyle: white14PxNormal.copyWith(
-                color: blackColor.withOpacity(0.4)),
-            suffixIcon: const Icon(Icons.arrow_drop_down, color: fontColor)),
-        onChanged: (text) {
+    return Container(
+      decoration: neurmorphicBoxDecoration,
+      child: TypeAheadFormField(
+        textFieldConfiguration: TextFieldConfiguration(
+          controller: widget.controller,
+          style: white14PxNormal.apply(color: blackColor,fontSizeFactor: 1.2),
+          autofocus: false,
+          decoration: InputDecoration(
+              fillColor: bgColor.withOpacity(0.8),
+              filled: true,
+              focusedBorder: textFieldBorderStyle,
+              disabledBorder: textFieldBorderStyle,
+              enabledBorder: textFieldBorderStyle,
+              errorBorder: textFieldBorderStyle,
+              focusedErrorBorder: textFieldBorderStyle,
+              hintText: widget.hintText,
+              contentPadding: const EdgeInsets.fromLTRB(10.0,0,10,20),
+              hintStyle: white14PxNormal.copyWith(
+                  color: blackColor.withOpacity(0.4)),
+              suffixIcon: const Icon(Icons.arrow_drop_down, color: fontColor)),
+          onChanged: (text) {
+            setState(() {
+              widget.clearCallback!();
+            });
+          },
+        ),
+        validator: (value) {
+          return widget.validationFunction != null ? widget.validationFunction!(value) : null;
+        },
+        suggestionsBoxDecoration: const SuggestionsBoxDecoration(color: whiteColor),
+        suggestionsCallback: (pattern) async {
+          return ["qbsdv","Efse","dfdfds"];
+        },
+        transitionBuilder: (context, suggestionsBox, controller) {
+          return suggestionsBox;
+        },
+        itemBuilder: (context, String? text) {
+          return text == null
+              ? Container()
+              : ListTile(
+            title: Text(
+              text,
+              style: white14PxNormal.copyWith(color: fontColor),
+            ),
+          );
+        },
+        onSuggestionSelected: (String? suggestion) {
           setState(() {
-            widget.clearCallback!();
+            if (suggestion != null) {
+              FocusScope.of(context).unfocus();
+              if (widget.selectionCallBack != null) {
+                widget.selectionCallBack!(suggestion);
+              }
+            }
           });
         },
       ),
-      validator: (value) {
-        return widget.validationFunction != null ? widget.validationFunction!(value) : null;
-      },
-      suggestionsBoxDecoration: const SuggestionsBoxDecoration(color: whiteColor),
-      suggestionsCallback: (pattern) async {
-        return ["qbsdv","Efse","dfdfds"];
-      },
-      transitionBuilder: (context, suggestionsBox, controller) {
-        return suggestionsBox;
-      },
-      itemBuilder: (context, String? text) {
-        return text == null
-            ? Container()
-            : ListTile(
-          title: Text(
-            text,
-            style: white14PxNormal.copyWith(color: fontColor),
-          ),
-        );
-      },
-      onSuggestionSelected: (String? suggestion) {
-        setState(() {
-          if (suggestion != null) {
-            FocusScope.of(context).unfocus();
-            if (widget.selectionCallBack != null) {
-              widget.selectionCallBack!(suggestion);
-            }
-          }
-        });
-      },
     );
   }
 }
