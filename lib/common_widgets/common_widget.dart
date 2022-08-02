@@ -220,7 +220,10 @@ PreferredSize commonAppbar({BuildContext? context,
          backgroundColor: ConvertTheme().getBackGroundColor(),
          centerTitle: centerTitle,
          elevation: 0.0,
-         title: commonHeaderTitle(title: title,fontSize: 1.3,fontWeight: 2),
+         title: Padding(
+           padding: const EdgeInsets.only(top: 5),
+           child: commonHeaderTitle(title: title,fontSize: 1.3,fontWeight: 2,align: TextAlign.center),
+         ),
          leading: isLeadingCCustom ? leadingWidget! : InkWell(
              onTap: (){
                Get.back();
@@ -232,7 +235,7 @@ PreferredSize commonAppbar({BuildContext? context,
    );
 }
 
-List<Widget> actionIcons(BuildContext context){
+List<Widget> actionIcons(BuildContext context,{isAllowSpacing = false}){
   return [
     InkWell(
       onTap: (){
@@ -241,8 +244,11 @@ List<Widget> actionIcons(BuildContext context){
       child: Image
         (image: plantIconImage,color: ConvertTheme().getWhiteToFontColor()),
     ),
-    commonHorizontalSpacing(spacing: 15),
+    if(isAllowSpacing)
+      commonHorizontalSpacing(spacing: 15),
     Icon(Icons.notifications,color: ConvertTheme().getWhiteToFontColor(),size: 32),
+    if(!isAllowSpacing)
+      commonHorizontalSpacing(),
   ];
 }
 

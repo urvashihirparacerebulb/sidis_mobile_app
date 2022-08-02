@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:my_projects/controllers/dropdown_data_controller.dart';
 import 'package:my_projects/models/business_data_model.dart';
 import 'package:my_projects/models/machines_response_model.dart';
 import 'package:my_projects/utility/constants.dart';
-
-import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_typeaheadfield.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../models/plants_response_model.dart';
@@ -14,6 +13,7 @@ import '../../../textfields/business_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../utility/color_utility.dart';
+import '../../../utility/common_methods.dart';
 
 class CLITAFillFormView extends StatefulWidget {
   const CLITAFillFormView({Key? key}) : super(key: key);
@@ -33,10 +33,13 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
   MachineData? machineData;
+  String selectedDate = "";
 
   @override
   void initState() {
-    DropDownDataController.to.getBusinesses();
+    if(DropDownDataController.to.businessData!.isEmpty) {
+      DropDownDataController.to.getBusinesses();
+    }
     super.initState();
   }
 
@@ -49,7 +52,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Obx((){
-            return DropDownDataController.to.bussinessData!.isEmpty ? const SpinKitThreeBounce(
+            return DropDownDataController.to.businessData!.isEmpty ? const SpinKitThreeBounce(
               color: primaryColor,
               size: 30.0,
             ) : Stack(
@@ -61,7 +64,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                     BusinessTextField(
                       controller: businessController,
                       hintText: "Select Business",
-                      myItems: DropDownDataController.to.bussinessData!,
+                      myItems: DropDownDataController.to.businessData!,
                       clearCallback: (){
 
                       },
@@ -92,7 +95,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                           selectedPlant = val;
                           plantsController.text = selectedPlant!.soleName ?? "";
                           if(selectedPlant != null) {
-                            DropDownDataController.to.getMachines(plantId: selectedPlant!.soleId.toString());
+                            DropDownDataController.to.getMachines(plantId: selectedPlant!.soleId);
                           }
                         });
                       },
@@ -113,6 +116,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                         setState(() {
                           machineData = val;
                           machineController.text = machineData?.machineName ?? "";
+                          if(machineData != null){
+                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId);
+                          }
                         });
                       },
                       validationFunction: (String val){
@@ -120,38 +126,71 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                       },
                     ),
                     commonVerticalSpacing(spacing: 20),
+                    Visibility(
+                      visible: machineData == null ? false : true,
+                      child: MachineTextFiled(
+                        controller: subMachineController,
+                        myItems: DropDownDataController.to.subMachinesList!,
+                        hintText: "Select Sub Machine",
+                        clearCallback: (){
+
+                        },
+                        selectionCallBack: (MachineData val){
+                          setState(() {
+                            machineData = val;
+                            subMachineController.text = machineData?.machineName ?? "";
+                          });
+                        },
+                        validationFunction: (String val){
+
+                        },
+                      ),
+                    ),
+                    commonVerticalSpacing(spacing: machineData == null ? 0 : 20),
                     CommonTypeAheadTextField(
                       controller: intervalController,
-                      myItems: [],
+                      myItems: DropDownDataController.to.intervalList,
                       hintText: "Select Interval",
                       clearCallback: (){
 
                       },
                       selectionCallBack: (String val){
-
+                        setState(() {
+                          intervalController.text = val;
+                        });
                       },
                       validationFunction: (String val){
 
                       },
                     ),
                     commonVerticalSpacing(spacing: 20),
-                    CommonTextFiled(
-                      fieldTitleText: "Select Date",
-                      hintText: "Select Date",
-                      // isBorderEnable: false,
-                      isChangeFillColor: true,
-                      textEditingController: dateController,
-                      suffixIcon: InkWell(
-                        onTap: (){},
-                        child: const Icon(Icons.calendar_month),
-                      ),
-                      onChangedFunction: (String value){
-                      },
-                      validationFunction: (String value) {
-                        return value.toString().isEmpty
-                            ? notEmptyFieldMessage
-                            : null;
-                      },),
+                    Container(
+                        height: 48,
+                        padding: EdgeInsets.symmetric(horizontal: commonHorizontalPadding),
+                        decoration: neurmorphicBoxDecoration,
+                        child: Stack(
+                          children: [
+                            Align(
+                                alignment: Alignment.centerLeft,
+                                child: commonHeaderTitle(title: selectedDate.isEmpty ? "Select Date" : selectedDate)
+                            ),
+                            Align(
+                                alignment: Alignment.centerRight,
+                                child: InkWell(
+                                  onTap: () {
+                                    openCalendarView(
+                                        context,
+                                        initialDate: DateTime.now().toString(),
+                                    ).then((value) {
+                                      setState(() {
+                                        selectedDate = DateFormat("dd/MM/yyyy").format(value);
+                                      });
+                                    });
+                                  },
+                                  child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
+                                )),
+                          ],
+                        )),
                   ],
                 ),
                 // Positioned(

@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               commonHorizontalSpacing(),
               Row(
-                children: actionIcons(context),
+                children: actionIcons(context,isAllowSpacing: true),
               )
             ],
           ),

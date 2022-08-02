@@ -40,6 +40,7 @@ dependencies:
   fluttertoast: ^8.0.9
   dio: ^4.0.6
   connectivity_plus: ^2.3.0
+  intl:
 #
 #dependency_overrides:
 #  path_provider: any

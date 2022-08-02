@@ -42,6 +42,35 @@ class ActivityData {
   };
 }
 
+class IntervalResponse {
+  IntervalResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  IntervalResponseModel? data;
+
+  factory IntervalResponse.fromJson(Map<String, dynamic> json) => IntervalResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: IntervalResponseModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+
 class IntervalResponseModel {
   IntervalResponseModel({
     this.interval,

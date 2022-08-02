@@ -1,7 +1,7 @@
 const String appName = "SIDIS App";
 const String welcomeTo = "Welcome to";
 const String goToLogin = "Go to Login";
-const String infoMsg = "Skaps Industries\nData Information System";
+const String infoMsg = "SKAPS Industries\nData Information System";
 const String userName = "User Name";
 const String passwordText = "Password";
 const String reMemberMe = "Remember Me";

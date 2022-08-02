@@ -75,7 +75,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ],
               ),
               Row(
-                children: actionIcons(context),
+                children: actionIcons(context,isAllowSpacing: true),
               )
             ],
           ),

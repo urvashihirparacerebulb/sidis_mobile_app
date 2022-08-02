@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:my_projects/utility/color_utility.dart';
 
 import '../configurations/config_file.dart';
 import '../main.dart';
@@ -108,4 +110,29 @@ confirmationAlertDialog({String? title, required String message, Function? butto
     transitionCurve: Curves.easeInCubic,
     transitionDuration: const Duration(milliseconds: 400),
   );
+}
+
+Future<DateTime> openCalendarView(BuildContext buildContext, {int selectedYear = 15,
+  required String initialDate, String? firstDate}) async {
+  DateTime? initialDateObj;
+  if (initialDate != "") {
+    initialDateObj = DateFormat("yyyy-MM-dd").parse(initialDate);
+  }
+  DateTime? picked = await showDatePicker(
+      context: buildContext,
+      initialDate: (initialDateObj ?? DateTime(DateTime
+          .now()
+          .year - selectedYear)),
+      // initialDateObj == null ? DateTime.now() : initialDateObj,
+      firstDate: DateTime(DateTime.now().year - 100),
+  // (date != null ? date : DateTime(DateTime.now().year - selectedYear)),
+  lastDate: DateTime.now(),
+  builder: (context, child) {
+    return Theme(data: ThemeData.light().copyWith(colorScheme: const ColorScheme.light(onPrimary: bgColor,primary: primaryColor,surface: primaryColor)), child: child!);
+  },
+  );
+  if (picked != null) return picked;
+  return
+  picked
+  !;
 }

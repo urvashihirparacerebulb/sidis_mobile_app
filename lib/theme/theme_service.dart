@@ -8,7 +8,7 @@ import '../utility/constants.dart';
 
 class Themes {
   static final light = ThemeData(
-    primaryColor: primaryColor,
+    primaryColor: bgColor,
     fontFamily: 'Poppins',
     highlightColor: Colors.transparent,
     splashColor: Colors.transparent,

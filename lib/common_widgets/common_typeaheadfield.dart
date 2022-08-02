@@ -6,7 +6,7 @@ import 'common_widget.dart';
 
 class CommonTypeAheadTextField extends StatefulWidget {
   final String hintText;
-  final List<Map<String, dynamic>> myItems;
+  final List<String> myItems;
   final Function? validationFunction;
   final Function? clearCallback;
   final TextEditingController controller;
@@ -98,7 +98,7 @@ class _CommonTypeAheadTextFieldState extends State<CommonTypeAheadTextField> {
         },
         suggestionsBoxDecoration: const SuggestionsBoxDecoration(color: whiteColor),
         suggestionsCallback: (pattern) async {
-          return ["qbsdv","Efse","dfdfds"];
+          return widget.myItems;
         },
         transitionBuilder: (context, suggestionsBox, controller) {
           return suggestionsBox;

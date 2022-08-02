@@ -33,40 +33,46 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return commonStructure(context: context,
-        floatingAction: Padding(
-          padding: const EdgeInsets.only(bottom: 40.0,right: 10),
-          child: NeumorphicFloatingActionButton(
-            style: const NeumorphicStyle(
-              boxShape: NeumorphicBoxShape.circle(),
-              color: primaryColor
-            ),
-          child: const Icon(Icons.navigate_next_outlined, size: 30),
-            onPressed: () {
-              // Get.to(() => const CommonDashboard());
-              if (_formKey.currentState!.validate()) {
-                _formKey.currentState!.save();
-                Map<String, dynamic> params = {
-                  "loginemail": userNameController.text,
-                  "loginpassword": passwordController.text,
-                };
-                AuthenticationController.to.loginAPI(params);
-              }
-            },
-          ),
+        bottomNavigation: Stack(
+          children: [
+            Image.asset("assets/images/login_tansparent_curve.png",height: 125,
+              width: getScreenWidth(context),fit: BoxFit.cover,),
+            Positioned(
+              bottom: 8,left: 5,right: 5,
+              child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                commonHeaderTitle(title: "Having Trouble?",fontWeight: 1,fontSize: 1),
+                commonHorizontalSpacing(spacing: 6),
+                commonHeaderTitle(title: "We Can Help >",color: primaryColor,fontWeight: 2,fontSize: 1),
+              ],
+            )),
+            Positioned(
+                top: 0,right: 20,
+                child: NeumorphicFloatingActionButton(
+                  style: const NeumorphicStyle(
+                      boxShape: NeumorphicBoxShape.circle(),
+                      color: primaryColor
+                  ),
+                  child: const Icon(Icons.navigate_next_outlined, size: 30),
+                  onPressed: () {
+                    // Get.to(() => const CommonDashboard());
+                    if (_formKey.currentState!.validate()) {
+                      _formKey.currentState!.save();
+                      Map<String, dynamic> params = {
+                        "loginemail": userNameController.text,
+                        "loginpassword": passwordController.text,
+                      };
+                      AuthenticationController.to.loginAPI(params);
+                    }
+                  },
+                )
+            )
+          ],
         ),
         child: Stack(
       alignment: Alignment.center,
       children: [
-        Positioned(bottom: 0, left: 0, right: 0,
-            child: Image.asset("assets/images/login_tansparent_curve.png",height: 130,width: getScreenWidth(context),fit: BoxFit.contain,)),
-        Positioned(bottom:10,child:  Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            commonHeaderTitle(title: "Having Trouble?",fontWeight: 1,fontSize: 1),
-            commonHorizontalSpacing(spacing: 6),
-            commonHeaderTitle(title: "We Can Help >",color: primaryColor,fontWeight: 2,fontSize: 1),
-          ],
-        )),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Form(
@@ -74,9 +80,6 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Align(
               alignment: Alignment.center,
               child: ListView(
-                // mainAxisSize: MainAxisSize.min,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   commonVerticalSpacing(spacing: 20),
                   Obx(() => Image(image: GeneralController.to.isDarkMode.value ? horizontalAppLogoDark : horizontalAppLogoLight,height: 80),),

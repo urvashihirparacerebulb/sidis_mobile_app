@@ -15,14 +15,14 @@ import 'authentication_controller.dart';
 
 class DropDownDataController extends GetxController {
   static DropDownDataController get to => Get.find();
-  RxList<BusinessData>? bussinessData =  RxList<BusinessData>();
+  RxList<BusinessData>? businessData =  RxList<BusinessData>();
   RxList<CompanyBusinessPlant>? companyBusinessPlants = RxList<CompanyBusinessPlant>();
   RxList<MachineData>? machinesList = RxList<MachineData>();
   RxList<MachineData>? subMachinesList = RxList<MachineData>();
-  RxList intervalList = [].obs;
+  RxList<String> intervalList = RxList<String>();
 
   void getBusinesses() {
-    bussinessData!.clear();
+    businessData!.clear();
     apiServiceCall(
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
@@ -32,7 +32,10 @@ class DropDownDataController extends GetxController {
       success: (dio.Response<dynamic> response) {
         BusinessDataResponseModel businessDataResponse =
         BusinessDataResponseModel.fromJson(jsonDecode(response.data));
-        bussinessData!.addAll(businessDataResponse.data?.data ?? []);
+        businessData!.addAll(businessDataResponse.data?.data ?? []);
+        if(intervalList.isEmpty){
+          getIntervalList();
+        }
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -109,21 +112,21 @@ class DropDownDataController extends GetxController {
     );
   }
 
-  void getIntervalList() {
+  void getIntervalList({bool isLoading = false}) {
     apiServiceCall(
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
       },
       serviceUrl: ApiConfig.intervalListURL,
       success: (dio.Response<dynamic> response) {
-        IntervalResponseModel intervalResponseModel =
-        IntervalResponseModel.fromJson(jsonDecode(response.data));
-        intervalList.addAll(intervalResponseModel.interval ?? []);
+        IntervalResponse intervalResponseModel =
+        IntervalResponse.fromJson(jsonDecode(response.data));
+        intervalList.addAll(intervalResponseModel.data!.interval!.first.values);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
       },
-      isProgressShow: true,
+      isProgressShow: isLoading,
       methodType: ApiConfig.methodPOST,
     );
   }
