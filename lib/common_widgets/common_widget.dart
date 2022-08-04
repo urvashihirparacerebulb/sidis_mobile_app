@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
 
 import '../controllers/general_controller.dart';
+import '../models/activities_response_model.dart';
 import '../modules/dashboard/dashboard_listing/dashboard_view.dart';
 import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
@@ -22,7 +23,7 @@ BoxDecoration neurmorphicBoxDecoration = BoxDecoration(
   boxShadow: GeneralController.to.isDarkMode.value ? [
     BoxShadow(
       color: Colors.white.withOpacity(0.1),
-      offset: const Offset(-6.0, -6.0),
+      offset: const Offset(-5.0, -6.0),
       blurRadius: 16.0,
     ),
     BoxShadow(
@@ -33,7 +34,7 @@ BoxDecoration neurmorphicBoxDecoration = BoxDecoration(
   ] : [
     BoxShadow(
       color: Colors.white.withOpacity(0.8),
-      offset: const Offset(-6.0, -6.0),
+      offset: const Offset(-5.0, -6.0),
       blurRadius: 16.0,
     ),
     BoxShadow(
@@ -42,7 +43,7 @@ BoxDecoration neurmorphicBoxDecoration = BoxDecoration(
       blurRadius: 16.0,
     ),
   ],
-  color: ConvertTheme().getBackGroundColor(),
+  color: ConvertTheme.convertTheme.getBackGroundColor(),
   borderRadius: BorderRadius.circular(12.0),
 );
 
@@ -80,7 +81,7 @@ Widget commonAppBackground() {
   return Obx(() {
     return Container(
       decoration: BoxDecoration(
-        color: ConvertTheme().getBackGroundColor(),
+        color: ConvertTheme.convertTheme.getBackGroundColor(),
       ),
     );
   });
@@ -131,7 +132,8 @@ Widget commonBorderButtonView(
       Color? color,
       double height = 50,
       IconData? iconData}) {
-  return SizedBox(
+  return Container(
+    decoration: neurmorphicBoxDecoration,
     width: MediaQuery.of(context).size.width - (commonHorizontalPadding * 2),
     height: height,
     child: ElevatedButton(
@@ -141,18 +143,18 @@ Widget commonBorderButtonView(
         }
       },
       style: ElevatedButton.styleFrom(
-        shadowColor: blackColor.withOpacity(0.8),
+        // shadowColor: blackColor.withOpacity(0.8),
         alignment: Alignment.center,
-        primary: whiteColor,
-        side: const BorderSide(
-          color: blackColor,
-          width: 1.0,
-        ),
+        primary: ConvertTheme.convertTheme.getBackGroundColor(),
+        // side: const BorderSide(
+        //   color: blackColor,
+        //   width: 1.0,
+        // ),
         shape: RoundedRectangleBorder(
           borderRadius: commonBorderRadius,
         ),
         padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
-        elevation: 5.0,
+        elevation: 0.0,
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -190,7 +192,7 @@ commonHeaderTitle({String title = "",
     title,
     style: white14PxNormal
         .apply(
-        color: isChangeColor ? color : ConvertTheme().getWhiteToFontColor(),
+        color: isChangeColor ? color : ConvertTheme.convertTheme.getWhiteToFontColor(),
         fontStyle: fontStyle,
         fontSizeFactor: fontSize,
         fontFamily: "Poppins",
@@ -217,7 +219,7 @@ PreferredSize commonAppbar({BuildContext? context,
        preferredSize: const Size.fromHeight(56.0),
        child: Obx(() {
        return AppBar(
-         backgroundColor: ConvertTheme().getBackGroundColor(),
+         backgroundColor: ConvertTheme.convertTheme.getBackGroundColor(),
          centerTitle: centerTitle,
          elevation: 0.0,
          title: Padding(
@@ -228,7 +230,7 @@ PreferredSize commonAppbar({BuildContext? context,
              onTap: (){
                Get.back();
              },
-             child: Image(image: backIconImage,color: ConvertTheme().getWhiteToFontColor())),
+             child: Image(image: backIconImage,color: ConvertTheme.convertTheme.getWhiteToFontColor())),
          actions: actionIcons(context!),
        );
      }),
@@ -242,11 +244,11 @@ List<Widget> actionIcons(BuildContext context,{isAllowSpacing = false}){
         showDialog(context: context, builder: (BuildContext context) => const CustomDialog());
       },
       child: Image
-        (image: plantIconImage,color: ConvertTheme().getWhiteToFontColor()),
+        (image: plantIconImage,color: ConvertTheme.convertTheme.getWhiteToFontColor()),
     ),
     if(isAllowSpacing)
       commonHorizontalSpacing(spacing: 15),
-    Icon(Icons.notifications,color: ConvertTheme().getWhiteToFontColor(),size: 32),
+    Icon(Icons.notifications,color: ConvertTheme.convertTheme.getWhiteToFontColor(),size: 32),
     if(!isAllowSpacing)
       commonHorizontalSpacing(),
   ];
@@ -269,4 +271,43 @@ Widget commonNeumorphicView({Widget? child}){
   return Container(
       decoration: neurmorphicBoxDecoration,
       child: child);
+}
+
+void openPictureSelectionView(
+    {BuildContext? context,
+      Widget? child}) {
+  showModalBottomSheet(
+      context: context!,
+      isScrollControlled: true,
+      backgroundColor: ConvertTheme.convertTheme.getBackGroundColor(),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(20.0),
+        ),
+      ),
+      builder: (builder) {
+        return FractionallySizedBox(
+          heightFactor: 0.92,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            child: child,
+          ),
+        );
+      });
+}
+
+Widget getActivityCard({ActivityData? activityResponse, Function? callback}){
+  return Container(
+    margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
+    decoration: neurmorphicBoxDecoration,
+    child: CheckboxListTile(
+      title: Text(activityResponse!.activityFor ?? ""),
+      subtitle: Text(activityResponse.activityQuestion ?? "",style: white14PxNormal.apply(color: greyColor)),
+      value: activityResponse.isSelected,
+      activeColor: greenColor,
+      onChanged: (bool? value) {
+        callback!(value);
+      },
+    ),
+  );
 }

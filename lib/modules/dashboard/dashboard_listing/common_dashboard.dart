@@ -2,6 +2,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/controllers/general_controller.dart';
+import 'package:my_projects/modules/profile/profile_view.dart';
 import 'package:my_projects/utility/assets_utility.dart';
 
 import '../../../theme/convert_theme_colors.dart';
@@ -35,7 +36,7 @@ class _CommonDashboardState extends State<CommonDashboard> {
       },
       child: Obx((){
         return Scaffold(
-          backgroundColor: ConvertTheme().getBackGroundColor(),
+          backgroundColor: ConvertTheme.convertTheme.getBackGroundColor(),
           floatingActionButton: SizedBox(
             height: 64,width: 64,
             child: NeumorphicFloatingActionButton(
@@ -87,7 +88,10 @@ class _CommonDashboardState extends State<CommonDashboard> {
             ),
           ),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-          body: GeneralController.to.dashboardIndex.value == 0 ? const DashboardView() : const HomeScreen(),
+          body: GeneralController.to.dashboardIndex.value == 0 ?
+          const DashboardView() : GeneralController.to.dashboardIndex.value == 2 ?
+          const ProfileView() :
+          const HomeScreen(),
         );
       }),
     );

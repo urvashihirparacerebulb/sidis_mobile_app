@@ -7,7 +7,6 @@ import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import '../models/boolean_response_model.dart';
 import '../models/login_response_model.dart';
-import '../modules/dashboard/dashboard_listing/dashboard_view.dart';
 import '../utility/common_methods.dart';
 
 class AuthenticationController extends GetxController {

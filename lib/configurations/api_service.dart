@@ -239,6 +239,7 @@ void showProgressDialog() {
                   child: commonHeaderTitle(
                       title: "Please Wait...",
                       align: TextAlign.center,
+                      isChangeColor: true,
                       color: whiteColor)),
             ],
           ),

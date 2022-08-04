@@ -112,6 +112,18 @@ confirmationAlertDialog({String? title, required String message, Function? butto
   );
 }
 
+String getIntervalIdToString({String? intervalString}){
+  if(intervalString == "Daily"){
+    return "1";
+  }else if(intervalString == "Weekly"){
+    return "2";
+  }else if(intervalString == "Half Monthly"){
+    return "3";
+  }else{
+    return "4";
+  }
+}
+
 Future<DateTime> openCalendarView(BuildContext buildContext, {int selectedYear = 15,
   required String initialDate, String? firstDate}) async {
   DateTime? initialDateObj;

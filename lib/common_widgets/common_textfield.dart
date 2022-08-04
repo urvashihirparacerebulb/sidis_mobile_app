@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:my_projects/controllers/general_controller.dart';
 import 'package:my_projects/utility/color_utility.dart';
 import '../theme/convert_theme_colors.dart';
 import '../utility/theme_utility.dart';
@@ -92,6 +90,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
       child: TextFormField(
         enabled: !widget.isEnabled ? false : true,
         textAlign: widget.align,
+        textInputAction: TextInputAction.done,
         showCursor: !widget.isReadOnly,
         onTap: () {
           if (widget.onTapFunction != null) {
@@ -148,7 +147,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
           errorBorder: textFieldBorderStyle,
           focusedErrorBorder: textFieldBorderStyle,
           hintText: widget.hintText,
-          fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : ConvertTheme().getTextFiledBackGroundColor(),
+          fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : ConvertTheme.convertTheme.getTextFiledBackGroundColor(),
           hintStyle: white14PxNormal.copyWith(
               color: blackColor.withOpacity(0.4),fontSize: 16),
           suffixIcon: widget.isPassword

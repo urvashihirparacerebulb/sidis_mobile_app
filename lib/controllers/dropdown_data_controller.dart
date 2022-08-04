@@ -20,6 +20,7 @@ class DropDownDataController extends GetxController {
   RxList<MachineData>? machinesList = RxList<MachineData>();
   RxList<MachineData>? subMachinesList = RxList<MachineData>();
   RxList<String> intervalList = RxList<String>();
+  RxList<ActivityData>? activityData = RxList<ActivityData>();
 
   void getBusinesses() {
     businessData!.clear();
@@ -45,7 +46,7 @@ class DropDownDataController extends GetxController {
     );
   }
 
-  void getCompanyPlants({String? businessId}) {
+  void getCompanyPlants({String? businessId,Function? successCallback}) {
     companyBusinessPlants!.clear();
     apiServiceCall(
       params: {
@@ -58,6 +59,7 @@ class DropDownDataController extends GetxController {
         PlantsResponse plantsResponseModel =
         PlantsResponse.fromJson(jsonDecode(response.data));
         companyBusinessPlants!.addAll(plantsResponseModel.data?.companyBusinessPlants ?? []);
+        successCallback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -67,7 +69,7 @@ class DropDownDataController extends GetxController {
     );
   }
 
-  void getMachines({String? plantId}) {
+  void getMachines({String? plantId,Function? successCallback}) {
     machinesList!.clear();
     apiServiceCall(
       params: {
@@ -80,6 +82,7 @@ class DropDownDataController extends GetxController {
         MachineResponse machineResponseModel =
         MachineResponse.fromJson(jsonDecode(response.data));
         machinesList!.addAll(machineResponseModel.data?.machineData ?? []);
+        successCallback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -89,7 +92,7 @@ class DropDownDataController extends GetxController {
     );
   }
 
-  void getSubMachines({String? plantId,int? machineId}) {
+  void getSubMachines({String? plantId,int? machineId,Function? successCallback}) {
     subMachinesList!.clear();
     apiServiceCall(
       params: {
@@ -103,6 +106,7 @@ class DropDownDataController extends GetxController {
         SubMachineResponse subMachineResponseModel =
         SubMachineResponse.fromJson(jsonDecode(response.data));
         subMachinesList!.addAll(subMachineResponseModel.data?.submachineArray ?? []);
+        successCallback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -127,6 +131,32 @@ class DropDownDataController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: isLoading,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getActivityCheckList({String? businessId,machineId,subMachineId,intervalId,date}) {
+    activityData!.clear();
+    apiServiceCall(
+      params: {
+        "user_id": getLoginData()!.userdata!.first.id,
+        "group_id": getLoginData()!.userdata!.first.groupId,
+        "bussiness_id": businessId,
+        "machine_id": machineId,
+        "submachine_id": subMachinesList,
+        "interval_id": intervalId,
+        "date": date
+      },
+      serviceUrl: ApiConfig.activityListURL,
+      success: (dio.Response<dynamic> response) {
+        ActivityResponse activityResponse =
+        ActivityResponse.fromJson(jsonDecode(response.data));
+        activityData!.addAll(activityResponse.data?.activitydata ?? []);
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
       methodType: ApiConfig.methodPOST,
     );
   }

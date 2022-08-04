@@ -33,6 +33,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
   MachineData? machineData;
+  MachineData? subMachineData;
   String selectedDate = "";
 
   @override
@@ -43,6 +44,19 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
     super.initState();
   }
 
+  getActivityList(){
+    DropDownDataController.to.activityData!.clear();
+    if(selectedBusiness != null && selectedPlant != null && machineData != null && intervalController.text.isNotEmpty && selectedDate.isNotEmpty){
+      DropDownDataController.to.getActivityCheckList(
+        businessId: selectedBusiness!.businessId.toString(),
+        machineId: machineData!.machineId.toString(),
+        subMachineId: subMachineData == null ? "" : subMachineData!.machineId.toString(),
+        intervalId: getIntervalIdToString(intervalString: intervalController.text),
+        date: selectedDate
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return commonStructure(
@@ -50,7 +64,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
         bgColor: blackColor,
         appBar: commonAppbar(context: context,title: clitaFillFormText),
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(16.0),
           child: Obx((){
             return DropDownDataController.to.businessData!.isEmpty ? const SpinKitThreeBounce(
               color: primaryColor,
@@ -73,7 +87,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                           selectedBusiness = val;
                           businessController.text = selectedBusiness!.businessName ?? "";
                           if(selectedBusiness != null) {
-                            DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness!.businessId.toString());
+                            DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness!.businessId.toString(),successCallback: (){
+                              getActivityList();
+                            });
                           }
                         });
                       },
@@ -95,7 +111,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                           selectedPlant = val;
                           plantsController.text = selectedPlant!.soleName ?? "";
                           if(selectedPlant != null) {
-                            DropDownDataController.to.getMachines(plantId: selectedPlant!.soleId);
+                            DropDownDataController.to.getMachines(plantId: selectedPlant!.soleId,successCallback: (){
+                              getActivityList();
+                            });
                           }
                         });
                       },
@@ -117,7 +135,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                           machineData = val;
                           machineController.text = machineData?.machineName ?? "";
                           if(machineData != null){
-                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId);
+                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId,successCallback: (){
+                              getActivityList();
+                            });
                           }
                         });
                       },
@@ -137,9 +157,10 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                         },
                         selectionCallBack: (MachineData val){
                           setState(() {
-                            machineData = val;
-                            subMachineController.text = machineData?.machineName ?? "";
+                            subMachineData = val;
+                            subMachineController.text = subMachineData?.machineName ?? "";
                           });
+                          getActivityList();
                         },
                         validationFunction: (String val){
 
@@ -158,6 +179,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                         setState(() {
                           intervalController.text = val;
                         });
+                        getActivityList();
                       },
                       validationFunction: (String val){
 
@@ -183,14 +205,31 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                                         initialDate: DateTime.now().toString(),
                                     ).then((value) {
                                       setState(() {
-                                        selectedDate = DateFormat("dd/MM/yyyy").format(value);
+                                        selectedDate = DateFormat("dd MMM,yyyy").format(value);
                                       });
+                                      getActivityList();
                                     });
                                   },
                                   child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
                                 )),
                           ],
                         )),
+                    commonVerticalSpacing(spacing: 15),
+                    Visibility(
+                      visible: selectedBusiness != null && selectedPlant != null && machineData != null && subMachineData != null && intervalController.text.isNotEmpty && selectedDate.isNotEmpty,
+                      child: Obx(() => ListView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: DropDownDataController.to.activityData!.length,
+                        itemBuilder: (context, index) => getActivityCard(
+                            activityResponse: DropDownDataController.to.activityData![index],
+                            callback: (val) {
+                              DropDownDataController.to.activityData![index].isSelected = val;
+                              DropDownDataController.to.activityData!.refresh();
+                            }
+                        ),
+                      )),
+                    )
                   ],
                 ),
                 // Positioned(

@@ -5,6 +5,7 @@ import 'package:my_projects/utility/constants.dart';
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_typeaheadfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/screen_utility.dart';
 
@@ -35,9 +36,9 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
         bgColor: blackColor,
         appBar: commonAppbar(context: context,title: abnormalityFormText),
         bottomNavigation: Container(
-          color: whiteColor,
+          color: ConvertTheme.convertTheme.getBackGroundColor(),
           child: Padding(
-              padding: const EdgeInsets.only(left: 16,right: 16,bottom: 10,top: 10),
+              padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 10),
               child: Row(
                 children: [
                   Expanded(child: commonBorderButtonView(
@@ -61,211 +62,208 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
               ),
           ),
         ),
-        child: commonRoundedContainer(
-          context: context,
-          child: ListView(
-            shrinkWrap: true,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 24.0,right: 24.0,top: 24.0),
-                child: Stack(
-                  alignment: Alignment.topCenter,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        commonHeaderTitle(title: "Where is Abnormality?",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          myItems: [],
-                          controller: businessController,
-                          hintText: "Select Business*",
-                          clearCallback: (){
+        child: ListView(
+          shrinkWrap: true,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(left: 24.0,right: 24.0,top: 24.0),
+              child: Stack(
+                alignment: Alignment.topCenter,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      commonHeaderTitle(title: "Where is Abnormality?",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        myItems: [],
+                        controller: businessController,
+                        hintText: "Select Business*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          controller: plantsController,
-                          myItems: [],
-                          hintText: "Select COMPANY_BUSINESS_PLANTS",
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        controller: plantsController,
+                        myItems: [],
+                        hintText: "Select COMPANY_BUSINESS_PLANTS",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
+                        },
+                      ),
 
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          myItems: [],
-                          controller: departmentController,
-                          hintText: "Select Department*",
-                          clearCallback: (){
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        myItems: [],
+                        controller: departmentController,
+                        hintText: "Select Department*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          myItems: [],
-                          controller: subDepartmentController,
-                          hintText: "Select Sub Department*",
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        myItems: [],
+                        controller: subDepartmentController,
+                        hintText: "Select Sub Department*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        commonHeaderTitle(title: "Machine Detail",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          myItems: [],
-                          hintText: "Select Machine*",
-                          controller: machineController,
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 30),
+                      commonHeaderTitle(title: "Machine Detail",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        myItems: [],
+                        hintText: "Select Machine*",
+                        controller: machineController,
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          controller: subMachineController,
-                          myItems: [],
-                          hintText: "Select Sub Machine*",
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        controller: subMachineController,
+                        myItems: [],
+                        hintText: "Select Sub Machine*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTextFiled(
-                          fieldTitleText: "Part Name*",
-                          hintText: "Part Name*",
-                          // isBorderEnable: false,
-                          isChangeFillColor: true,
-                          textEditingController: partNameController,
-                          onChangedFunction: (String value){
-                          },
-                          validationFunction: (String value) {
-                            return value.toString().isEmpty
-                                ? notEmptyFieldMessage
-                                : null;
-                          },),
-                        commonVerticalSpacing(spacing: 20),
-                        commonHeaderTitle(title: "Abnormality Detail",fontSize: 1.3,fontWeight: 4,color: darkFontColor),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          myItems: [],
-                          controller: abnormalityTitleController,
-                          hintText: "Abnormality Title*",
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTextFiled(
+                        fieldTitleText: "Part Name*",
+                        hintText: "Part Name*",
+                        // isBorderEnable: false,
+                        isChangeFillColor: true,
+                        textEditingController: partNameController,
+                        onChangedFunction: (String value){
+                        },
+                        validationFunction: (String value) {
+                          return value.toString().isEmpty
+                              ? notEmptyFieldMessage
+                              : null;
+                        },),
+                      commonVerticalSpacing(spacing: 30),
+                      commonHeaderTitle(title: "Abnormality Detail",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        myItems: [],
+                        controller: abnormalityTitleController,
+                        hintText: "Abnormality Title*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTypeAheadTextField(
-                          controller: abnormalityTypeController,
-                          myItems: [],
-                          hintText: "Abnormality Type*",
-                          clearCallback: (){
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTypeAheadTextField(
+                        controller: abnormalityTypeController,
+                        myItems: [],
+                        hintText: "Abnormality Type*",
+                        clearCallback: (){
 
-                          },
-                          selectionCallBack: (String val){
+                        },
+                        selectionCallBack: (String val){
 
-                          },
-                          validationFunction: (String val){
+                        },
+                        validationFunction: (String val){
 
-                          },
-                        ),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTextFiled(
-                          fieldTitleText: "Abnormality(In Detail)",
-                          hintText: "Abnormality(In Detail)",
-                          // isBorderEnable: false,
-                          isChangeFillColor: true,
-                          maxLine: 5,
-                          textEditingController: abnormalityController,
-                          onChangedFunction: (String value){
-                          },
-                          validationFunction: (String value) {
-                            return value.toString().isEmpty
-                                ? notEmptyFieldMessage
-                                : null;
-                          },),
-                        commonVerticalSpacing(spacing: 20),
-                        CommonTextFiled(
-                          fieldTitleText: "Possible Solution",
-                          hintText: "Possible Solution",
-                          // isBorderEnable: false,
-                          maxLine: 5,
-                          isChangeFillColor: true,
-                          textEditingController: possibleSolutionController,
-                          onChangedFunction: (String value){
-                          },
-                          validationFunction: (String value) {
-                            return value.toString().isEmpty
-                                ? notEmptyFieldMessage
-                                : null;
-                          },),
-                        commonVerticalSpacing(spacing: 20),
-                      ],
-                    ),
-                    // Positioned(
-                    //   bottom: 20,
-                    //   right: 10,left: 10,
-                    //   child: Container(
-                    //     height: 65,
-                    //     decoration: BoxDecoration(
-                    //       image: DecorationImage(
-                    //         image: watermarkImage,
-                    //         fit: BoxFit.contain,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
-                  ],
-                ),
+                        },
+                      ),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTextFiled(
+                        fieldTitleText: "Abnormality(In Detail)",
+                        hintText: "Abnormality(In Detail)",
+                        // isBorderEnable: false,
+                        isChangeFillColor: true,
+                        maxLine: 5,
+                        textEditingController: abnormalityController,
+                        onChangedFunction: (String value){
+                        },
+                        validationFunction: (String value) {
+                          return value.toString().isEmpty
+                              ? notEmptyFieldMessage
+                              : null;
+                        },),
+                      commonVerticalSpacing(spacing: 20),
+                      CommonTextFiled(
+                        fieldTitleText: "Possible Solution",
+                        hintText: "Possible Solution",
+                        // isBorderEnable: false,
+                        maxLine: 5,
+                        isChangeFillColor: true,
+                        textEditingController: possibleSolutionController,
+                        onChangedFunction: (String value){
+                        },
+                        validationFunction: (String value) {
+                          return value.toString().isEmpty
+                              ? notEmptyFieldMessage
+                              : null;
+                        },),
+                      commonVerticalSpacing(spacing: 20),
+                    ],
+                  ),
+                  // Positioned(
+                  //   bottom: 20,
+                  //   right: 10,left: 10,
+                  //   child: Container(
+                  //     height: 65,
+                  //     decoration: BoxDecoration(
+                  //       image: DecorationImage(
+                  //         image: watermarkImage,
+                  //         fit: BoxFit.contain,
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         )
     );
   }

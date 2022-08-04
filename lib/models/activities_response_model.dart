@@ -1,3 +1,31 @@
+class ActivityResponse {
+  ActivityResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  ActivityResponseModel? data;
+
+  factory ActivityResponse.fromJson(Map<String, dynamic> json) => ActivityResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: ActivityResponseModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
 class ActivityResponseModel {
   ActivityResponseModel({
     this.activitydata,
@@ -20,12 +48,16 @@ class ActivityData {
     this.activityMstId,
     this.activityFor,
     this.activityQuestion,
+    this.isSelected = false
   });
 
   int? activityId;
   int? activityMstId;
   String? activityFor;
   String? activityQuestion;
+
+  //Developer Purpose
+  bool isSelected;
 
   factory ActivityData.fromJson(Map<String, dynamic> json) => ActivityData(
     activityId: json["activity_id"],

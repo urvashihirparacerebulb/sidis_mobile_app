@@ -89,6 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   CommonTextFiled(
                     fieldTitleText: userName,
                     hintText: userName,
+
                     textEditingController: userNameController,
                     onChangedFunction: (String value){
                     },
@@ -124,7 +125,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               },
                               child: Image(image: isRemember ? checkedImage : unCheckedImage,
                                   width: 20,height: 20,
-                                  color: ConvertTheme().getWhiteToFontColor())
+                                  color: ConvertTheme.convertTheme.getWhiteToFontColor())
                           ),
                           commonHorizontalSpacing(spacing: 6),
                           commonHeaderTitle(title: reMemberMe,fontSize: 1,fontWeight: 1),
@@ -153,10 +154,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 30,
                           height: 40,
                           decoration: BoxDecoration(
-                              color: ConvertTheme().getWhiteToFontColor(),
+                              color: ConvertTheme.convertTheme.getWhiteToFontColor(),
                               borderRadius: commonBorderRadius
                           ),
-                          child: Icon(Icons.fingerprint,color: ConvertTheme().getFontToWhiteColor()),
+                          child: Icon(Icons.fingerprint,color: ConvertTheme.convertTheme.getFontToWhiteColor()),
                         ),
                     ),
                   ),
