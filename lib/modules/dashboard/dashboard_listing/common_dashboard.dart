@@ -47,7 +47,7 @@ class _CommonDashboardState extends State<CommonDashboard> {
               ),
               child: Image(image: dashboardIconImage),
               onPressed: () {
-                GeneralController.to.dashboardIndex.value = 2;
+                GeneralController.to.dashboardIndex.value = 1;
               },
             ),
           ),

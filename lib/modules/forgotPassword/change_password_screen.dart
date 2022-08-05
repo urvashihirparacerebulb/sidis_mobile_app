@@ -82,7 +82,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   commonVerticalSpacing(spacing: 60),
                   commonFillButtonView(
                       context: context,
-                      title: sendText,
+                      title: "Update",
                       width: getScreenWidth(context) - 40,
                       height: 50,
                       tapOnButton: () {
