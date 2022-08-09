@@ -1,6 +1,9 @@
 import 'package:get/get.dart';
+import 'package:my_projects/controllers/business_controller.dart';
 import 'package:my_projects/controllers/general_controller.dart';
+import '../abnormality_controller.dart';
 import '../authentication_controller.dart';
+import '../department_controller.dart';
 import '../dropdown_data_controller.dart';
 
 class AppBinding extends Bindings {
@@ -11,6 +14,12 @@ class AppBinding extends Bindings {
     Get.put<GeneralController>(GeneralController(),
         permanent: true);
     Get.put<DropDownDataController>(DropDownDataController(),
+        permanent: true);
+    Get.put<BusinessController>(BusinessController(),
+        permanent: true);
+    Get.put<DepartmentController>(DepartmentController(),
+        permanent: true);
+    Get.put<AbnormalityController>(AbnormalityController(),
         permanent: true);
   }
 }

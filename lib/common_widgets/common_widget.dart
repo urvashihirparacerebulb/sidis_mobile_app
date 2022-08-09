@@ -273,7 +273,7 @@ Widget commonNeumorphicView({Widget? child}){
       child: child);
 }
 
-void openPictureSelectionView(
+void commonBottomView(
     {BuildContext? context,
       Widget? child}) {
   showModalBottomSheet(
@@ -286,13 +286,14 @@ void openPictureSelectionView(
         ),
       ),
       builder: (builder) {
-        return FractionallySizedBox(
-          heightFactor: 0.92,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
-            child: child,
-          ),
+        return Padding(
+          padding: MediaQuery.of(context).viewInsets,
+          child: child
         );
+        // return FractionallySizedBox(
+        //   heightFactor: 0.92,
+        //   child:,
+        // );
       });
 }
 
@@ -308,6 +309,27 @@ Widget getActivityCard({ActivityData? activityResponse, Function? callback}){
       onChanged: (bool? value) {
         callback!(value);
       },
+    ),
+  );
+}
+
+commonDecoratedTextView({String title = "", bool isChangeColor = false,double bottom = 25}){
+  return Container(
+    padding: const EdgeInsets.all(12),
+    margin: EdgeInsets.only(bottom: bottom),
+    decoration: neurmorphicBoxDecoration,
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        commonHeaderTitle(
+            title: title,
+            isChangeColor: isChangeColor,
+            fontSize: 1.1,
+            color: blackColor.withOpacity(0.4)
+        ),
+        commonHorizontalSpacing(),
+        Icon(Icons.keyboard_arrow_down,color: ConvertTheme.convertTheme.getWhiteToFontColor(),)
+      ],
     ),
   );
 }

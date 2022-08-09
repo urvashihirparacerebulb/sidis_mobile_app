@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/models/department_response_model.dart';
 
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
 
-class DepartmentBottomView extends StatefulWidget {
+class CommonBottomStringView extends StatefulWidget {
   final String hintText;
-  final List<Department> myItems;
+  final List<String> myItems;
   final Function? selectionCallBack;
-  const DepartmentBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText}) : super(key: key);
+  const CommonBottomStringView({Key? key, required this.hintText, required this.myItems, this.selectionCallBack}) : super(key: key);
 
   @override
-  State<DepartmentBottomView> createState() => _DepartmentBottomViewState();
+  State<CommonBottomStringView> createState() => _CommonBottomStringViewState();
 }
 
-class _DepartmentBottomViewState extends State<DepartmentBottomView> {
+class _CommonBottomStringViewState extends State<CommonBottomStringView> {
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -27,7 +26,7 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           commonVerticalSpacing(spacing: 15),
-          commonHeaderTitle(title: widget.hintText ,fontWeight: 2,fontSize: 1.5),
+          commonHeaderTitle(title: widget.hintText,fontWeight: 2,fontSize: 1.5),
           commonVerticalSpacing(spacing: 15),
           CommonTextFiled(
             fieldTitleText: "Search",
@@ -44,7 +43,7 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.departmentName!.startsWith(searchController.text)).toList().length,
+              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.startsWith(searchController.text)).toList().length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
@@ -53,7 +52,7 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].departmentName ?? "",
+                      title: widget.myItems[index],
                       fontSize: 1.2
                   ),
                 ),

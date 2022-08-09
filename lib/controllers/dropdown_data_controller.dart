@@ -8,43 +8,15 @@ import 'package:my_projects/utility/common_methods.dart';
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import 'package:dio/dio.dart' as dio;
-
-import '../models/business_data_model.dart';
 import '../models/machines_response_model.dart';
 import 'authentication_controller.dart';
 
 class DropDownDataController extends GetxController {
   static DropDownDataController get to => Get.find();
-  RxList<BusinessData>? businessData =  RxList<BusinessData>();
   RxList<CompanyBusinessPlant>? companyBusinessPlants = RxList<CompanyBusinessPlant>();
   RxList<MachineData>? machinesList = RxList<MachineData>();
   RxList<MachineData>? subMachinesList = RxList<MachineData>();
-  RxList<String> intervalList = RxList<String>();
   RxList<ActivityData>? activityData = RxList<ActivityData>();
-
-  void getBusinesses() {
-    businessData!.clear();
-    apiServiceCall(
-      params: {
-        "user_id": getLoginData()!.userdata!.first.id,
-        "group_id": getLoginData()!.userdata!.first.groupId
-      },
-      serviceUrl: ApiConfig.businessListURL,
-      success: (dio.Response<dynamic> response) {
-        BusinessDataResponseModel businessDataResponse =
-        BusinessDataResponseModel.fromJson(jsonDecode(response.data));
-        businessData!.addAll(businessDataResponse.data?.data ?? []);
-        if(intervalList.isEmpty){
-          getIntervalList();
-        }
-      },
-      error: (dio.Response<dynamic> response) {
-        errorHandling(response);
-      },
-      isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
-    );
-  }
 
   void getCompanyPlants({String? businessId,Function? successCallback}) {
     companyBusinessPlants!.clear();
@@ -112,25 +84,6 @@ class DropDownDataController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
-    );
-  }
-
-  void getIntervalList({bool isLoading = false}) {
-    apiServiceCall(
-      params: {
-        "user_id": getLoginData()!.userdata!.first.id,
-      },
-      serviceUrl: ApiConfig.intervalListURL,
-      success: (dio.Response<dynamic> response) {
-        IntervalResponse intervalResponseModel =
-        IntervalResponse.fromJson(jsonDecode(response.data));
-        intervalList.addAll(intervalResponseModel.data!.interval!.first.values);
-      },
-      error: (dio.Response<dynamic> response) {
-        errorHandling(response);
-      },
-      isProgressShow: isLoading,
       methodType: ApiConfig.methodPOST,
     );
   }

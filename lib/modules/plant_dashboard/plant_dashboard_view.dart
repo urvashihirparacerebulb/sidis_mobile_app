@@ -14,6 +14,7 @@ class PlantDashboardView extends StatefulWidget {
 }
 
 class _PlantDashboardViewState extends State<PlantDashboardView> {
+
   @override
   Widget build(BuildContext context) {
     return commonStructure(

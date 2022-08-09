@@ -118,3 +118,83 @@ class IntervalResponseModel {
     "interval": List<dynamic>.from(interval!.map((x) => Map.from(x).map((k, v) => MapEntry<String, dynamic>(k, v)))),
   };
 }
+
+class AbnormalityTypeResponseModel {
+  AbnormalityTypeResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  AbnormalityTypeResponse? data;
+
+  factory AbnormalityTypeResponseModel.fromJson(Map<String, dynamic> json) => AbnormalityTypeResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: AbnormalityTypeResponse.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class AbnormalityTypeResponse {
+  AbnormalityTypeResponse({
+    this.typeData,
+  });
+
+  List<AbnormalityType>? typeData;
+
+  factory AbnormalityTypeResponse.fromJson(Map<String, dynamic> json) => AbnormalityTypeResponse(
+    typeData : List<AbnormalityType>.from(json["typedata"].map((x) => AbnormalityType.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "typedata": typeData == null ? [] : List<dynamic>.from(typeData!.map((x) => x.toJson())),
+  };
+}
+
+class AbnormalityType {
+  AbnormalityType({
+    this.id,
+    this.typeName,
+    this.manageUserId,
+    this.status,
+    this.createdAt,
+    this.modifiedAt,
+  });
+
+  int? id;
+  String? typeName;
+  int? manageUserId;
+  int? status;
+  String? createdAt;
+  String? modifiedAt;
+
+  factory AbnormalityType.fromJson(Map<String, dynamic> json) => AbnormalityType(
+    id: json["id"],
+    typeName: json["type_name"],
+    manageUserId: json["manage_user_id"],
+    status: json["status"],
+    createdAt: json["created_at"],
+    modifiedAt: json["modified_at"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "type_name": typeName,
+    "manage_user_id": manageUserId,
+    "status": status,
+    "created_at": createdAt,
+    "modified_at": modifiedAt,
+  };
+}

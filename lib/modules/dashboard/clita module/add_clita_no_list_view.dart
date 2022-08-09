@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/utility/constants.dart';
-import '../../../common_widgets/common_typeaheadfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../controllers/business_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
 import '../../../models/business_data_model.dart';
 import '../../../models/machines_response_model.dart';
 import '../../../models/plants_response_model.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../utility/color_utility.dart';
@@ -31,12 +34,13 @@ class _CLITANoListViewState extends State<CLITANoListView> {
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
   MachineData? machineData;
+  MachineData? subMachineData;
   String selectedDate = "";
 
   @override
   void initState() {
-    if(DropDownDataController.to.businessData!.isEmpty) {
-      DropDownDataController.to.getBusinesses();
+    if(BusinessController.to.businessData!.isEmpty) {
+      BusinessController.to.getBusinesses();
     }
     super.initState();
   }
@@ -47,119 +51,128 @@ class _CLITANoListViewState extends State<CLITANoListView> {
         context: context,
         bgColor: blackColor,
         appBar: commonAppbar(context: context,title: clitaNoListText),
-        child: commonRoundedContainer(
-          context: context,
-          child: Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Stack(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Obx((){
+            return BusinessController.to.businessData!.isEmpty ? const SpinKitThreeBounce(
+              color: primaryColor,
+              size: 30.0,
+            ) : Stack(
               alignment: Alignment.topCenter,
               children: [
                 ListView(
                   shrinkWrap: true,
                   children: [
-                    BusinessTextField(
-                      controller: businessController,
-                      hintText: "Select Business",
-                      myItems: DropDownDataController.to.businessData!,
-                      clearCallback: (){
-
-                      },
-                      selectionCallBack: (BusinessData val){
-                        setState((){
-                          selectedBusiness = val;
-                          businessController.text = selectedBusiness!.businessName ?? "";
-                          if(selectedBusiness != null) {
-                            DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness!.businessId.toString());
+                    InkWell(
+                      onTap: (){
+                        commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
+                          selectedBusiness = business;
+                          setState(() {});
+                          if(selectedBusiness?.businessId != null) {
+                            DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness?.businessId.toString(),successCallback: (){
+                              // getActivityList();
+                            });
                           }
-                        });
+                        }));
                       },
-                      validationFunction: (String val){
-
-                      },
-                    ),
-                    commonVerticalSpacing(spacing: 20),
-                    PlantsTextField(
-                      controller: plantsController,
-                      isEnabled: selectedBusiness == null ? false : true,
-                      myItems: DropDownDataController.to.companyBusinessPlants!,
-                      hintText: "Select COMPANY_BUSINESS_PLANTS",
-                      clearCallback: (){
-
-                      },
-                      selectionCallBack: (CompanyBusinessPlant val){
-                        setState(() {
-                          selectedPlant = val;
-                          plantsController.text = selectedPlant!.soleName ?? "";
-                          if(selectedPlant != null) {
-                            DropDownDataController.to.getMachines(plantId: selectedPlant!.soleId);
-                          }
-                        });
-                      },
-                      validationFunction: (String val){
-
-                      },
-                    ),
-                    commonVerticalSpacing(spacing: 20),
-                    MachineTextFiled(
-                      controller: machineController,
-                      isEnabled: selectedPlant == null ? false : true,
-                      myItems: DropDownDataController.to.machinesList!,
-                      hintText: "Select Machine",
-                      clearCallback: (){
-
-                      },
-                      selectionCallBack: (MachineData val){
-                        setState(() {
-                          machineData = val;
-                          machineController.text = machineData?.machineName ?? "";
-                          if(machineData != null){
-                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId);
-                          }
-                        });
-                      },
-                      validationFunction: (String val){
-
-                      },
-                    ),
-                    commonVerticalSpacing(spacing: 20),
-                    Visibility(
-                      visible: machineData == null ? false : true,
-                      child: MachineTextFiled(
-                        controller: subMachineController,
-                        myItems: DropDownDataController.to.subMachinesList!,
-                        hintText: "Select Sub Machine",
-                        clearCallback: (){
-
-                        },
-                        selectionCallBack: (MachineData val){
-                          setState(() {
-                            machineData = val;
-                            subMachineController.text = machineData?.machineName ?? "";
-                          });
-                        },
-                        validationFunction: (String val){
-
-                        },
+                      child: commonDecoratedTextView(
+                          title: selectedBusiness?.businessId == null ? "Select Business" : selectedBusiness?.businessName ?? "",
+                          isChangeColor: selectedBusiness?.businessId == null ? true : false
                       ),
                     ),
-                    commonVerticalSpacing(spacing: machineData == null ? 0 : 20),
-                    CommonTypeAheadTextField(
-                      controller: intervalController,
-                      myItems: DropDownDataController.to.intervalList,
-                      hintText: "Select Interval",
-                      clearCallback: (){
-
-                      },
-                      selectionCallBack: (String val){
-                        setState(() {
-                          intervalController.text = val;
-                        });
-                      },
-                      validationFunction: (String val){
-
-                      },
+                    InkWell(
+                        onTap: (){
+                          if(selectedBusiness?.businessId != null) {
+                            commonBottomView(context: context,
+                                child: PlantBottomView(
+                                    myItems: DropDownDataController.to
+                                        .companyBusinessPlants!,
+                                    selectionCallBack: (
+                                        CompanyBusinessPlant plant) {
+                                      selectedPlant = plant;
+                                      setState(() {});
+                                      if (selectedPlant != null) {
+                                        DropDownDataController.to.getMachines(
+                                            plantId: selectedPlant!.soleId,
+                                            successCallback: () {
+                                              // getActivityList();
+                                            });
+                                      }
+                                    }));
+                          }
+                        },
+                        child: commonDecoratedTextView(
+                          title: selectedPlant == null ? "Select Plant" : selectedPlant!.soleName ?? "",
+                          isChangeColor: selectedPlant == null ? true : false,
+                        )
                     ),
-                    commonVerticalSpacing(spacing: 20),
+                    InkWell(
+                        onTap: (){
+                          if(selectedPlant != null) {
+                            commonBottomView(context: context,
+                                child: MachineBottomView(
+                                    hintText: "Select Machine",
+                                    myItems: DropDownDataController.to.machinesList!,
+                                    selectionCallBack: (
+                                        MachineData machine) {
+                                      machineData = machine;
+                                      if (machineData != null) {
+                                        setState(() {});
+                                        DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId,successCallback: (){
+                                          // getActivityList();
+                                        });
+                                      }
+                                    }));
+                          }
+                        },
+                        child: commonDecoratedTextView(
+                          bottom: subMachineData == null ? 20 : 0,
+                          title: machineData == null ? "Select Machine" : machineData!.machineName ?? "",
+                          isChangeColor: machineData == null ? true : false,
+                        )
+                    ),
+                    Visibility(
+                      visible: machineData == null ? false : true,
+                      child: InkWell(
+                          onTap: (){
+                            commonBottomView(context: context,
+                                child: MachineBottomView(
+                                    hintText: "Select Sub Machine",
+                                    myItems: DropDownDataController.to.subMachinesList!,
+                                    selectionCallBack: (
+                                        MachineData machine) {
+                                      subMachineData = machine;
+                                      setState(() {});
+                                      if (subMachineData != null) {
+                                        // getActivityList();
+                                      }
+                                    }));
+                          },
+                          child: commonDecoratedTextView(
+                            title: subMachineData == null ? "Select Sub Machine" : subMachineData!.machineName ?? "",
+                            isChangeColor: subMachineData == null ? true : false,
+                          )
+                      ),
+                    ),
+                    InkWell(
+                        onTap: (){
+                          commonBottomView(context: context,
+                              child: CommonBottomStringView(
+                                  hintText: "Select Interval",
+                                  myItems: BusinessController.to.intervalList,
+                                  selectionCallBack: (
+                                      String val) {
+                                    setState(() {
+                                      intervalController.text = val;
+                                    });
+                                    // getActivityList();
+                                  }));
+                        },
+                        child: commonDecoratedTextView(
+                          title: intervalController.text.isEmpty ? "Select Interval" : intervalController.text,
+                          isChangeColor: intervalController.text.isEmpty ? true : false,
+                        )
+                    ),
                     Container(
                         height: 48,
                         padding: EdgeInsets.symmetric(horizontal: commonHorizontalPadding),
@@ -188,7 +201,7 @@ class _CLITANoListViewState extends State<CLITANoListView> {
                           ],
                         )),
                   ],
-                ),
+                )
                 // Positioned(
                 //   bottom: 20,
                 //   right: 10,left: 10,
@@ -203,8 +216,8 @@ class _CLITANoListViewState extends State<CLITANoListView> {
                 //   ),
                 // )
               ],
-            ),
-          ),
+            );
+          }),
         )
     );
   }
