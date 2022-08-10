@@ -20,6 +20,7 @@ import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
+import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
 class AddAbnormalityFormView extends StatefulWidget {
@@ -40,7 +41,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   Department? selectedSubDepartment;
   AbnormalityType? selectedAbnormalityType;
   MachineData? machineData;
-  MachineData? subMachineData;
+  // MachineData? subMachineData;
+  List<MachineData> subMachineLists = [];
 
   @override
   void initState() {
@@ -51,6 +53,26 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
       AbnormalityController.to.getAbnormalityType();
     });
     super.initState();
+  }
+
+  prepareRequestObject(){
+    AbnormalityRequest abnormalityRequest = AbnormalityRequest();
+    abnormalityRequest.soleId = selectedPlant!.soleId;
+    abnormalityRequest.departmentId = selectedDepartment!.departmentId.toString();
+    abnormalityRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
+    abnormalityRequest.machineId = machineData!.machineId.toString();
+    abnormalityRequest.partName = partNameController.text;
+    abnormalityRequest.abnormalityTitle = abnormalityTitleController.text;
+    abnormalityRequest.abnormalityTypeId = selectedAbnormalityType!.id.toString();
+    abnormalityRequest.abnormalityText = abnormalityController.text;
+    abnormalityRequest.possibleSolution = possibleSolutionController.text;
+    abnormalityRequest.userId = getLoginData()!.userdata!.first.id.toString();
+    List<String> subMachineIds = [];
+    for (var element in subMachineLists) {
+      subMachineIds.add(element.machineId!.toString());
+    }
+    abnormalityRequest.subMachineId = subMachineIds.join(',');
+    AbnormalityController.to.addEditNewAbnormality(abnormalityRequest);
   }
 
   @override
@@ -82,10 +104,10 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                       tapOnButton: () {
                         if(selectedBusiness != null && selectedPlant != null &&
                             selectedDepartment != null && selectedSubDepartment != null &&
-                            machineData != null && subMachineData != null &&
+                            machineData != null && subMachineLists.isNotEmpty &&
                             selectedAbnormalityType != null && partNameController.text.isNotEmpty &&
                             abnormalityTitleController.text.isNotEmpty){
-
+                          prepareRequestObject();
                         }
                       },
                       isLoading: false)),
@@ -210,26 +232,34 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                           myItems: DropDownDataController.to.machinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {
+                                            subMachineLists.clear();
                                             machineData = machine;
                                             if (machineData != null) {
-                                              setState(() {});
                                               DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId,successCallback: (){
-
+                                                if(DropDownDataController.to.subMachinesList!.isNotEmpty){
+                                                  subMachineLists.add(MachineData());
+                                                  setState(() {});
+                                                }
                                               });
+                                              setState(() {});
                                             }
                                           }));
                                 }
                               },
                               child: commonDecoratedTextView(
-                                bottom: subMachineData == null ? 25 : 0,
+                                bottom: subMachineLists.isEmpty ? 25 : 0,
                                 title: machineData == null ? "Select Machine" : machineData!.machineName ?? "",
                                 isChangeColor: machineData == null ? true : false,
                               )
                           ),
-                          commonVerticalSpacing(spacing: subMachineData == null ? 0 : 25),
+                          commonVerticalSpacing(spacing: subMachineLists.isEmpty ? 0 : 25),
                           Visibility(
                             visible: machineData == null ? false : true,
-                            child: InkWell(
+                            child: ListView.builder(
+                              physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                itemCount: subMachineLists.length,
+                                itemBuilder: (context, index) => InkWell(
                                 onTap: (){
                                   commonBottomView(context: context,
                                       child: MachineBottomView(
@@ -237,17 +267,21 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                           myItems: DropDownDataController.to.subMachinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {
-                                            subMachineData = machine;
+                                            subMachineLists[index] = machine;
+                                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: subMachineLists[index].machineId,successCallback: (){
+                                              if(DropDownDataController.to.subMachinesList!.isNotEmpty){
+                                                subMachineLists.add(MachineData());
+                                                setState(() {});
+                                              }
+                                            });
                                             setState(() {});
-                                            if (subMachineData != null) {
-                                            }
                                           }));
                                 },
                                 child: commonDecoratedTextView(
-                                  title: subMachineData == null ? "Select Sub Machine" : subMachineData!.machineName ?? "",
-                                  isChangeColor: subMachineData == null ? true : false,
+                                  title: subMachineLists[index].machineName == null ? "Select Sub Machine" : subMachineLists[index].machineName ?? "",
+                                  isChangeColor: subMachineLists[index].machineName == null ? true : false,
                                 )
-                            ),
+                            )),
                           ),
                           CommonTextFiled(
                             fieldTitleText: "Part Name*",
@@ -335,4 +369,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
         })
     );
   }
+}
+
+class SubMachineViewList{
+  MachineData? subMachine;
 }

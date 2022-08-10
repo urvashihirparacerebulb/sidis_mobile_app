@@ -198,3 +198,63 @@ class AbnormalityType {
     "modified_at": modifiedAt,
   };
 }
+
+class AbnormalityRequest{
+  String? soleId;
+  String? departmentId;
+  String? subDepartmentId;
+  String? machineId;
+  String? subMachineId;
+  String? partsId = "";
+  String? partName;
+  String? abnormalityTitle;
+  String? abnormalityTypeId;
+  String? abnormalityText;
+  String? possibleSolution;
+  String? userId;
+
+  AbnormalityRequest({
+    this.soleId,
+    this.departmentId,
+    this.subDepartmentId,
+    this.machineId,
+    this.subMachineId,
+    this.partsId,
+    this.partName,
+    this.abnormalityTitle,
+    this.abnormalityTypeId,
+    this.abnormalityText,
+    this.possibleSolution,
+    this.userId
+  });
+
+  factory AbnormalityRequest.fromJson(Map<String, dynamic> json) => AbnormalityRequest(
+    soleId: json["sole_id"],
+    departmentId: json["department_id"],
+    subDepartmentId: json["subdepartment_id"],
+    machineId: json["machine_id"],
+    subMachineId:  json['submachine_id'],
+    partsId: json["parts_id"],
+    partName: json["part_name"],
+    abnormalityTitle: json["abnormality_title"],
+    abnormalityTypeId: json["abnormality_type_id"],
+    abnormalityText: json["abnormality_text"],
+    possibleSolution: json["possible_solution"],
+    userId: json["user_id"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "sole_id": soleId,
+    "department_id": departmentId,
+    "subdepartment_id": subDepartmentId,
+    "machine_id": machineId,
+    "submachine_id": subMachineId,
+    "parts_id": partsId,
+    "part_name": partName,
+    "abnormality_title": abnormalityTitle,
+    "abnormality_type_id": abnormalityTypeId,
+    "abnormality_text": abnormalityText,
+    "possible_solution": possibleSolution,
+    "user_id": userId,
+  };
+}

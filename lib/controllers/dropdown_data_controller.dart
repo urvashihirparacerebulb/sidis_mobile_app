@@ -81,7 +81,7 @@ class DropDownDataController extends GetxController {
         successCallback!();
       },
       error: (dio.Response<dynamic> response) {
-        errorHandling(response);
+        // errorHandling(response);
       },
       isProgressShow: true,
       methodType: ApiConfig.methodPOST,

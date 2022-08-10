@@ -11,6 +11,7 @@ class ApiConfig {
   static const String departmentListURL = "${baseURL}fetch-department";
   static const String subDepartmentListURL = "${baseURL}fetch-sub-department";
   static const String getAbnormalityTypeURL = "${baseURL}get-abnormality-type";
+  static const String addNewAbnormalityURL = "${baseURL}manage-abnormality";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

@@ -2,9 +2,11 @@ import 'dart:convert';
 
 import 'package:get/get.dart';
 import 'package:my_projects/models/activities_response_model.dart';
+import 'package:my_projects/models/boolean_response_model.dart';
 
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
+import '../utility/common_methods.dart';
 import 'authentication_controller.dart';
 import 'package:dio/dio.dart' as dio;
 
@@ -27,6 +29,23 @@ class AbnormalityController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void addEditNewAbnormality(AbnormalityRequest? abnormalityRequest) {
+    apiServiceCall(
+      params: abnormalityRequest!.toJson(),
+      serviceUrl: ApiConfig.addNewAbnormalityURL,
+      success: (dio.Response<dynamic> response) {
+        BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
+        showSnackBar(title: ApiConfig.success, message: booleanResponseModel.message ?? "");
+        Get.back();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
       methodType: ApiConfig.methodPOST,
     );
   }
