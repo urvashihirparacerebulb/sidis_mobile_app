@@ -6,6 +6,7 @@ import 'package:my_projects/models/boolean_response_model.dart';
 
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
+import '../models/abnormality_response_model.dart';
 import '../utility/common_methods.dart';
 import 'authentication_controller.dart';
 import 'package:dio/dio.dart' as dio;
@@ -14,6 +15,8 @@ class AbnormalityController extends GetxController {
   static AbnormalityController get to => Get.find();
 
   RxList<AbnormalityType>? abnormalityTypeData = RxList<AbnormalityType>();
+  RxList<Abnormality>? allAbnormalities = RxList<Abnormality>();
+  RxBool loadingForAbnormality = false.obs;
 
   void getAbnormalityType() {
     abnormalityTypeData!.clear();
@@ -29,6 +32,30 @@ class AbnormalityController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getAbnormalityLists() {
+    loadingForAbnormality.value = true;
+    allAbnormalities!.clear();
+    apiServiceCall(
+      params: {
+        "user_id": getLoginData()!.userdata!.first.id,
+        "group_id": getLoginData()!.userdata!.first.groupId,
+      },
+      serviceUrl: ApiConfig.abnormalityListURL,
+      success: (dio.Response<dynamic> response) {
+        AbnormalityResponseModel abnormalityResponseModel =
+        AbnormalityResponseModel.fromJson(jsonDecode(response.data));
+        allAbnormalities!.addAll(abnormalityResponseModel.data?.data ?? []);
+        loadingForAbnormality.value = false;
+      },
+      error: (dio.Response<dynamic> response) {
+        loadingForAbnormality.value = false;
+        errorHandling(response);
+      },
+      isProgressShow: true,
       methodType: ApiConfig.methodPOST,
     );
   }

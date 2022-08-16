@@ -5,6 +5,7 @@ import '../../../common_widgets/common_widget.dart';
 import '../../../utility/assets_utility.dart';
 import '../../../utility/common_methods.dart';
 import '../../../utility/constants.dart';
+import '../abnormality_form/abnormality_list_view.dart';
 import '../abnormality_form/add_abnormaliry_view.dart';
 import '../assigned_form/add_assigned_form_view.dart';
 import '../clita module/add_clita_fill_form_view.dart';
@@ -49,7 +50,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
             Get.to(() => const CLITANoListView());
           }
           if(title == abnormalityFormText){
-            Get.to(() => const AddAbnormalityFormView());
+            Get.to(() => const AbnormalityListView());
           }
           if(title == assignedFormText){
             Get.to(() => const AddAssignedFormView());

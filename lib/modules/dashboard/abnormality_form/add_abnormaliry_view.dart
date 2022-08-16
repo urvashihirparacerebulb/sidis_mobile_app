@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:my_projects/configurations/config_file.dart';
 import 'package:my_projects/controllers/abnormality_controller.dart';
 import 'package:my_projects/controllers/department_controller.dart';
+import 'package:my_projects/controllers/part_controller.dart';
 import 'package:my_projects/models/department_response_model.dart';
 import 'package:my_projects/utility/constants.dart';
 import '../../../common_widgets/common_textfield.dart';
@@ -12,11 +14,13 @@ import '../../../controllers/dropdown_data_controller.dart';
 import '../../../models/activities_response_model.dart';
 import '../../../models/business_data_model.dart';
 import '../../../models/machines_response_model.dart';
+import '../../../models/part_response_model.dart';
 import '../../../models/plants_response_model.dart';
 import '../../../textfields/abnormality_type_field.dart';
 import '../../../textfields/business_textfiled.dart';
 import '../../../textfields/department_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
+import '../../../textfields/part_textfiled.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
@@ -33,7 +37,6 @@ class AddAbnormalityFormView extends StatefulWidget {
 class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   TextEditingController abnormalityController = TextEditingController();
   TextEditingController abnormalityTitleController = TextEditingController();
-  TextEditingController partNameController = TextEditingController();
   TextEditingController possibleSolutionController = TextEditingController();
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
@@ -41,6 +44,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   Department? selectedSubDepartment;
   AbnormalityType? selectedAbnormalityType;
   MachineData? machineData;
+  PartArray? selectedPart;
   // MachineData? subMachineData;
   List<MachineData> subMachineLists = [];
 
@@ -55,13 +59,41 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
     super.initState();
   }
 
+  partAPICall(){
+    String machineId = "";
+    if(subMachineLists.isNotEmpty){
+      if(subMachineLists.last.machineId != null){
+        machineId = subMachineLists.last.machineId.toString();
+      }else{
+        machineId = machineData!.machineId.toString();
+      }
+    }else{
+      machineId = machineData!.machineId.toString();
+    }
+    PartController.to.getPartList(machineId: machineId);
+  }
+
+  getSubMachineAPI({String? plantId, int? machineId}){
+    DropDownDataController.to.getSubMachines(plantId: plantId,
+        machineId: machineId,successCallback: (){
+          partAPICall();
+          if(DropDownDataController.to.subMachinesList!.isNotEmpty){
+            subMachineLists.add(MachineData());
+            setState(() {});
+          }
+          setState(() {
+          });
+        });
+  }
+
   prepareRequestObject(){
     AbnormalityRequest abnormalityRequest = AbnormalityRequest();
     abnormalityRequest.soleId = selectedPlant!.soleId;
     abnormalityRequest.departmentId = selectedDepartment!.departmentId.toString();
     abnormalityRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
     abnormalityRequest.machineId = machineData!.machineId.toString();
-    abnormalityRequest.partName = partNameController.text;
+    abnormalityRequest.partName = selectedPart!.partName;
+    abnormalityRequest.partsId = selectedPart!.partId == null ? "" : selectedPart!.partId.toString();
     abnormalityRequest.abnormalityTitle = abnormalityTitleController.text;
     abnormalityRequest.abnormalityTypeId = selectedAbnormalityType!.id.toString();
     abnormalityRequest.abnormalityText = abnormalityController.text;
@@ -105,9 +137,11 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         if(selectedBusiness != null && selectedPlant != null &&
                             selectedDepartment != null && selectedSubDepartment != null &&
                             machineData != null && subMachineLists.isNotEmpty &&
-                            selectedAbnormalityType != null && partNameController.text.isNotEmpty &&
+                            selectedAbnormalityType != null && selectedPart != null &&
                             abnormalityTitleController.text.isNotEmpty){
                           prepareRequestObject();
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please fill whole form");
                         }
                       },
                       isLoading: false)),
@@ -217,7 +251,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                 }
                               },
                               child: commonDecoratedTextView(
-                                title: selectedSubDepartment == null ? "Select Sub Machine" : selectedSubDepartment!.departmentName ?? "",
+                                title: selectedSubDepartment == null ? "Select Sub Department" : selectedSubDepartment!.departmentName ?? "",
                                 isChangeColor: selectedSubDepartment == null ? true : false,
                               )
                           ),
@@ -235,13 +269,10 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                             subMachineLists.clear();
                                             machineData = machine;
                                             if (machineData != null) {
-                                              DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: machineData!.machineId,successCallback: (){
-                                                if(DropDownDataController.to.subMachinesList!.isNotEmpty){
-                                                  subMachineLists.add(MachineData());
-                                                  setState(() {});
-                                                }
-                                              });
-                                              setState(() {});
+                                              getSubMachineAPI(
+                                                  plantId: selectedPlant!.soleId,
+                                                  machineId: machineData!.machineId
+                                              );
                                             }
                                           }));
                                 }
@@ -268,13 +299,10 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                           selectionCallBack: (
                                               MachineData machine) {
                                             subMachineLists[index] = machine;
-                                            DropDownDataController.to.getSubMachines(plantId: selectedPlant!.soleId,machineId: subMachineLists[index].machineId,successCallback: (){
-                                              if(DropDownDataController.to.subMachinesList!.isNotEmpty){
-                                                subMachineLists.add(MachineData());
-                                                setState(() {});
-                                              }
-                                            });
-                                            setState(() {});
+                                            getSubMachineAPI(
+                                                plantId: selectedPlant!.soleId,
+                                                machineId: subMachineLists[index].machineId
+                                            );
                                           }));
                                 },
                                 child: commonDecoratedTextView(
@@ -283,20 +311,24 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                 )
                             )),
                           ),
-                          CommonTextFiled(
-                            fieldTitleText: "Part Name*",
-                            hintText: "Part Name*",
-                            // isBorderEnable: false,
-                            isChangeFillColor: true,
-                            textEditingController: partNameController,
-                            onChangedFunction: (String value){
-                            },
-                            validationFunction: (String value) {
-                              return value.toString().isEmpty
-                                  ? notEmptyFieldMessage
-                                  : null;
-                            },),
-                          commonVerticalSpacing(spacing: 30),
+                          InkWell(
+                              onTap: (){
+                                  commonBottomView(context: context,
+                                      child: PartBottomView(
+                                          hintText: "Part Name",
+                                          myItems: PartController.to.allPartList,
+                                          selectionCallBack: (
+                                              PartArray part) {
+                                            setState(() {
+                                              selectedPart = part;
+                                            });
+                                          }));
+                              },
+                              child: commonDecoratedTextView(
+                                title: selectedPart == null ? "Part Name*" : selectedPart!.partName ?? "",
+                                isChangeColor: selectedPart == null ? true : false,
+                              )
+                          ),
                           commonHeaderTitle(title: "Abnormality Detail",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
                           commonVerticalSpacing(spacing: 20),
                           CommonTextFiled(

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:my_projects/controllers/business_controller.dart';
 import 'package:my_projects/controllers/general_controller.dart';
+import 'package:my_projects/controllers/part_controller.dart';
 import '../abnormality_controller.dart';
 import '../authentication_controller.dart';
 import '../department_controller.dart';
@@ -20,6 +21,8 @@ class AppBinding extends Bindings {
     Get.put<DepartmentController>(DepartmentController(),
         permanent: true);
     Get.put<AbnormalityController>(AbnormalityController(),
+        permanent: true);
+    Get.put<PartController>(PartController(),
         permanent: true);
   }
 }
