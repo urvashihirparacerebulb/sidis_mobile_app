@@ -28,7 +28,9 @@ import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
 class AddAbnormalityFormView extends StatefulWidget {
-  const AddAbnormalityFormView({Key? key}) : super(key: key);
+  final bool isEdit;
+  final String abnormalityId;
+  const AddAbnormalityFormView({Key? key, required this.isEdit, required this.abnormalityId}) : super(key: key);
 
   @override
   State<AddAbnormalityFormView> createState() => _AddAbnormalityFormViewState();
@@ -50,12 +52,59 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
 
   @override
   void initState() {
-    if(BusinessController.to.businessData!.isEmpty) {
-      BusinessController.to.getBusinesses();
+    if(widget.isEdit){
+      var abnormality = AbnormalityController.to.abnormalityDetail.value;
+      AbnormalityController.to.getAbnormalityByDetail(abnormalityId: widget.abnormalityId,callback: (){
+        if (BusinessController.to.businessData!.isEmpty) {
+          BusinessController.to.getBusinesses();
+        }
+        BusinessData business  = BusinessData();
+        business.businessId = abnormality.bussinessId;
+        business.businessName = abnormality.bussinessName;
+        selectedBusiness = business;
+        CompanyBusinessPlant plant = CompanyBusinessPlant();
+        plant.soleId = "${abnormality.companyId} - ${abnormality.plantId} - ${abnormality.bussinessId}";
+        plant.soleName = abnormality.companyShortName;
+        selectedPlant = plant;
+        Department department = Department();
+        department.departmentId = abnormality.departmentId;
+        department.departmentName = abnormality.departmentShortName;
+        selectedDepartment = department;
+        Department subDepartment = Department();
+        subDepartment.departmentId = abnormality.subdepartmentId;
+        subDepartment.departmentName = abnormality.subdepartmentShortName;
+        selectedSubDepartment = subDepartment;
+        MachineData machine = MachineData();
+        machine.machineId = abnormality.machineId;
+        machine.machineName = abnormality.machineName;
+        machineData = machine;
+        AbnormalityType type = AbnormalityType();
+        type.id = abnormality.abnormalityTypeId;
+        type.typeName = abnormality.typeName;
+        selectedAbnormalityType = type;
+        PartArray part = PartArray();
+        part.partId = abnormality.partsId;
+        part.partName = abnormality.partName;
+        selectedPart = part;
+        abnormality.submachine?.forEach((element) {
+          MachineData subMachine = MachineData();
+          subMachine.machineId = element.id;
+          subMachine.machineName = element.name;
+          subMachineLists.add(subMachine);
+        });
+        abnormalityController.text = abnormality.abnormalityText ?? "";
+        abnormalityTitleController.text = abnormality.abnormalityTitle ?? "";
+        possibleSolutionController.text = abnormality.solutionText ?? "";
+        setState(() {});
+      });
+    }else {
+      if (BusinessController.to.businessData!.isEmpty) {
+        BusinessController.to.getBusinesses();
+      }
+      Future.delayed(const Duration(seconds: 5), () {
+        AbnormalityController.to.getAbnormalityType(callback: (){});
+      });
     }
-    Future.delayed(const Duration(seconds: 5), () {
-      AbnormalityController.to.getAbnormalityType();
-    });
     super.initState();
   }
 
@@ -70,7 +119,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
     }else{
       machineId = machineData!.machineId.toString();
     }
-    PartController.to.getPartList(machineId: machineId);
+    PartController.to.getPartList(machineId: machineId,callback: (){});
   }
 
   getSubMachineAPI({String? plantId, int? machineId}){
@@ -88,6 +137,9 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
 
   prepareRequestObject(){
     AbnormalityRequest abnormalityRequest = AbnormalityRequest();
+    if(widget.isEdit){
+      abnormalityRequest.editAbnormalityId = widget.abnormalityId;
+    }
     abnormalityRequest.soleId = selectedPlant!.soleId;
     abnormalityRequest.departmentId = selectedDepartment!.departmentId.toString();
     abnormalityRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
@@ -136,7 +188,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                       tapOnButton: () {
                         if(selectedBusiness != null && selectedPlant != null &&
                             selectedDepartment != null && selectedSubDepartment != null &&
-                            machineData != null && subMachineLists.isNotEmpty &&
+                            machineData != null &&
                             selectedAbnormalityType != null && selectedPart != null &&
                             abnormalityTitleController.text.isNotEmpty){
                           prepareRequestObject();
@@ -171,6 +223,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                             onTap: (){
                               commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
                                 selectedBusiness = business;
+                                selectedPlant = null;selectedDepartment = null;
+                                selectedSubDepartment = null;machineData = null; subMachineLists = [];
                                 setState(() {});
                                 if(selectedBusiness?.businessId != null) {
                                   DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness?.businessId.toString(),successCallback: (){
@@ -192,16 +246,20 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                       child: PlantBottomView(
                                           myItems: DropDownDataController.to
                                               .companyBusinessPlants!,
+                                          businessId: selectedBusiness!.businessId.toString(),
                                           selectionCallBack: (
                                               CompanyBusinessPlant plant) {
                                             selectedPlant = plant;
+                                            selectedDepartment = null;
+                                            selectedSubDepartment = null;machineData = null; subMachineLists = [];
                                             setState(() {});
                                             if (selectedPlant != null) {
                                               DropDownDataController.to.getMachines(
                                                   plantId: selectedPlant!.soleId,
                                                   successCallback: () {
                                                     DepartmentController.to.getDepartment(
-                                                        soleId: selectedPlant!.soleId
+                                                        soleId: selectedPlant!.soleId,
+                                                      callback: (){}
                                                     );
                                                   });
                                             }
@@ -223,9 +281,10 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                           selectionCallBack: (
                                               Department department) {
                                             selectedDepartment = department;
+                                            selectedSubDepartment = null;machineData = null; subMachineLists = [];
                                             setState(() {});
                                             if (selectedDepartment != null) {
-                                              DepartmentController.to.getSubDepartment(departmentId: selectedDepartment!.departmentId.toString());
+                                              DepartmentController.to.getSubDepartment(departmentId: selectedDepartment!.departmentId.toString(),callback: (){});
                                             }
                                           }));
                                 }
@@ -263,11 +322,15 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                   commonBottomView(context: context,
                                       child: MachineBottomView(
                                           hintText: "Select Machine",
+                                          soleId: selectedPlant!.soleId ?? "",
+                                          machineId: machineData!.machineId ?? 0,
                                           myItems: DropDownDataController.to.machinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {
                                             subMachineLists.clear();
                                             machineData = machine;
+                                            subMachineLists = [];
+                                            setState(() {});
                                             if (machineData != null) {
                                               getSubMachineAPI(
                                                   plantId: selectedPlant!.soleId,
@@ -295,10 +358,14 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                   commonBottomView(context: context,
                                       child: MachineBottomView(
                                           hintText: "Select Sub Machine",
+                                          soleId: selectedPlant!.soleId ?? "",
+                                          machineId: subMachineLists.last.machineId ?? 0,
                                           myItems: DropDownDataController.to.subMachinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {
                                             subMachineLists[index] = machine;
+                                            setState(() {
+                                            });
                                             getSubMachineAPI(
                                                 plantId: selectedPlant!.soleId,
                                                 machineId: subMachineLists[index].machineId
@@ -316,6 +383,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                   commonBottomView(context: context,
                                       child: PartBottomView(
                                           hintText: "Part Name",
+                                          machineId: subMachineLists.isNotEmpty ? subMachineLists.last.machineId.toString() : machineData!.machineId.toString(),
                                           myItems: PartController.to.allPartList,
                                           selectionCallBack: (
                                               PartArray part) {

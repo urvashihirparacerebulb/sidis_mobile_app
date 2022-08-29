@@ -15,7 +15,7 @@ class PartController extends GetxController {
 
   RxList<PartArray> allPartList = RxList<PartArray>();
 
-  void getPartList({String machineId = ""}) {
+  void getPartList({String machineId = "",Function? callback}) {
     allPartList.clear();
     apiServiceCall(
       params: {
@@ -27,6 +27,7 @@ class PartController extends GetxController {
       success: (dio.Response<dynamic> response) {
         PartResponseModel partResponseModel = PartResponseModel.fromJson(jsonDecode(response.data));
         allPartList.addAll(partResponseModel.data?.partArray ?? []);
+        callback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

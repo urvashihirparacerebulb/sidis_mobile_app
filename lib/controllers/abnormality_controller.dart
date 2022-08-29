@@ -17,8 +17,9 @@ class AbnormalityController extends GetxController {
   RxList<AbnormalityType>? abnormalityTypeData = RxList<AbnormalityType>();
   RxList<Abnormality>? allAbnormalities = RxList<Abnormality>();
   RxBool loadingForAbnormality = false.obs;
+  Rx<AbnormalityDetail> abnormalityDetail = AbnormalityDetail().obs;
 
-  void getAbnormalityType() {
+  void getAbnormalityType({Function? callback}) {
     abnormalityTypeData!.clear();
     apiServiceCall(
       params: {},
@@ -27,6 +28,7 @@ class AbnormalityController extends GetxController {
         AbnormalityTypeResponseModel abnormalityTypeResponse =
         AbnormalityTypeResponseModel.fromJson(jsonDecode(response.data));
         abnormalityTypeData!.addAll(abnormalityTypeResponse.data?.typeData ?? []);
+        callback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -68,6 +70,7 @@ class AbnormalityController extends GetxController {
         BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
         showSnackBar(title: ApiConfig.success, message: booleanResponseModel.message ?? "");
         Get.back();
+        getAbnormalityLists();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -76,4 +79,26 @@ class AbnormalityController extends GetxController {
       methodType: ApiConfig.methodPOST,
     );
   }
+
+  void getAbnormalityByDetail({String? abnormalityId,Function? callback}) {
+    apiServiceCall(
+      params: {
+        "user_id": getLoginData()!.userdata!.first.id,
+        "abnormality_id": abnormalityId,
+      },
+      serviceUrl: ApiConfig.getAbnormalityDetailURL,
+      success: (dio.Response<dynamic> response) {
+        AbnormalityDetailResponse abnormalityDetailResponse =
+        AbnormalityDetailResponse.fromJson(jsonDecode(response.data));
+        abnormalityDetail.value = abnormalityDetailResponse.data!;
+        callback!();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
 }

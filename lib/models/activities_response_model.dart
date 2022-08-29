@@ -200,6 +200,7 @@ class AbnormalityType {
 }
 
 class AbnormalityRequest{
+  String? editAbnormalityId;
   String? soleId;
   String? departmentId;
   String? subDepartmentId;
@@ -214,6 +215,7 @@ class AbnormalityRequest{
   String? userId;
 
   AbnormalityRequest({
+    this.editAbnormalityId,
     this.soleId,
     this.departmentId,
     this.subDepartmentId,
@@ -229,6 +231,7 @@ class AbnormalityRequest{
   });
 
   factory AbnormalityRequest.fromJson(Map<String, dynamic> json) => AbnormalityRequest(
+    editAbnormalityId: json["edit_abnormality_id"],
     soleId: json["sole_id"],
     departmentId: json["department_id"],
     subDepartmentId: json["subdepartment_id"],
@@ -244,6 +247,7 @@ class AbnormalityRequest{
   );
 
   Map<String, dynamic> toJson() => {
+    "edit_abnormality_id": editAbnormalityId,
     "sole_id": soleId,
     "department_id": departmentId,
     "subdepartment_id": subDepartmentId,

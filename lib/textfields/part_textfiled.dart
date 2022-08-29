@@ -3,13 +3,15 @@ import 'package:get/get.dart';
 import 'package:my_projects/models/part_response_model.dart';
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
+import '../controllers/part_controller.dart';
 
 class PartBottomView extends StatefulWidget {
   final String hintText;
+  final String machineId;
   final List<PartArray> myItems;
   final Function? selectionCallBack;
 
-  const PartBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText}) : super(key: key);
+  const PartBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText, this.machineId = ""}) : super(key: key);
 
   @override
   State<PartBottomView> createState() => _PartBottomViewState();
@@ -17,6 +19,15 @@ class PartBottomView extends StatefulWidget {
 
 class _PartBottomViewState extends State<PartBottomView> {
   TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
+    if(widget.myItems.isEmpty){
+      PartController.to.getPartList(machineId: widget.machineId,callback: (){
+        setState(() {});
+      });
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

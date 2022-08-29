@@ -8,6 +8,7 @@ import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/screen_utility.dart';
 import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
+import '../../speech_view.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/constants.dart';
 
@@ -142,23 +143,28 @@ class _LoginScreenState extends State<LoginScreen> {
                   commonVerticalSpacing(spacing: 30),
                   commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2,align: TextAlign.center),
                   commonVerticalSpacing(),
-                  Center(
-                    child: Neumorphic(
-                        style: NeumorphicStyle(
-                            shape: NeumorphicShape.concave,
-                            boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-                            depth: 8,
-                            color: Colors.grey
-                        ),
-                        child: Container(
-                          width: 30,
-                          height: 40,
-                          decoration: BoxDecoration(
-                              color: ConvertTheme.convertTheme.getWhiteToFontColor(),
-                              borderRadius: commonBorderRadius
+                  InkWell(
+                    onTap: (){
+                      Get.to(() => const SpeechSampleApp());
+                    },
+                    child: Center(
+                      child: Neumorphic(
+                          style: NeumorphicStyle(
+                              shape: NeumorphicShape.concave,
+                              boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                              depth: 8,
+                              color: Colors.grey
                           ),
-                          child: Icon(Icons.fingerprint,color: ConvertTheme.convertTheme.getFontToWhiteColor()),
-                        ),
+                          child: Container(
+                            width: 30,
+                            height: 40,
+                            decoration: BoxDecoration(
+                                color: ConvertTheme.convertTheme.getWhiteToFontColor(),
+                                borderRadius: commonBorderRadius
+                            ),
+                            child: Icon(Icons.fingerprint,color: ConvertTheme.convertTheme.getFontToWhiteColor()),
+                          ),
+                      ),
                     ),
                   ),
                   commonVerticalSpacing(spacing: 15),

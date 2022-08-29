@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
-
 import '../controllers/general_controller.dart';
 import '../models/activities_response_model.dart';
 import '../modules/dashboard/dashboard_listing/dashboard_view.dart';

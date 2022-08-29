@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:my_projects/utility/screen_utility.dart';
+import 'package:get/get.dart';
+import 'package:my_projects/controllers/dashboard_controller.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../common_widgets/common_widget.dart';
-import '../../../utility/assets_utility.dart';
 import '../../../utility/color_utility.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -13,6 +14,52 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late SelectionBehavior _selectionBehavior;
+
+  @override
+  void initState(){
+    DashboardController.to.getKaizenChartData();
+    _selectionBehavior = SelectionBehavior(
+        enable: true);
+    super.initState();
+  }
+
+  List<ChartData> getKaizenXData(){
+    List<ChartData> myChartData = [];
+    var val = DashboardController.to.kaizenCharts.value;
+    for(int i = 0; i < val.value!.length; i ++){
+      myChartData.add(ChartData(val.data![i], val.value![i], 0));
+    }
+    return myChartData;
+  }
+
+  List<ChartData> getAbnormalityXData(){
+    List<ChartData> myChartData = [];
+    var val = DashboardController.to.abnormalitiesCharts.value;
+    for(int i = 0; i < val.value!.length; i ++){
+      myChartData.add(ChartData(val.data![i], val.value![i], 0));
+    }
+    return myChartData;
+  }
+
+  List<ChartData> getKaizenYData(){
+    List<ChartData> myChartData = [];
+    var val = DashboardController.to.kaizenCharts.value;
+    for(int i = 0; i < val.commpletedvalue!.length; i ++){
+      myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+    }
+    return myChartData;
+  }
+
+  List<ChartData> getAbnormalityYData(){
+    List<ChartData> myChartData = [];
+    var val = DashboardController.to.abnormalitiesCharts.value;
+    for(int i = 0; i < val.commpletedvalue!.length; i ++){
+      myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+    }
+    return myChartData;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -141,16 +188,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   commonVerticalSpacing(),
-                  Container(
-                    height: 130,
-                    width: getScreenWidth(context),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: defaultGraphImage,
-                            fit: BoxFit.fill
-                        )
+                  Obx(() => Visibility(
+                    visible: DashboardController.to.kaizenCharts.value.data != null,
+                    child: SfCartesianChart(
+                        palette: const [
+                          Color(0xff147AD6),
+                          Color(0xff00BE4C),
+                        ],
+                        primaryXAxis: CategoryAxis(),
+                        series: <ChartSeries<ChartData, String>>[
+                          ColumnSeries<ChartData, String>(
+                            dataSource: getKaizenXData(),
+                            xValueMapper: (ChartData sales, _) => sales.x,
+                            yValueMapper: (ChartData sales, _) => sales.y, // same y variable used but assign y data value from series -1 data source.
+                          ),
+                          ColumnSeries<ChartData, String>(
+                            dataSource: getKaizenYData(),
+                            xValueMapper: (ChartData sales, _) => sales.x,
+                            // same y variable used but assign y data value from series -2 data source.
+                            yValueMapper: (ChartData sales, _) => sales.y1,
+                          ),
+                        ]
                     ),
-                  )
+                  ))
                 ],
               ),
             ),
@@ -188,16 +248,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     ],
                   ),
                   commonVerticalSpacing(),
-                  Container(
-                    height: 130,
-                    width: getScreenWidth(context),
-                    decoration: BoxDecoration(
-                        image: DecorationImage(
-                            image: defaultGraphImage,
-                            fit: BoxFit.fill
-                        )
+                  Obx(() => Visibility(
+                    visible: DashboardController.to.abnormalitiesCharts.value.data != null,
+                    child: SfCartesianChart(
+                        palette: const [
+                          Color(0xff147AD6),
+                          Color(0xff00BE4C),
+                        ],
+                        primaryXAxis: CategoryAxis(),
+                        series: <ChartSeries<ChartData, String>>[
+                          ColumnSeries<ChartData, String>(
+                            dataSource: getAbnormalityXData(),
+                            xValueMapper: (ChartData sales, _) => sales.x,
+                            yValueMapper: (ChartData sales, _) => sales.y, // same y variable used but assign y data value from series -1 data source.
+                          ),
+                          ColumnSeries<ChartData, String>(
+                            dataSource: getAbnormalityYData(),
+                            xValueMapper: (ChartData sales, _) => sales.x,
+                            // same y variable used but assign y data value from series -2 data source.
+                            yValueMapper: (ChartData sales, _) => sales.y1,
+                          ),
+                        ]
                     ),
-                  )
+                  ))
                 ],
               ),
             ),
@@ -207,4 +280,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
+
+class ChartData {
+  ChartData(this.x, this.y,this.y1);
+  final String x;
+  final num y;
+  final num y1;
 }

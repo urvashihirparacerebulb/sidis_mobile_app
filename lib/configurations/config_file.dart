@@ -10,10 +10,13 @@ class ApiConfig {
   static const String intervalListURL = "${baseURL}interval-list";
   static const String departmentListURL = "${baseURL}fetch-department";
   static const String subDepartmentListURL = "${baseURL}fetch-sub-department";
+  static const String getAbnormalityGraphURL = "${baseURL}get-dashboard-abnormality-data";
+  static const String getKaizenGraphURL = "${baseURL}get-dashboard-kaizen-data";
   static const String getAbnormalityTypeURL = "${baseURL}get-abnormality-type";
   static const String addNewAbnormalityURL = "${baseURL}manage-abnormality";
   static const String abnormalityListURL = "${baseURL}fetch-abnormality";
   static const String getPartDataURL = "${baseURL}get-part-data";
+  static const String getAbnormalityDetailURL = "${baseURL}get-abnormality";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

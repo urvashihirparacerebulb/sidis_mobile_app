@@ -37,32 +37,32 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "202294538",fontWeight: 3,fontSize: 1.2),
-                commonHeaderTitle(title: "Part 2",fontWeight: 3,fontSize: 1.2)
+                commonHeaderTitle(title: abnormality!.requestNo ?? "",fontWeight: 3,fontSize: 1.2),
+                commonHeaderTitle(title: abnormality.companyShortName ?? "",fontWeight: 3,fontSize: 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "CEREBULB_Stiching_FB",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: "Fiber Glass Fiber Fabric",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.plantShortName ?? "",fontWeight: 1,fontSize: 0.90),
+                commonHeaderTitle(title: abnormality.bussinessName ?? "",fontWeight: 1,fontSize: 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Maintenance_Extruder",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: "Maintenance_Extruder",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.departmentName ?? "",fontWeight: 1,fontSize: 0.90),
+                commonHeaderTitle(title: abnormality.partsName ?? "",fontWeight: 1,fontSize: 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Activity 1",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: "05-07-2022,11:27 AM",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.abnormalityTitle ?? "",fontWeight: 1,fontSize: 0.90),
+                commonHeaderTitle(title: abnormality.createdAt ?? "",fontWeight: 1,fontSize: 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -84,15 +84,17 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition);
+                          _showPopupMenu(details.globalPosition,abnormality.abnormalityId!);
                         },
                         child: Container(
-                            padding: const EdgeInsets.all(10.0),
+                            padding: const EdgeInsets.all(5.0),
                             decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Color(0xffD9D9D9)
                             ),
-                            child: const Icon(Icons.more_vert_rounded,size: 16)))))
+                            child: const Icon(Icons.more_vert_rounded,size: 24))
+                    )
+                ))
               ],
             )
           ],
@@ -101,7 +103,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset,int id) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -115,12 +117,18 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
       items: [
         PopupMenuItem<String>(
             value: 'Edit',
-            child: Row(
-              children: [
-                const Icon(Icons.edit),
-                commonHorizontalSpacing(),
-                const Text('Edit'),
-              ],
+            child: InkWell(
+              onTap: (){
+                Get.back();
+                Get.to(() => AddAbnormalityFormView(isEdit: true,abnormalityId: id.toString()));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.edit),
+                  commonHorizontalSpacing(),
+                  const Text('Edit'),
+                ],
+              ),
             )),
         PopupMenuItem<String>(
             value: 'Delete',
@@ -144,7 +152,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
         appBar: commonAppbar(context: context,title: "Abnormality List"),
         floatingAction: InkWell(
           onTap: (){
-            Get.to(() => const AddAbnormalityFormView());
+            Get.to(() => const AddAbnormalityFormView(isEdit: false,abnormalityId: ""));
           },
           child: Container(
               height: 60,width: 60,

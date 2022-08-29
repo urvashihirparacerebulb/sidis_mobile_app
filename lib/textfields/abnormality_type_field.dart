@@ -4,6 +4,7 @@ import 'package:my_projects/models/activities_response_model.dart';
 
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
+import '../controllers/abnormality_controller.dart';
 
 class AbnormalityTypeBottomView extends StatefulWidget {
   final List<AbnormalityType> myItems;
@@ -16,6 +17,14 @@ class AbnormalityTypeBottomView extends StatefulWidget {
 
 class _AbnormalityTypeBottomViewState extends State<AbnormalityTypeBottomView> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    if(widget.myItems.isEmpty){
+      AbnormalityController.to.getAbnormalityType(callback: (){setState(() {});});
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

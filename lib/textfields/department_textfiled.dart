@@ -4,12 +4,15 @@ import 'package:my_projects/models/department_response_model.dart';
 
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
+import '../controllers/department_controller.dart';
 
 class DepartmentBottomView extends StatefulWidget {
   final String hintText;
   final List<Department> myItems;
   final Function? selectionCallBack;
-  const DepartmentBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText}) : super(key: key);
+  final String soleId;
+  final String departmentId;
+  const DepartmentBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText, this.soleId = "", this.departmentId = ""}) : super(key: key);
 
   @override
   State<DepartmentBottomView> createState() => _DepartmentBottomViewState();
@@ -17,6 +20,26 @@ class DepartmentBottomView extends StatefulWidget {
 
 class _DepartmentBottomViewState extends State<DepartmentBottomView> {
   TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    if(widget.myItems.isEmpty){
+      if(widget.hintText == "Select Department"){
+         DepartmentController.to.getDepartment(
+             soleId: widget.soleId,
+           callback: (){
+             setState(() {});
+           }
+         );
+      }else{
+        DepartmentController.to.getSubDepartment(departmentId: widget.departmentId.toString(),callback: (){
+          setState(() {
+          });
+        });
+      }
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {

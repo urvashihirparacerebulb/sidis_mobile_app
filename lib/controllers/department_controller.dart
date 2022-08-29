@@ -16,7 +16,7 @@ class DepartmentController extends GetxController {
   RxList<Department>? departmentData = RxList<Department>();
   RxList<Department>? subDepartmentData = RxList<Department>();
 
-  void getDepartment({String? soleId}) {
+  void getDepartment({String? soleId, Function? callback}) {
     departmentData!.clear();
     apiServiceCall(
       params: {
@@ -29,6 +29,7 @@ class DepartmentController extends GetxController {
         DepartmentResponseModel departmentResponse =
         DepartmentResponseModel.fromJson(jsonDecode(response.data));
         departmentData!.addAll(departmentResponse.data?.departmentData ?? []);
+        callback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -38,7 +39,7 @@ class DepartmentController extends GetxController {
     );
   }
 
-  void getSubDepartment({String? departmentId}) {
+  void getSubDepartment({String? departmentId, Function? callback}) {
     subDepartmentData!.clear();
     apiServiceCall(
       params: {
@@ -51,6 +52,7 @@ class DepartmentController extends GetxController {
         DepartmentResponseModel departmentResponse =
         DepartmentResponseModel.fromJson(jsonDecode(response.data));
         subDepartmentData!.addAll(departmentResponse.data?.departmentData ?? []);
+        callback!();
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

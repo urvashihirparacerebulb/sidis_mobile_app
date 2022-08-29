@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,7 +41,6 @@ class _MyLockViewState extends State<MyLockView> {
     if (!mounted) {
       return;
     }
-
     setState(() {
       _canCheckBiometrics = canCheckBiometrics;
     });
