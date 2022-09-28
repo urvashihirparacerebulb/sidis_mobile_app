@@ -10,7 +10,6 @@ ExactAssetImage checkedImage = const ExactAssetImage('assets/images/remember_che
 ExactAssetImage unCheckedImage = const ExactAssetImage('assets/images/remember_unchecked.png');
 ExactAssetImage backIconImage = const ExactAssetImage('assets/images/back_icon.png',scale: 2);
 ExactAssetImage forgotPasswordImage = const ExactAssetImage('assets/images/forgot_passs_word@2x.png');
-ExactAssetImage menuIconImage = const ExactAssetImage('assets/images/menu_icon@2x.png',scale: 2);
 ExactAssetImage nextPageArrowImage = const ExactAssetImage('assets/images/next_page_arrow.png');
 ExactAssetImage watermarkImage = const ExactAssetImage('assets/images/watermark_logo.png');
 ExactAssetImage assignedAbnormalityImage = const ExactAssetImage('assets/images/assigned_abnormality_icon@2x.png',scale: 2);

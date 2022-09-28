@@ -217,7 +217,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          commonHeaderTitle(title: "Where is Abnormality?",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                          commonHeaderTitle(title: "Where is Abnormality?",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
                           commonVerticalSpacing(spacing: 20),
                           InkWell(
                             onTap: (){
@@ -314,7 +314,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                 isChangeColor: selectedSubDepartment == null ? true : false,
                               )
                           ),
-                          commonHeaderTitle(title: "Machine Detail",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                          commonHeaderTitle(title: "Machine Detail",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
                           commonVerticalSpacing(spacing: 20),
                           InkWell(
                               onTap: (){
@@ -397,7 +397,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                 isChangeColor: selectedPart == null ? true : false,
                               )
                           ),
-                          commonHeaderTitle(title: "Abnormality Detail",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                          commonHeaderTitle(title: "Abnormality Detail",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
                           commonVerticalSpacing(spacing: 20),
                           CommonTextFiled(
                             fieldTitleText: "Abnormality Title*",

@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -9,7 +11,6 @@ import '../utility/common_methods.dart';
 import 'controllers/app_binding/app_binding_controllers.dart';
 import 'controllers/general_controller.dart';
 import 'modules/dashboard/dashboard_listing/common_dashboard.dart';
-import 'modules/dashboard/dashboard_listing/dashboard_view.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/splash_screen.dart';
 import 'utility/common_methods.dart';
@@ -31,9 +32,13 @@ void main() {
       ThemeService().saveThemeToBox(false);
     }
   }
-  runApp(const MyApp());
+  runApp(const MyApp()
+    // DevicePreview(
+    //   enabled: !kReleaseMode,
+    //   builder: (context) => const MyApp(), // Wrap your app
+    // ),
+  );
 }
-
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

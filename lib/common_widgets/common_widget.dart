@@ -323,7 +323,7 @@ commonDecoratedTextView({String title = "", bool isChangeColor = false,double bo
         commonHeaderTitle(
             title: title,
             isChangeColor: isChangeColor,
-            fontSize: 1.1,
+            fontSize: isTablet() ? 1.4 : 1.1,
             color: blackColor.withOpacity(0.4)
         ),
         commonHorizontalSpacing(),

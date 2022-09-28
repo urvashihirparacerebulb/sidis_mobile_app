@@ -37,32 +37,32 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: abnormality!.requestNo ?? "",fontWeight: 3,fontSize: 1.2),
-                commonHeaderTitle(title: abnormality.companyShortName ?? "",fontWeight: 3,fontSize: 1.2)
+                commonHeaderTitle(title: abnormality!.requestNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: abnormality.companyShortName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: abnormality.plantShortName ?? "",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: abnormality.bussinessName ?? "",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.plantShortName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: abnormality.bussinessName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: abnormality.departmentName ?? "",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: abnormality.partsName ?? "",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.departmentName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: abnormality.partsName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: abnormality.abnormalityTitle ?? "",fontWeight: 1,fontSize: 0.90),
-                commonHeaderTitle(title: abnormality.createdAt ?? "",fontWeight: 1,fontSize: 0.90)
+                commonHeaderTitle(title: abnormality.abnormalityTitle ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: abnormality.createdAt ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -74,9 +74,9 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        commonHeaderTitle(title: "Assign to: CEREBULB ADMIN(CEREBULB001)",fontWeight: 1,fontSize: 0.90),
+                        commonHeaderTitle(title: "Assign to: CEREBULB ADMIN(CEREBULB001)",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                         commonVerticalSpacing(),
-                        commonHeaderTitle(title: "Tag: Red",fontWeight: 1,fontSize: 0.90),
+                        commonHeaderTitle(title: "Tag: Red",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                       ],
                     )),
 
@@ -92,7 +92,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                                 shape: BoxShape.circle,
                                 color: Color(0xffD9D9D9)
                             ),
-                            child: const Icon(Icons.more_vert_rounded,size: 24))
+                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 24))
                     )
                 ))
               ],
@@ -170,6 +170,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
             );
           }
           return  Column(
+            mainAxisSize: MainAxisSize.min,
             // alignment: Alignment.topCenter,
             children: [
               Padding(
@@ -177,7 +178,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                 child: Row(
                   // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    commonHeaderTitle(title: "Departments",fontSize: 1.2,fontWeight: 2,color: darkFontColor),
+                    commonHeaderTitle(title: "Departments",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
                     commonHorizontalSpacing(),
                     Expanded(
                       child: CommonTextFiled(
@@ -197,14 +198,17 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                   ],
                 ),
               ),
-              commonVerticalSpacing(),
-              SizedBox(
-                height: getScreenHeight(context) - 150,
-                child: ListView.builder(
-                    itemCount: AbnormalityController.to.allAbnormalities!.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => abnormalityCardView(abnormality: AbnormalityController.to.allAbnormalities![index])),
-              ),
+              commonVerticalSpacing(spacing: 20),
+              Expanded(
+                child: SizedBox(
+                  height: getScreenHeight(context) - 150,
+                  child: ListView.builder(
+                      itemCount: AbnormalityController.to.allAbnormalities!.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => abnormalityCardView(abnormality: AbnormalityController.to.allAbnormalities![index])
+                  ),
+                ),
+              )
             ],
           );
         })

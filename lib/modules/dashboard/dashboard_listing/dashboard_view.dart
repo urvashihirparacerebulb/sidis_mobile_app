@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/screen_utility.dart';
 import '../../plant_dashboard/plant_dashboard_view.dart';
 import 'list_dashboard_view.dart';
 
@@ -31,17 +32,17 @@ class _DashboardViewState extends State<DashboardView> {
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: commonHeaderTitle(title: title,
-                    fontSize: 1.8,fontWeight: 1),
+                    fontSize: isTablet() ? 2.1 : 1.8,fontWeight: 1),
               ),
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: EdgeInsets.all(isTablet() ? 11 : 8.0),
                 decoration: const BoxDecoration(
                     color: primaryColor,
                     shape: BoxShape.circle
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 5),
-                  child: commonHeaderTitle(title: subTitle,fontSize: 0.85,
+                  child: commonHeaderTitle(title: subTitle,fontSize: isTablet() ? 1.10 : 0.85,
                       fontWeight: 2,color: blackColor,
                       isChangeColor: true,align: TextAlign.center),
                 ),
@@ -68,10 +69,10 @@ class _DashboardViewState extends State<DashboardView> {
                 children: [
                   commonHeaderTitle(title: "Hello,",
                       isChangeColor: true,
-                      color: lightFontColor,fontSize: 1.4,fontWeight: 1),
+                      color: lightFontColor,fontSize: isTablet() ? 1.6 : 1.4,fontWeight: 1),
                   commonVerticalSpacing(spacing: 5),
                   commonHeaderTitle(title: "Anna",
-                      fontSize: 2,fontWeight: 3),
+                      fontSize: isTablet() ? 2.5 : 2,fontWeight: 3),
                 ],
               ),
               Row(

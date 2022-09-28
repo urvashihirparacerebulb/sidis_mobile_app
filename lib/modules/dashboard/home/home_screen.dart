@@ -5,6 +5,7 @@ import 'package:my_projects/controllers/dashboard_controller.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../utility/color_utility.dart';
+import '../../../utility/screen_utility.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -60,6 +61,28 @@ class _HomeScreenState extends State<HomeScreen> {
     return myChartData;
   }
 
+  totalCompletedView(){
+    return Row(
+      children: [
+        Container(
+          height: isTablet() ? 11 : 7,width: isTablet() ? 11 : 7,
+          decoration: const BoxDecoration(
+              color: ourBlueColor
+          ),),
+        commonHorizontalSpacing(spacing: 5),
+        commonHeaderTitle(title: "Total",fontSize: isTablet() ? 1.0 : 0.7,fontWeight: 1),
+        commonHorizontalSpacing(spacing: 5),
+        Container(
+          height: isTablet() ? 11 : 7,width: isTablet() ? 11 : 7,
+          decoration: const BoxDecoration(
+              color: ourGreenColor
+          ),),
+        commonHorizontalSpacing(spacing: 5),
+        commonHeaderTitle(title: "Completed",fontSize: isTablet() ? 1.0 : 0.7,fontWeight: 1),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -76,10 +99,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   commonHeaderTitle(title: "Current Working Plant",
                       isChangeColor: true,
-                      color: lightFontColor,fontSize: 0.90,fontWeight: 1),
+                      color: lightFontColor,fontSize: isTablet() ? 1.1 : 0.90,fontWeight: 1),
                   commonVerticalSpacing(spacing: 5),
                   commonHeaderTitle(title: "SKAPS_Woven_Unit2(102)",
-                      fontSize: 1,fontWeight: 1),
+                      fontSize: isTablet() ? 1.7 : 1,fontWeight: 1),
                 ],
               ),
               commonHorizontalSpacing(),
@@ -94,42 +117,44 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Projects".toUpperCase(),fontSize: 1.7,fontWeight: 2),
+                commonHeaderTitle(title: "Projects".toUpperCase(),fontSize: isTablet() ? 2.0 : 1.7,fontWeight: 2),
                 Row(
                   children: [
                     Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(14.0),
+                          padding: EdgeInsets.all(isTablet() ? 18 : 14.0),
                           decoration: const BoxDecoration(
                             color: primaryColor,
                             shape: BoxShape.circle
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(top: 5),
-                            child: commonHeaderTitle(title: '15',fontSize: 1.2,fontWeight: 1,color: whiteColor,isChangeColor: true,align: TextAlign.center),
+                            child: commonHeaderTitle(title: (DashboardController.to.kaizenCharts.value.totalProjects ?? 0).toString(),
+                                fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 1,color: whiteColor,isChangeColor: true,align: TextAlign.center),
                           ),
                         ),
                         commonVerticalSpacing(spacing: 8),
-                        commonHeaderTitle(title: "Progress",fontSize: 1,fontWeight: 2,color: primaryColor,isChangeColor: true)
+                        commonHeaderTitle(title: "Progress",fontSize: isTablet() ? 1.2 : 1,fontWeight: 2,color: primaryColor,isChangeColor: true)
                       ],
                     ),
                     commonHorizontalSpacing(spacing: 15),
                     Column(
                       children: [
                         Container(
-                          padding: const EdgeInsets.all(14.0),
+                          padding: EdgeInsets.all(isTablet() ? 18 : 14.0),
                           decoration: const BoxDecoration(
                               color: greenColor,
                               shape: BoxShape.circle
                           ),
                           child: Padding(
                             padding: const EdgeInsets.only(top: 5),
-                            child: commonHeaderTitle(title: '15',fontSize: 1.2,fontWeight: 1,color: whiteColor,isChangeColor: true),
+                            child: commonHeaderTitle(title: (DashboardController.to.kaizenCharts.value.totalCompleted ?? 0).toString(),
+                                fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 1,color: whiteColor,isChangeColor: true),
                           ),
                         ),
                         commonVerticalSpacing(spacing: 8),
-                        commonHeaderTitle(title: "Completed",fontSize: 1,fontWeight: 2,color: greenColor,isChangeColor: true)
+                        commonHeaderTitle(title: "Completed",fontSize: isTablet() ? 1.2 : 1,fontWeight: 2,color: greenColor,isChangeColor: true)
                       ],
                     )
                   ],
@@ -145,11 +170,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  commonHeaderTitle(title: "Senior Score".toUpperCase(),fontSize: 1.7,fontWeight: 2),
+                  commonHeaderTitle(title: "Senior Score".toUpperCase(),fontSize: isTablet() ? 2.0 : 1.7,fontWeight: 2),
                   Row(
                     children: [
-                      commonHeaderTitle(title: "9.5".toUpperCase(),fontSize: 1.7,fontWeight: 2,isChangeColor: true,color: const Color(0xffBE48DB)),
-                      commonHeaderTitle(title: "/10".toUpperCase(),fontSize: 1.3,fontWeight: 2,isChangeColor: true,color: lightFontColor),
+                      commonHeaderTitle(title: "9.5".toUpperCase(),fontSize: isTablet() ? 2.0 : 1.7,fontWeight: 2,isChangeColor: true,color: const Color(0xffBE48DB)),
+                      commonHeaderTitle(title: "/10".toUpperCase(),fontSize: isTablet() ? 1.6 : 1.3,fontWeight: 2,isChangeColor: true,color: lightFontColor),
                     ],
                   )
                 ],
@@ -165,26 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      commonHeaderTitle(title: "Kaizen",fontSize: 1.15,fontWeight: 1),
-                      Row(
-                        children: [
-                          Container(
-                            height: 7,width: 7,
-                            decoration: const BoxDecoration(
-                            color: ourBlueColor
-                          ),),
-                          commonHorizontalSpacing(spacing: 5),
-                          commonHeaderTitle(title: "Total",fontSize: 0.7,fontWeight: 1),
-                          commonHorizontalSpacing(spacing: 5),
-                          Container(
-                            height: 7,width: 7,
-                            decoration: const BoxDecoration(
-                                color: ourGreenColor
-                            ),),
-                          commonHorizontalSpacing(spacing: 5),
-                          commonHeaderTitle(title: "Completed",fontSize: 0.7,fontWeight: 1),
-                        ],
-                      )
+                      commonHeaderTitle(title: "Kaizen",fontSize: isTablet() ? 1.4 : 1.15,fontWeight: 1),
+                      totalCompletedView()
                     ],
                   ),
                   commonVerticalSpacing(),
@@ -225,26 +232,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      commonHeaderTitle(title: "Abnormality",fontSize: 1.15,fontWeight: 1),
-                      Row(
-                        children: [
-                          Container(
-                            height: 7,width: 7,
-                            decoration: const BoxDecoration(
-                                color: ourBlueColor
-                            ),),
-                          commonHorizontalSpacing(spacing: 5),
-                          commonHeaderTitle(title: "Total",fontSize: 0.7,fontWeight: 1),
-                          commonHorizontalSpacing(spacing: 5),
-                          Container(
-                            height: 7,width: 7,
-                            decoration: const BoxDecoration(
-                                color: ourGreenColor
-                            ),),
-                          commonHorizontalSpacing(spacing: 5),
-                          commonHeaderTitle(title: "Completed",fontSize: 0.7,fontWeight: 1),
-                        ],
-                      )
+                      commonHeaderTitle(title: "Abnormality",fontSize: isTablet() ? 1.4 : 1.15,fontWeight: 1),
+                      totalCompletedView()
                     ],
                   ),
                   commonVerticalSpacing(),

@@ -5,8 +5,8 @@ import '../../../common_widgets/common_widget.dart';
 import '../../../utility/assets_utility.dart';
 import '../../../utility/common_methods.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/screen_utility.dart';
 import '../abnormality_form/abnormality_list_view.dart';
-import '../abnormality_form/add_abnormaliry_view.dart';
 import '../assigned_form/add_assigned_form_view.dart';
 import '../clita module/add_clita_fill_form_view.dart';
 import '../clita module/add_clita_no_list_view.dart';
@@ -63,14 +63,14 @@ class _ListDashboardViewState extends State<ListDashboardView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: Image(image: getMenuIcon(index!)),
+                padding: EdgeInsets.only(top: isTablet() ? 10 : 5),
+                child: Image(image: getMenuIcon(index!), height: isTablet() ? 50 : 40,width: isTablet() ? 50 : 40,fit: BoxFit.contain),
               ),
-              commonVerticalSpacing(spacing: 20),
+              commonVerticalSpacing(spacing: isTablet() ? 25 : 20),
               Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: commonHeaderTitle(title: title,
-                    fontSize: 1.1,fontWeight: 2),
+                    fontSize: isTablet() ? 1.5 : 1.1,fontWeight: 2),
               ),
             ],
           ),
@@ -91,8 +91,8 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           children: [
             GridView.builder(
               itemCount: getLoginData() == null ? 0 : getLoginData()!.allMenus?.length,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: 16/9,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: isTablet() ? 20/9 : 16/9,
                   crossAxisSpacing: 20,
                   mainAxisSpacing: 20,
                   crossAxisCount: 2,
@@ -106,7 +106,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
               bottom: 20,
               right: 10,left: 10,
               child: Container(
-                height: 65,
+                height: isTablet() ? 80 : 65,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: watermarkImage,

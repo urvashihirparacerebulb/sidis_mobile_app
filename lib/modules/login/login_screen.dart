@@ -8,6 +8,7 @@ import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/screen_utility.dart';
 import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
+import '../../my_barcode_scanner_view.dart';
 import '../../speech_view.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/constants.dart';
@@ -145,7 +146,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   commonVerticalSpacing(),
                   InkWell(
                     onTap: (){
-                      Get.to(() => const SpeechSampleApp());
+                      Get.to(() => const MyBarcodeScannerView());
+                      // Get.to(() => const SpeechSampleApp());
                     },
                     child: Center(
                       child: Neumorphic(

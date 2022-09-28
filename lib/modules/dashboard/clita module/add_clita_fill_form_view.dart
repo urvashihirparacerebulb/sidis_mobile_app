@@ -16,6 +16,7 @@ import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/common_methods.dart';
+import '../../../utility/screen_utility.dart';
 
 class CLITAFillFormView extends StatefulWidget {
   const CLITAFillFormView({Key? key}) : super(key: key);
@@ -91,7 +92,7 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                           title: "Change Filter",
                           color: blackColor.withOpacity(0.4),
                         fontWeight: 2,
-                        fontSize: 1.2
+                        fontSize: isTablet() ? 1.5 : 1.2
                       ),
                       commonHorizontalSpacing(),
                       Icon(isExpanded ? Icons.keyboard_arrow_up_outlined : Icons.keyboard_arrow_down,color: ConvertTheme.convertTheme.getWhiteToFontColor(),)
@@ -226,7 +227,9 @@ class _CLITAFillFormViewState extends State<CLITAFillFormView> {
                             children: [
                               Align(
                                   alignment: Alignment.centerLeft,
-                                  child: commonHeaderTitle(title: selectedDate.isEmpty ? "Select Date" : selectedDate)
+                                  child: commonHeaderTitle(
+                                    fontSize: isTablet() ? 1.3 : 1,
+                                      title: selectedDate.isEmpty ? "Select Date" : selectedDate)
                               ),
                               Align(
                                   alignment: Alignment.centerRight,

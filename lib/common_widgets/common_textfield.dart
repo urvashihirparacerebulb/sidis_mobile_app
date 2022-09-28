@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_projects/utility/color_utility.dart';
 import '../theme/convert_theme_colors.dart';
+import '../utility/screen_utility.dart';
 import '../utility/theme_utility.dart';
 import 'common_widget.dart';
 
@@ -129,11 +130,13 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
         // initialValue: initialText,
         obscureText: passwordVisible!,
         style: black15PxW800.copyWith(
+          fontSize: isTablet() ? 18 : 15,
             color: blackColor,fontWeight: FontWeight.normal),
         inputFormatters: widget.inputFormatter,
         decoration: InputDecoration(
           labelStyle: black15PxW800.copyWith(
               fontWeight: FontWeight.w500,
+              fontSize: isTablet() ? 18 : 15,
               color: blackColor.withOpacity(0.4)),
           labelText: widget.fieldTitleText,
           alignLabelWithHint: true,
@@ -149,7 +152,7 @@ class _CommonTextFiledState extends State<CommonTextFiled> {
           hintText: widget.hintText,
           fillColor: widget.isChangeFillColor ? bgColor.withOpacity(0.8) : ConvertTheme.convertTheme.getTextFiledBackGroundColor(),
           hintStyle: white14PxNormal.copyWith(
-              color: blackColor.withOpacity(0.4),fontSize: 16),
+              color: blackColor.withOpacity(0.4),fontSize: isTablet() ? 19 : 16),
           suffixIcon: widget.isPassword
               ? InkWell(
               onTap: () {

@@ -17,6 +17,7 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -59,27 +60,27 @@ class _ProfileViewState extends State<ProfileView> {
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: "4568792018",fontWeight: 2,fontSize: 1.4),
 
-                        commonVerticalSpacing(spacing: 15),
+                        commonVerticalSpacing(spacing: isTablet() ? 20 : 15),
                         commonHeaderTitle(title: "User Name/ Email Id",color: const Color(0xffB0B0B0),fontSize: 1,fontWeight: 1),
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: "Rocky_anna",fontWeight: 2,fontSize: 1.4),
 
-                        commonVerticalSpacing(spacing: 15),
+                        commonVerticalSpacing(spacing: isTablet() ? 20 : 15),
                         commonHeaderTitle(title: "Soul Department",color: const Color(0xffB0B0B0),fontSize: 1,fontWeight: 1),
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: "SKAPS_Woven_Unit2(102)",fontWeight: 2,fontSize: 1.4),
 
-                        commonVerticalSpacing(spacing: 15),
+                        commonVerticalSpacing(spacing: isTablet() ? 20 : 15),
                         commonHeaderTitle(title: "Contact No",color: const Color(0xffB0B0B0),fontSize: 1,fontWeight: 1),
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: "+91 987956950",fontWeight: 2,fontSize: 1.4),
 
-                        commonVerticalSpacing(spacing: 15),
+                        commonVerticalSpacing(spacing: isTablet() ? 20 : 15),
                         commonHeaderTitle(title: "Group",color: const Color(0xffB0B0B0),fontSize: 1,fontWeight: 1),
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: getLoginData() == null ? "" : getLoginData()!.userdata?.first.groupName ?? "",fontWeight: 2,fontSize: 1.4),
 
-                        commonVerticalSpacing(spacing: 15),
+                        commonVerticalSpacing(spacing: isTablet() ? 20 : 15),
                         commonHeaderTitle(title: "Designation",color: const Color(0xffB0B0B0),fontSize: 1,fontWeight: 1),
                         commonVerticalSpacing(spacing: 8),
                         commonHeaderTitle(title: "Labor",fontWeight: 2,fontSize: 1.4),
