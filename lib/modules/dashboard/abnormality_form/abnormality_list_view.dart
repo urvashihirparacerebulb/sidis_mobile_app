@@ -92,7 +92,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                                 shape: BoxShape.circle,
                                 color: Color(0xffD9D9D9)
                             ),
-                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 24))
+                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
                     )
                 ))
               ],
@@ -169,7 +169,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
               child: CircularProgressIndicator(color: primaryColor),
             );
           }
-          return  Column(
+          return Column(
             mainAxisSize: MainAxisSize.min,
             // alignment: Alignment.topCenter,
             children: [

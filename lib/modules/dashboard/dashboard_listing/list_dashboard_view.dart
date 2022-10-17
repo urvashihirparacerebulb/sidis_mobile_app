@@ -10,6 +10,9 @@ import '../abnormality_form/abnormality_list_view.dart';
 import '../assigned_form/add_assigned_form_view.dart';
 import '../clita module/add_clita_fill_form_view.dart';
 import '../clita module/add_clita_no_list_view.dart';
+import '../kaizen/kaizen_list.dart';
+import '../needle/needle_board_list.dart';
+import '../needle/needle_record_form_list.dart';
 
 class ListDashboardView extends StatefulWidget {
   const ListDashboardView({Key? key}) : super(key: key);
@@ -35,7 +38,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
       case 5:
         return kaizenFormImage;
       default:
-        return dashboardImage;
+        return dashboardIconImage;
     }
   }
 
@@ -55,6 +58,15 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           if(title == assignedFormText){
             Get.to(() => const AddAssignedFormView());
           }
+          if(title == kaizenFormText){
+            Get.to(() => const KaizenListView());
+          }
+          if(title == needleRecordFormText){
+            Get.to(() => const NeedleRecordFormList());
+          }
+          if(title == needleBoardText){
+            Get.to(() => const NeedleBoardList());
+          }
         },
         child: Padding(
           padding: const EdgeInsets.all(10.0),
@@ -64,7 +76,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
             children: [
               Padding(
                 padding: EdgeInsets.only(top: isTablet() ? 10 : 5),
-                child: Image(image: getMenuIcon(index!), height: isTablet() ? 50 : 40,width: isTablet() ? 50 : 40,fit: BoxFit.contain),
+                child: Image(image: getMenuIcon(index!), height: isTablet() ? 50 : 30,width: isTablet() ? 50 : 40,fit: BoxFit.contain),
               ),
               commonVerticalSpacing(spacing: isTablet() ? 25 : 20),
               Padding(

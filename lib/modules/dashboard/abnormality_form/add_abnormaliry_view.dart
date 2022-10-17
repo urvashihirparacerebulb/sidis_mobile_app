@@ -238,7 +238,6 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                 isChangeColor: selectedBusiness?.businessId == null ? true : false
                             ),
                           ),
-
                           InkWell(
                               onTap: (){
                                 if(selectedBusiness?.businessId != null) {

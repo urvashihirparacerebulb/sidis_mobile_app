@@ -43,6 +43,7 @@ dependencies:
   connectivity_plus: ^2.3.0
   intl:
   speech_to_text: ^5.6.1
+  image_picker: ^0.8.6
   syncfusion_flutter_charts: ^20.2.45
   flutter_barcode_scanner: ^2.0.0
 
