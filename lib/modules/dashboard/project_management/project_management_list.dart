@@ -7,19 +7,19 @@ import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
 import '../../../utility/screen_utility.dart';
-import 'add_kaizen_form.dart';
+import 'add_project_management.dart';
 
-class KaizenListView extends StatefulWidget {
-  const KaizenListView({Key? key}) : super(key: key);
+class ProjectManagementListView extends StatefulWidget {
+  const ProjectManagementListView({Key? key}) : super(key: key);
 
   @override
-  State<KaizenListView> createState() => _KaizenListViewState();
+  State<ProjectManagementListView> createState() => _ProjectManagementListViewState();
 }
 
-class _KaizenListViewState extends State<KaizenListView> {
+class _ProjectManagementListViewState extends State<ProjectManagementListView> {
   TextEditingController searchController = TextEditingController();
 
-  Widget kaizenCardView(){
+  Widget projectCardView(){
     return Container(
       margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
       decoration: neurmorphicBoxDecoration,
@@ -30,34 +30,32 @@ class _KaizenListViewState extends State<KaizenListView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "202279626",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: "SKAPS",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                commonHeaderTitle(title: "FGT Woven unit",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "KK",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "SKAPS",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Unit2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: "Woven",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Line-10",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "EOU",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Complete",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: "164 days",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Tej Patel",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "16-09-2022",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
                 commonHeaderTitle(title: "21-09-2022",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
@@ -67,7 +65,7 @@ class _KaizenListViewState extends State<KaizenListView> {
               children: [
                 Expanded(
                   flex: 6,
-                    child: commonHeaderTitle(title: "To reduce quality change over time for high heat product to low het product.",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  child: commonHeaderTitle(title: "To complete the plant acquisition process and reach to the optimum production capacity.",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 ),
 
                 Expanded(flex: 1,child: Align(
@@ -137,64 +135,64 @@ class _KaizenListViewState extends State<KaizenListView> {
   @override
   Widget build(BuildContext context) {
     return commonStructure(
-      context: context,
-      bgColor: blackColor,
-      appBar: commonAppbar(context: context,title: "Kaizen List"),
-      floatingAction: InkWell(
-        onTap: (){
-          Get.to(() => const AddKaizenFormView());
-        },
-        child: Container(
-            height: 60,width: 60,
-            decoration: const BoxDecoration(
-                color: primaryColor,
-                shape: BoxShape.circle
-            ),
-            child: const Icon(Icons.add,color: blackColor,size: 30)
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        // alignment: Alignment.topCenter,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: "Search",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
-                commonHorizontalSpacing(),
-                Expanded(
-                  child: CommonTextFiled(
-                    fieldTitleText: "Search here..",
-                    hintText: "Search here..",
-                    // isBorderEnable: false,
-                    isChangeFillColor: true,
-                    textEditingController: searchController,
-                    onChangedFunction: (String value){
-                    },
-                    validationFunction: (String value) {
-                      return value.toString().isEmpty
-                          ? notEmptyFieldMessage
-                          : null;
-                    },),
-                )
-              ],
-            ),
+        context: context,
+        bgColor: blackColor,
+        appBar: commonAppbar(context: context,title: "Project Management"),
+        floatingAction: InkWell(
+          onTap: (){
+            Get.to(() => const AddProjectView());
+          },
+          child: Container(
+              height: 60,width: 60,
+              decoration: const BoxDecoration(
+                  color: primaryColor,
+                  shape: BoxShape.circle
+              ),
+              child: const Icon(Icons.add,color: blackColor,size: 30)
           ),
-          commonVerticalSpacing(spacing: 20),
-          Expanded(
-            child: SizedBox(
-              height: getScreenHeight(context) - 150,
-              child: ListView.builder(
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => kaizenCardView()
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          // alignment: Alignment.topCenter,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Row(
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: "Search",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
+                  commonHorizontalSpacing(),
+                  Expanded(
+                    child: CommonTextFiled(
+                      fieldTitleText: "Search here..",
+                      hintText: "Search here..",
+                      // isBorderEnable: false,
+                      isChangeFillColor: true,
+                      textEditingController: searchController,
+                      onChangedFunction: (String value){
+                      },
+                      validationFunction: (String value) {
+                        return value.toString().isEmpty
+                            ? notEmptyFieldMessage
+                            : null;
+                      },),
+                  )
+                ],
               ),
             ),
-          )
-        ],
-      )
+            commonVerticalSpacing(spacing: 20),
+            Expanded(
+              child: SizedBox(
+                height: getScreenHeight(context) - 150,
+                child: ListView.builder(
+                    itemCount: 10,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => projectCardView()
+                ),
+              ),
+            )
+          ],
+        )
     );
   }
 }

@@ -22,7 +22,7 @@ const String businessesText = "Businesses";
 const String plantsText = "Plants";
 const String departmentsText = "Departments";
 const String machinesText = "Machines";
-const String clitaActivityListText = "CLITA Activity List";
+const String clitaActivityListText = "CLITA  Activity List";
 const String clitaFillFormText = "CLITA Fill Form";
 const String clitaNoListText = "CLITA No List";
 const String abnormalityFormText = "Abnormality Form";
@@ -31,7 +31,7 @@ const String kaizenFormText = "Kaizen Form";
 const String userManagementText = "User Management";
 const String needleRecordFormText = "Needle Record Form";
 const String needleBoardText = "Needle Board Form";
-const String productRequisition = "Product Requisition";
+const String productRequisitionText = "Product Requisition";
 
 const String exitMessage = "Do you want to exit from app?";
 const String notEmptyFieldMessage = "Field must not be empty";

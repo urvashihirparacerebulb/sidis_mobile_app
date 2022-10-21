@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_projects/modules/dashboard/product_requisition/product_requisition_list.dart';
 
 import '../../../common_widgets/common_widget.dart';
 import '../../../utility/assets_utility.dart';
@@ -7,12 +8,15 @@ import '../../../utility/common_methods.dart';
 import '../../../utility/constants.dart';
 import '../../../utility/screen_utility.dart';
 import '../abnormality_form/abnormality_list_view.dart';
+import '../ampere_log/ampere_log_list_view.dart';
 import '../assigned_form/add_assigned_form_view.dart';
+import '../clita module/add_clita_activity_list_view.dart';
 import '../clita module/add_clita_fill_form_view.dart';
 import '../clita module/add_clita_no_list_view.dart';
 import '../kaizen/kaizen_list.dart';
 import '../needle/needle_board_list.dart';
 import '../needle/needle_record_form_list.dart';
+import '../project_management/project_management_list.dart';
 
 class ListDashboardView extends StatefulWidget {
   const ListDashboardView({Key? key}) : super(key: key);
@@ -49,6 +53,9 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           if(title == clitaFillFormText){
             Get.to(() => const CLITAFillFormView());
           }
+          if(title == clitaActivityListText){
+            Get.to(() => const CLITActivityListFormScreen());
+          }
           if(title == clitaNoListText){
             Get.to(() => const CLITANoListView());
           }
@@ -66,6 +73,15 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           }
           if(title == needleBoardText){
             Get.to(() => const NeedleBoardList());
+          }
+          if(title == productRequisitionText){
+            Get.to(() => const ProductRequisitionList());
+          }
+          if(title == "Ampere Log"){
+            Get.to(() => const AmpereLogListView());
+          }
+          if(title == "Project Management"){
+            Get.to(() => const ProjectManagementListView());
           }
         },
         child: Padding(
@@ -98,36 +114,17 @@ class _ListDashboardViewState extends State<ListDashboardView> {
       appBar: commonAppbar(context: context,title: "JH"),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 10),
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            GridView.builder(
-              itemCount: getLoginData() == null ? 0 : getLoginData()!.allMenus?.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                childAspectRatio: isTablet() ? 20/9 : 16/9,
-                  crossAxisSpacing: 20,
-                  mainAxisSpacing: 20,
-                  crossAxisCount: 2,
-              ),
-              itemBuilder: (BuildContext context, int index) {
-                return commonCardView(index: index, title: getLoginData()!.allMenus?[index].menuName ?? "");
-              },
-            ),
-
-            Positioned(
-              bottom: 20,
-              right: 10,left: 10,
-              child: Container(
-                height: isTablet() ? 80 : 65,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: watermarkImage,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ),
-            )
-          ],
+        child: GridView.builder(
+          itemCount: getLoginData() == null ? 0 : (getLoginData()!.allMenus?.length)! + 2,
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            childAspectRatio: isTablet() ? 20/9 : 16/10,
+              crossAxisSpacing: 20,
+              mainAxisSpacing: 20,
+              crossAxisCount: 2,
+          ),
+          itemBuilder: (BuildContext context, int index) {
+            return commonCardView(index: index, title: index == getLoginData()!.allMenus?.length ? "Ampere Log" : (index == (getLoginData()!.allMenus?.length)! + 1) ? "Project Management" : getLoginData()!.allMenus?[index].menuName ?? "");
+          },
         ),
       )
     );

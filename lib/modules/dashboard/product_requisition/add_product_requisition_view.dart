@@ -3,12 +3,12 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
-import 'package:my_projects/common_widgets/common_widget.dart';
-import 'package:my_projects/utility/constants.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:my_projects/utility/constants.dart';
 
 import '../../../common_widgets/common_textfield.dart';
+import '../../../common_widgets/common_widget.dart';
 import '../../../controllers/business_controller.dart';
 import '../../../controllers/department_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
@@ -25,16 +25,14 @@ import '../../../utility/color_utility.dart';
 import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
-class AddKaizenFormView extends StatefulWidget {
-  const AddKaizenFormView({Key? key}) : super(key: key);
+class AddProductRequisitionView extends StatefulWidget {
+  const AddProductRequisitionView({Key? key}) : super(key: key);
 
   @override
-  State<AddKaizenFormView> createState() => _AddKaizenFormViewState();
+  State<AddProductRequisitionView> createState() => _AddProductRequisitionViewState();
 }
 
-class _AddKaizenFormViewState extends State<AddKaizenFormView> {
-
-  List<AnalysisView> analysisViews = [];
+class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
 
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
@@ -44,19 +42,8 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   List<MachineData> subMachineLists = [];
   String selectedStartDate = "";
   File? productImage;
-  File? countermeasureImage;
-
-  TextEditingController kaizenLossNoController = TextEditingController();
-  TextEditingController kaizenThemeController = TextEditingController();
-  TextEditingController benchMarkController = TextEditingController();
-  TextEditingController targetController = TextEditingController();
-  TextEditingController problemController = TextEditingController();
-  TextEditingController productImageController = TextEditingController();
-  TextEditingController rootCauseRemarksController = TextEditingController();
-  TextEditingController kaizenIdeaController = TextEditingController();
-  TextEditingController countermeasureController = TextEditingController();
-  TextEditingController analysisTitleController = TextEditingController();
-  TextEditingController analysisAnswerController = TextEditingController();
+  TextEditingController itemDescriptionController = TextEditingController();
+  TextEditingController requiredQuantityController = TextEditingController();
 
   @override
   void initState() {
@@ -75,7 +62,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
           }else {
             setState(() {});
           }
-        });
+    });
   }
 
   imageView({String title = "", File? selectedFile}){
@@ -134,120 +121,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
     );
   }
 
-  analysisView(){
-    return [
-      Visibility(
-        visible: analysisViews.isNotEmpty,
-        child: ListView.builder(
-          itemCount: analysisViews.length,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return Container(
-              margin: const EdgeInsets.only(bottom: 20),
-              padding: const EdgeInsets.symmetric(vertical: 10,horizontal: 16),
-              decoration: neurmorphicBoxDecoration,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      commonHeaderTitle(title: analysisViews[index].title ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
-                      commonHorizontalSpacing(),
-                      Row(
-                        children: [
-                          const Icon(Icons.edit,color: Colors.orange),
-                          commonHorizontalSpacing(),
-                          const Icon(Icons.delete_outline,color: Colors.redAccent),
-                        ]
-                      )
-                    ]
-                  ),
-                  commonVerticalSpacing(),
-                  commonHeaderTitle(title: analysisViews[index].answer ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                ],
-              ),
-            );
-        },),
-      ),
-
-      Row(
-        children: [
-          Expanded(
-            child: CommonTextFiled(
-                fieldTitleText: "Why",
-                hintText: "why",
-                // isBorderEnable: false,
-                isChangeFillColor: true,
-                textEditingController: analysisTitleController,
-                onChangedFunction: (String value){
-                },
-                validationFunction: (String value) {
-                  return value.toString().isEmpty
-                      ? notEmptyFieldMessage
-                      : null;
-                }),
-          ),
-          commonHorizontalSpacing(spacing: 10),
-          Expanded(
-            child: CommonTextFiled(
-                fieldTitleText: "Answer",
-                hintText: "Answer",
-                // isBorderEnable: false,
-                isChangeFillColor: true,
-                textEditingController: analysisAnswerController,
-                onChangedFunction: (String value){
-                },
-                validationFunction: (String value) {
-                  return value.toString().isEmpty
-                      ? notEmptyFieldMessage
-                      : null;
-                }),
-          ),
-          commonHorizontalSpacing(spacing: 10),
-          InkWell(
-            onTap: (){
-              AnalysisView view = AnalysisView();
-              view.title = analysisTitleController.text;
-              view.answer = analysisAnswerController.text;
-              setState(() {
-                analysisViews.add(view);
-                analysisTitleController.clear();
-                analysisAnswerController.clear();
-              });
-            },
-            child: Container(
-              margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(8.0)
-              ),
-                child: const Icon(Icons.add,color: whiteColor,size: 26)),
-          )
-        ],
-      )
-    ];
-  }
-
-  kaizenWhomForm(){
+  addProductRequisitionView(){
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        commonHeaderTitle(title: "Kaizen for whom?",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
-        commonVerticalSpacing(spacing: 20),
-        InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              title: "Select Pillar",
-              isChangeColor: true
-          ),
-        ),
         InkWell(
           onTap: (){
             commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
@@ -405,9 +283,6 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 )
             )
         ),
-
-        commonHeaderTitle(title: "Kaizen Detail",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
-        commonVerticalSpacing(spacing: 20),
         Container(
             height: 50,
             padding: EdgeInsets.symmetric(horizontal: commonHorizontalPadding),
@@ -438,89 +313,32 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
               ],
             )),
         commonVerticalSpacing(spacing: 20),
-        CommonTextFiled(
-            fieldTitleText: "Kaizen Loss No./ Step *",
-            hintText: "Kaizen Loss No./ Step *",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: kaizenLossNoController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
 
           },
           child: commonDecoratedTextView(
-            bottom: 20,
-              title: "Select Result Area *",
+              title: "Select Required In",
               isChangeColor: true
           ),
         ),
-        CommonTextFiled(
-            fieldTitleText: "Kaizen Theme *",
-            hintText: "Kaizen Theme *",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: kaizenThemeController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
-        CommonTextFiled(
-            fieldTitleText: "Bench mark *",
-            hintText: "Bench mark *",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: benchMarkController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
-        CommonTextFiled(
-            fieldTitleText: "Target *",
-            hintText: "Target *",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: targetController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
 
           },
           child: commonDecoratedTextView(
-              bottom: 20,
-              title: "Select Team Members *",
+              title: "Select Item Type",
               isChangeColor: true
           ),
         ),
+
         CommonTextFiled(
-            fieldTitleText: "Problem/Present status",
-            hintText: "Problem/Present status",
+            fieldTitleText: "Item Description*",
+            hintText: "Item Description*",
             // isBorderEnable: false,
             isChangeFillColor: true,
             maxLine: 5,
-            textEditingController: problemController,
+            textEditingController: itemDescriptionController,
             onChangedFunction: (String value){
             },
             validationFunction: (String value) {
@@ -528,68 +346,23 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   ? notEmptyFieldMessage
                   : null;
             }),
-        commonVerticalSpacing(spacing: 25),
-        imageView(title: "Problem Image *", selectedFile: productImage),
+        commonVerticalSpacing(spacing: 20),
+        CommonTextFiled(
+            fieldTitleText: "Required Quantity",
+            hintText: "Required Quantity",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            textEditingController: requiredQuantityController,
+            onChangedFunction: (String value){
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }
+        ),
         commonVerticalSpacing(spacing: 30),
-        commonHeaderTitle(title: "Analysis",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
-        commonVerticalSpacing(spacing: 20),
-        ...analysisView(),
-        commonVerticalSpacing(spacing: 20),
-        InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              bottom: 20,
-              title: "Select Root Cause",
-              isChangeColor: true
-          ),
-        ),
-        CommonTextFiled(
-            fieldTitleText: "Remarks (Root Cause)",
-            hintText: "Remarks (Root Cause)",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            maxLine: 5,
-            textEditingController: rootCauseRemarksController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
-        CommonTextFiled(
-            fieldTitleText: "Kaizen Idea *",
-            hintText: "Kaizen Idea *",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: kaizenIdeaController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
-        CommonTextFiled(
-            fieldTitleText: "Countermeasure",
-            hintText: "Countermeasure",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            maxLine: 5,
-            textEditingController: countermeasureController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 25),
-        imageView(title: "Countermeasure Image *", selectedFile: countermeasureImage),
+        imageView(title: "Product Image (if available)", selectedFile: productImage),
         commonVerticalSpacing(spacing: 20),
       ],
     );
@@ -598,60 +371,50 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   @override
   Widget build(BuildContext context) {
     return commonStructure(
-      context: context,
-      bgColor: blackColor,
-      appBar: commonAppbar(context: context,title: kaizenFormText),
-      bottomNavigation: Container(
-        color: ConvertTheme.convertTheme.getBackGroundColor(),
-        child: Padding(
-          padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 10),
-          child: Row(
-            children: [
-              Expanded(child: commonBorderButtonView(
-                  context: context,
-                  title: "Cancel",
-                  height: 50,
-                  tapOnButton: () {
-                    Get.back();
-                  },
-                  isLoading: false)),
-              commonHorizontalSpacing(),
-              Expanded(child: commonFillButtonView(
-                  context: context,
-                  title: "Complete Kaizen",
-                  width: getScreenWidth(context) - 40,
-                  height: 50,
-                  tapOnButton: () {
+        context: context,
+        bgColor: blackColor,
+        appBar: commonAppbar(context: context,title: productRequisitionText),
+        bottomNavigation: Container(
+          color: ConvertTheme.convertTheme.getBackGroundColor(),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 10),
+            child: Row(
+              children: [
+                Expanded(child: commonBorderButtonView(
+                    context: context,
+                    title: "Cancel",
+                    height: 50,
+                    tapOnButton: () {
+                      Get.back();
+                    },
+                    isLoading: false)),
+                commonHorizontalSpacing(),
+                Expanded(child: commonFillButtonView(
+                    context: context,
+                    title: "Save",
+                    width: getScreenWidth(context) - 40,
+                    height: 50,
+                    tapOnButton: () {
 
-                  },
-                  isLoading: false)),
-            ],
+                    },
+                    isLoading: false)),
+              ],
+            ),
           ),
         ),
-      ),
-      child: Obx(() {
-        return BusinessController.to.businessData!.isEmpty ? const SpinKitThreeBounce(
-          color: primaryColor,
-          size: 30.0,
-        ) : ListView(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 24.0,right: 24.0,top: 24.0),
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  kaizenWhomForm(),
-                ],
-              ),
-            )
-          ],
-        );
-      })
+        child: Obx(() {
+          return BusinessController.to.businessData!.isEmpty ? const SpinKitThreeBounce(
+            color: primaryColor,
+            size: 30.0,
+          ) : ListView(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 24.0,right: 24.0,top: 24.0),
+                child: addProductRequisitionView()
+              )
+            ],
+          );
+        })
     );
   }
-}
-
-class AnalysisView{
-  String? title;
-  String? answer;
 }
