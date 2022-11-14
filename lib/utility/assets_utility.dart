@@ -34,3 +34,4 @@ ExactAssetImage assignedFormImage = const ExactAssetImage('assets/icons/Assigned
 ExactAssetImage kaizenFormImage = const ExactAssetImage('assets/icons/Kaizen_Form@2x.png',scale: 2);
 ExactAssetImage userManagementImage = const ExactAssetImage('assets/icons/User_Management@2x.png',scale: 2);
 ExactAssetImage logoutImage = const ExactAssetImage('assets/icons/logout_button@2x.png',scale: 2);
+ExactAssetImage userDefaultImage = const ExactAssetImage('assets/images/default_profile.png');

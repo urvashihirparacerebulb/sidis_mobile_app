@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_projects/utility/common_methods.dart';
 
 import '../../../common_widgets/common_widget.dart';
 import '../../../utility/color_utility.dart';
@@ -71,7 +72,7 @@ class _DashboardViewState extends State<DashboardView> {
                       isChangeColor: true,
                       color: lightFontColor,fontSize: isTablet() ? 1.6 : 1.4,fontWeight: 1),
                   commonVerticalSpacing(spacing: 5),
-                  commonHeaderTitle(title: "Anna",
+                  commonHeaderTitle(title: getLoginData()!.userdata?.first.sessionName ?? "",
                       fontSize: isTablet() ? 2.5 : 2,fontWeight: 3),
                 ],
               ),
@@ -232,18 +233,19 @@ class _CustomDialogState extends State<CustomDialog> {
                     offset: Offset(0.0, 0.0),
                   ),
                 ]),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Padding(padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: commonHeaderTitle(title: selectPlant,color: blackColor,fontSize: 1.3,fontWeight: 2),
-                ),
-                commonVerticalSpacing(spacing: 8),
-                const Divider(color: greyColor,thickness: 0.7,height: 5,),
-                SizedBox(
-                  height: 35,
-                  child: ListTile(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  commonHeaderTitle(title: selectPlant,color: blackColor,fontSize: 1.3,fontWeight: 2),
+                  commonVerticalSpacing(spacing: 8),
+                  const Divider(color: greyColor,thickness: 0.7,height: 5),
+                  ListTile(
+                    minVerticalPadding: 0,
+                    visualDensity: VisualDensity.comfortable,
+                    contentPadding: EdgeInsets.zero,
                     trailing: Radio<String>(
                       value: '1',
                       groupValue: _selectedGender,
@@ -256,10 +258,10 @@ class _CustomDialogState extends State<CustomDialog> {
                     ),
                     title: const Text('SKAPS_Woven_Unit2(102)'),
                   ),
-                ),
-                SizedBox(
-                  height: 35,
-                  child: ListTile(
+                  ListTile(
+                    minVerticalPadding: 0,
+                    visualDensity: VisualDensity.comfortable,
+                    contentPadding: EdgeInsets.zero,
                     trailing: Radio<String>(
                       value: '2',
                       groupValue: _selectedGender,
@@ -272,10 +274,10 @@ class _CustomDialogState extends State<CustomDialog> {
                     ),
                     title: const Text('SKAPS_Woven_EOU(100)'),
                   ),
-                ),
-                SizedBox(
-                  height: 35,
-                  child: ListTile(
+                  ListTile(
+                    minVerticalPadding: 0,
+                    visualDensity: VisualDensity.comfortable,
+                    contentPadding: EdgeInsets.zero,
                     trailing: Radio<String>(
                       value: '3',
                       groupValue: _selectedGender,
@@ -288,10 +290,10 @@ class _CustomDialogState extends State<CustomDialog> {
                     ),
                     title: const Text('SKAPS_Woven_Unit2(103)'),
                   ),
-                ),
-                SizedBox(
-                  height: 35,
-                  child: ListTile(
+                  ListTile(
+                    minVerticalPadding: 0,
+                    visualDensity: VisualDensity.comfortable,
+                    contentPadding: EdgeInsets.zero,
                     trailing: Radio<String>(
                       value: '4',
                       groupValue: _selectedGender,
@@ -304,9 +306,9 @@ class _CustomDialogState extends State<CustomDialog> {
                     ),
                     title: const Text('SKAPS_Woven_Unit2(104)'),
                   ),
-                ),
-                commonVerticalSpacing(spacing: 30)
-              ],
+                  commonVerticalSpacing(spacing: 10)
+                ],
+              ),
             ),
           ),
           Positioned(

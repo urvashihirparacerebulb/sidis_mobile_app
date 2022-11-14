@@ -70,7 +70,8 @@ class _CommonDashboardState extends State<CommonDashboard> {
               unselectedLabelStyle: const TextStyle(fontSize: 0),
               items: [
                 BottomNavigationBarItem(
-                    icon: Image(image: listingIconImage,color: iconColor),
+                    icon: Image(image: listingIconImage,
+                        color: GeneralController.to.dashboardIndex.value == 0 ? blackColor : iconColor),
                     label: ''
                 ),
                 BottomNavigationBarItem(
@@ -78,7 +79,7 @@ class _CommonDashboardState extends State<CommonDashboard> {
                     label: ''
                 ),
                 BottomNavigationBarItem(
-                    icon: Image(image: profileIconImage,color: iconColor),
+                    icon: Image(image: profileIconImage,color: GeneralController.to.dashboardIndex.value == 2 ? blackColor : iconColor),
                     label: ''
                 )
               ],

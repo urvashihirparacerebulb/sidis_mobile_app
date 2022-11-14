@@ -85,7 +85,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           }
         },
         child: Padding(
-          padding: const EdgeInsets.all(10.0),
+          padding: EdgeInsets.all(isTablet() ? 25 : 10),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
