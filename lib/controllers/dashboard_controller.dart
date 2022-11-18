@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import '../models/chart_data_model.dart';
+import '../models/pillar_data_model.dart';
 import '../utility/common_methods.dart';
 import 'package:dio/dio.dart' as dio;
 
@@ -13,6 +14,10 @@ class DashboardController extends GetxController {
 
   Rx<ChartResponse> abnormalitiesCharts = ChartResponse().obs;
   Rx<ChartResponse> kaizenCharts = ChartResponse().obs;
+  RxList<PillarResponse> pillarList = RxList<PillarResponse>();
+  RxList<PillarForm> pillarForms = RxList<PillarForm>();
+  RxBool isLoadingForList = false.obs;
+  RxBool isLoadingForForm = false.obs;
   var currentDate = DateTime.now();
   DateTime pastMonth = DateTime.now().subtract(const Duration(days: 120));
 
@@ -64,4 +69,50 @@ class DashboardController extends GetxController {
       methodType: ApiConfig.methodPOST,
     );
   }
+
+  void getPillarList() {
+    isLoadingForList.value = true;
+    apiServiceCall(
+      params: {
+        "user_id": getLoginData()!.userdata!.first.id
+      },
+      serviceUrl: ApiConfig.getPillarListURL,
+      success: (dio.Response<dynamic> response) {
+        PillarDataModel pillarDataModel = PillarDataModel.fromJson(jsonDecode(response.data));
+        isLoadingForList.value = false;
+        pillarList.value = pillarDataModel.data!;
+      },
+      error: (dio.Response<dynamic> response) {
+        isLoadingForList.value = false;
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getPillarForm({num? selectedPillarId}) {
+    isLoadingForForm.value = true;
+    pillarForms.clear();
+    apiServiceCall(
+      params: {
+        "user_id": getLoginData()!.userdata!.first.id,
+        "group_id": getLoginData()!.userdata!.first.groupId,
+        "pillar_category_id": selectedPillarId
+      },
+      serviceUrl: ApiConfig.getPillarFormURL,
+      success: (dio.Response<dynamic> response) {
+        PillarFormResponseModel pillarFormResponseModel = PillarFormResponseModel.fromJson(jsonDecode(response.data));
+        isLoadingForForm.value = false;
+        pillarForms.value = pillarFormResponseModel.data!;
+      },
+      error: (dio.Response<dynamic> response) {
+        isLoadingForForm.value = false;
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
 }

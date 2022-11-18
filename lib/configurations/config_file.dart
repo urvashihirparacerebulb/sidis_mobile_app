@@ -18,6 +18,12 @@ class ApiConfig {
   static const String abnormalityListURL = "${baseURL}fetch-abnormality";
   static const String getPartDataURL = "${baseURL}get-part-data";
   static const String getAbnormalityDetailURL = "${baseURL}get-abnormality";
+  static const String getPillarListURL = "${baseURL}get-pillar-list";
+  static const String getPillarFormURL = "${baseURL}get-pillar-form";
+  static const String getKaizenListURL = "${baseURL}fetch-kaizen";
+  static const String getProductRequisitionURL = "${baseURL}fetch-product-requisition";
+  static const String getRequisitionItemTypeURL = "${baseURL}get-requisition-item-type";
+  static const String addProductRequisitionURL = "${baseURL}manage-product-requisition";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

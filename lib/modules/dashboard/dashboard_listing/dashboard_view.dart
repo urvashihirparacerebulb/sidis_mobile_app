@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_projects/controllers/dashboard_controller.dart';
 import 'package:my_projects/utility/common_methods.dart';
 
 import '../../../common_widgets/common_widget.dart';
+import '../../../models/pillar_data_model.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
 import '../../../utility/screen_utility.dart';
@@ -18,11 +20,20 @@ class DashboardView extends StatefulWidget {
 
 class _DashboardViewState extends State<DashboardView> {
 
-  commonCardView({String title = "", String subTitle = ""}){
+  @override
+  void initState() {
+    if (DashboardController.to.pillarList.isEmpty) {
+      DashboardController.to.getPillarList();
+    }
+    super.initState();
+  }
+
+
+  commonCardView({PillarResponse? pillarResponse}){
     return commonNeumorphicView(
       child: InkWell(
         onTap: (){
-          Get.to(() => const ListDashboardView());
+          Get.to(() => ListDashboardView(pillarCat: pillarResponse!));
         },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 10.0,vertical: 24.0),
@@ -32,7 +43,7 @@ class _DashboardViewState extends State<DashboardView> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: commonHeaderTitle(title: title,
+                child: commonHeaderTitle(title: pillarResponse?.pillarName ?? "",
                     fontSize: isTablet() ? 2.1 : 1.8,fontWeight: 1),
               ),
               Container(
@@ -43,7 +54,7 @@ class _DashboardViewState extends State<DashboardView> {
                 ),
                 child: Padding(
                   padding: const EdgeInsets.only(top: 5),
-                  child: commonHeaderTitle(title: subTitle,fontSize: isTablet() ? 1.10 : 0.85,
+                  child: commonHeaderTitle(title: (pillarResponse?.status ?? 0).toString(),fontSize: isTablet() ? 1.10 : 0.85,
                       fontWeight: 2,color: blackColor,
                       isChangeColor: true,align: TextAlign.center),
                 ),
@@ -82,115 +93,28 @@ class _DashboardViewState extends State<DashboardView> {
             ],
           ),
           commonVerticalSpacing(spacing: 25),
-          Row(
-            children: [
-              Expanded(child: commonCardView(title: "JH",subTitle: "99+")),
-              commonHorizontalSpacing(spacing: 20),
-              Expanded(child: commonCardView(title: "KK",subTitle: "50"))
-            ],
-          ),
-          commonVerticalSpacing(spacing: 27),
-          Row(
-            children: [
-              Expanded(child: commonCardView(title: "PM",subTitle: "99+")),
-              commonHorizontalSpacing(spacing: 20),
-              Expanded(child: commonCardView(title: "QM",subTitle: "50"))
-            ],
-          ),
-          commonVerticalSpacing(spacing: 27),
-          Row(
-            children: [
-              Expanded(child: commonCardView(title: "E&T",subTitle: "99+")),
-              commonHorizontalSpacing(spacing: 20),
-              Expanded(child: commonCardView(title: "SHE",subTitle: "50"))
-            ],
-          ),
-          commonVerticalSpacing(spacing: 27),
-          Row(
-            children: [
-              Expanded(child: commonCardView(title: "OTPM",subTitle: "99+")),
-              commonHorizontalSpacing(spacing: 20),
-              Expanded(child: commonCardView(title: "DM",subTitle: "50"))
-            ],
-          ),
-          commonVerticalSpacing(spacing: 27),
-          commonCardView(title: "GENERAL",subTitle: "5"),
+
+          Obx(() {
+            if(DashboardController.to.isLoadingForList.value){
+              return const Center(child: CircularProgressIndicator());
+            }
+            return GridView.builder(
+              shrinkWrap: true,
+              itemCount: DashboardController.to.pillarList.length,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                childAspectRatio: 16/9,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 20,
+                  crossAxisCount: 2),
+              itemBuilder: (BuildContext context, int index) {
+                return commonCardView(pillarResponse: DashboardController.to.pillarList[index]);
+              },
+            );
+          }),
         ],
       ),
     );
-    // return commonStructure(
-    //     context: context,
-    //     bgColor: blackColor,
-    //     appBar: commonAppbar(
-    //         context: context,title: "Hello, John",
-    //         isLeadingCCustom: true,
-    //         centerTitle: true,
-    //         leadingWidget: InkWell(
-    //       onTap: (){
-    //         Get.to(() => const MenuScreen());
-    //       },
-    //       child: Image(image: menuIconImage),
-    //     )),
-    //     child: ListView.builder(
-    //       itemCount: 15,
-    //       shrinkWrap: true,
-    //       itemBuilder: (context, index) {
-    //         return InkWell(
-    //           onTap: (){
-    //             Get.to(() => const PlantDashboardView());
-    //           },
-    //           child: Card(
-    //             margin: const EdgeInsets.all(10),
-    //             color: whiteColor,
-    //             elevation: 7.0,
-    //             shadowColor: greyColor.withOpacity(0.3),
-    //             shape: RoundedRectangleBorder(
-    //               borderRadius: BorderRadius.circular(10),
-    //             ),
-    //             child: Padding(
-    //               padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 15),
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                 children: [
-    //                   Stack(
-    //                     children: <Widget>[
-    //                       Padding(padding: const EdgeInsets.only(right: 10,top: 8),child:
-    //                       commonHeaderTitle(title: "RM",color: blackColor,fontWeight: 2,fontSize: 1.2),
-    //                       ),
-    //                       Positioned(
-    //                         right: 0,
-    //                         top: 0,
-    //                         child: Container(
-    //                           decoration: const BoxDecoration(
-    //                               color: Color(0xffFF7777),
-    //                               shape: BoxShape.circle
-    //                           ),
-    //                           constraints: const BoxConstraints(
-    //                             minWidth: 12,
-    //                             minHeight: 12,
-    //                           ),
-    //                           child: const Center(
-    //                             child: Text(
-    //                               '10',
-    //                               style: TextStyle(
-    //                                 color: Colors.white,
-    //                                 fontSize: 8,
-    //                               ),
-    //                               textAlign: TextAlign.center,
-    //                             ),
-    //                           ),
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                   Image(image: nextPageArrowImage)
-    //                 ],
-    //               ),
-    //             ),
-    //           ),
-    //         );
-    //       },)
-    // );
   }
 }
 

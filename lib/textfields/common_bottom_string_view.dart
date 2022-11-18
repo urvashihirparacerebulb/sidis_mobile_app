@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
 

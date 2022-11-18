@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
+import 'package:my_projects/controllers/kaizen_controller.dart';
 
 import '../../../common_widgets/common_textfield.dart';
+import '../../../models/kaizen_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
@@ -19,7 +21,13 @@ class KaizenListView extends StatefulWidget {
 class _KaizenListViewState extends State<KaizenListView> {
   TextEditingController searchController = TextEditingController();
 
-  Widget kaizenCardView(){
+  @override
+  void initState() {
+    KaizenController.to.getKaizenListData();
+    super.initState();
+  }
+
+  Widget kaizenCardView({KaizenList? kaizen}){
     return Container(
       margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
       decoration: neurmorphicBoxDecoration,
@@ -30,27 +38,27 @@ class _KaizenListViewState extends State<KaizenListView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "202279626",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: kaizen!.requestNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "SKAPS",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                commonHeaderTitle(title: kaizen.companyShortName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "KK",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: kaizen.pillarName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Unit2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: kaizen.plantShortName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Line-10",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: kaizen.machineDetail ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Complete",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: kaizen.finishStatus ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -59,7 +67,7 @@ class _KaizenListViewState extends State<KaizenListView> {
               children: [
                 commonHeaderTitle(title: "Tej Patel",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "21-09-2022",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: kaizen.createdAt ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -67,7 +75,7 @@ class _KaizenListViewState extends State<KaizenListView> {
               children: [
                 Expanded(
                   flex: 6,
-                    child: commonHeaderTitle(title: "To reduce quality change over time for high heat product to low het product.",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                    child: commonHeaderTitle(title: kaizen.theme ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 ),
 
                 Expanded(flex: 1,child: Align(
@@ -186,11 +194,18 @@ class _KaizenListViewState extends State<KaizenListView> {
           Expanded(
             child: SizedBox(
               height: getScreenHeight(context) - 150,
-              child: ListView.builder(
-                  itemCount: 10,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) => kaizenCardView()
-              ),
+              child: Obx((){
+                if(KaizenController.to.isKaizenLoading.value){
+                  return const Center(child: CircularProgressIndicator());
+                }
+                return ListView.builder(
+                    itemCount: KaizenController.to.kaizenList.length,
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) => kaizenCardView(
+                      kaizen: KaizenController.to.kaizenList[index]
+                    )
+                );
+              })
             ),
           )
         ],

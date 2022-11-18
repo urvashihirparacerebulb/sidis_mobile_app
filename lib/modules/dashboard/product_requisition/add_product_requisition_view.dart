@@ -5,8 +5,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:my_projects/controllers/product_requisition_controller.dart';
 import 'package:my_projects/utility/constants.dart';
-
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../controllers/business_controller.dart';
@@ -17,6 +17,7 @@ import '../../../models/department_response_model.dart';
 import '../../../models/machines_response_model.dart';
 import '../../../models/plants_response_model.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/department_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
@@ -39,35 +40,28 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
   Department? selectedDepartment;
   Department? selectedSubDepartment;
   MachineData? machineData;
-  List<MachineData> subMachineLists = [];
-  String selectedStartDate = "";
+  DateTime? selectedStartDate;
   File? productImage;
   TextEditingController itemDescriptionController = TextEditingController();
   TextEditingController requiredQuantityController = TextEditingController();
+  String requiredIn = "";
+  String selectedItemType = "";
 
   @override
   void initState() {
     if (BusinessController.to.businessData!.isEmpty) {
       BusinessController.to.getBusinesses();
     }
-    super.initState();
-  }
 
-  getSubMachineAPI({String? plantId, int? machineId}){
-    DropDownDataController.to.getSubMachines(plantId: plantId,
-        machineId: machineId,successCallback: (){
-          if(DropDownDataController.to.subMachinesList!.isNotEmpty){
-            subMachineLists.add(MachineData());
-            setState(() {});
-          }else {
-            setState(() {});
-          }
+    Future.delayed(const Duration(seconds: 5),(){
+      ProductRequisitionController.to.getRequisitionType();
     });
+    super.initState();
   }
 
   imageView({String title = "", File? selectedFile}){
     return SizedBox(
-      height: 72,
+      height: productImage == null ? 72 : 144,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -80,7 +74,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
           ),
           commonVerticalSpacing(spacing: 8),
           Container(
-            height: 50,
+            height: productImage == null ? 50 : 100,
             padding: const EdgeInsets.all(10),
             decoration: neurmorphicBoxDecoration,
             child: Row(
@@ -93,7 +87,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                           source: ImageSource.gallery,
                         );
                         setState(() {
-                          selectedFile = File(pickedFile!.path);
+                          productImage = File(pickedFile!.path);
                         });
                       } catch (e) {
                         print(e);
@@ -108,11 +102,11 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                 commonHorizontalSpacing(spacing: 10),
                 Container(height: 40,width: 1,color: fontColor),
                 commonHorizontalSpacing(spacing: 10),
-                commonHeaderTitle(
-                    title: selectedFile == null ? "No File Chosen" : selectedFile!.path,
+                productImage == null ? commonHeaderTitle(
+                    title: "No File Chosen",
                     color: blackColor.withOpacity(0.4),
                     isChangeColor: true
-                )
+                ) : Expanded(child: Image.file(productImage!,height: 100))
               ],
             ),
           ),
@@ -131,7 +125,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
             commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
               selectedBusiness = business;
               selectedPlant = null;selectedDepartment = null;
-              selectedSubDepartment = null;machineData = null; subMachineLists = [];
+              selectedSubDepartment = null;machineData = null;
               setState(() {});
               if(selectedBusiness?.businessId != null) {
                 DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness?.businessId.toString(),successCallback: (){
@@ -157,7 +151,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                             CompanyBusinessPlant plant) {
                           selectedPlant = plant;
                           selectedDepartment = null;
-                          selectedSubDepartment = null;machineData = null; subMachineLists = [];
+                          selectedSubDepartment = null;machineData = null;
                           setState(() {});
                           if (selectedPlant != null) {
                             DropDownDataController.to.getMachines(
@@ -187,7 +181,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                         selectionCallBack: (
                             Department department) {
                           selectedDepartment = department;
-                          selectedSubDepartment = null;machineData = null; subMachineLists = [];
+                          selectedSubDepartment = null;machineData = null;
                           setState(() {});
                           if (selectedDepartment != null) {
                             DepartmentController.to.getSubDepartment(departmentId: selectedDepartment!.departmentId.toString(),callback: (){});
@@ -227,60 +221,18 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     child: MachineBottomView(
                         hintText: "Select Machine",
                         soleId: selectedPlant!.soleId ?? "",
-                        machineId: machineData!.machineId ?? 0,
                         myItems: DropDownDataController.to.machinesList!,
                         selectionCallBack: (
                             MachineData machine) {
-                          subMachineLists.clear();
                           machineData = machine;
-                          subMachineLists = [];
                           setState(() {});
-                          if (machineData != null) {
-                            getSubMachineAPI(
-                                plantId: selectedPlant!.soleId,
-                                machineId: machineData!.machineId
-                            );
-                          }
                         }));
               }
             },
             child: commonDecoratedTextView(
-              bottom: subMachineLists.isEmpty ? 25 : 0,
+              bottom: 25,
               title: machineData == null ? "Select Machine" : machineData!.machineName ?? "",
               isChangeColor: machineData == null ? true : false,
-            )
-        ),
-        commonVerticalSpacing(spacing: subMachineLists.isEmpty ? 0 : 25),
-        Visibility(
-            visible: machineData == null ? false : true,
-            child: ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: subMachineLists.length,
-                itemBuilder: (context, index) => InkWell(
-                    onTap: (){
-                      commonBottomView(context: context,
-                          child: MachineBottomView(
-                              hintText: "Select Sub Machine",
-                              soleId: selectedPlant!.soleId ?? "",
-                              machineId: subMachineLists.last.machineId ?? 0,
-                              myItems: DropDownDataController.to.subMachinesList!,
-                              selectionCallBack: (
-                                  MachineData machine) {
-                                subMachineLists[index] = machine;
-                                setState(() {
-                                });
-                                getSubMachineAPI(
-                                    plantId: selectedPlant!.soleId,
-                                    machineId: subMachineLists[index].machineId
-                                );
-                              }));
-                    },
-                    child: commonDecoratedTextView(
-                      title: subMachineLists[index].machineName == null ? "Select Sub Machine" : subMachineLists[index].machineName ?? "",
-                      isChangeColor: subMachineLists[index].machineName == null ? true : false,
-                    )
-                )
             )
         ),
         Container(
@@ -293,7 +245,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     alignment: Alignment.centerLeft,
                     child: commonHeaderTitle(
                         fontSize: isTablet() ? 1.3 : 1,
-                        title: selectedStartDate.isEmpty ? "Select Date" : selectedStartDate)
+                        title: selectedStartDate == null ? "Select Date" : DateFormat("dd-MM-yyyy").format(selectedStartDate!))
                 ),
                 Align(
                     alignment: Alignment.centerRight,
@@ -304,7 +256,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                           initialDate: DateTime.now().toString(),
                         ).then((value) {
                           setState(() {
-                            selectedStartDate = DateFormat("dd MMM,yyyy").format(value);
+                            selectedStartDate = value;
                           });
                         });
                       },
@@ -314,22 +266,40 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
             )),
         commonVerticalSpacing(spacing: 20),
         InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              title: "Select Required In",
-              isChangeColor: true
-          ),
+            onTap: (){
+              commonBottomView(context: context,
+                  child: CommonBottomStringView(
+                      hintText: "Select Required In",
+                      myItems: const ["1 Week", "2 Week", "1 Month", "2 Month","Whenever Possible"],
+                      selectionCallBack: (
+                          String val) {
+                        setState(() {
+                          requiredIn = val;
+                        });
+                      }));
+            },
+            child: commonDecoratedTextView(
+              title: requiredIn.isEmpty ? "Select Required In" : requiredIn,
+              isChangeColor: requiredIn.isEmpty ? true : false,
+            )
         ),
         InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              title: "Select Item Type",
-              isChangeColor: true
-          ),
+            onTap: (){
+              commonBottomView(context: context,
+                  child: CommonBottomStringView(
+                      hintText: "Select Item Type",
+                      myItems: ProductRequisitionController.to.requisitionTypes,
+                      selectionCallBack: (
+                          String val) {
+                        setState(() {
+                          selectedItemType = val;
+                        });
+                      }));
+            },
+            child: commonDecoratedTextView(
+              title: selectedItemType.isEmpty ? "Select Item Type" : selectedItemType,
+              isChangeColor: selectedItemType.isEmpty ? true : false,
+            )
         ),
 
         CommonTextFiled(
@@ -395,7 +365,20 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     width: getScreenWidth(context) - 40,
                     height: 50,
                     tapOnButton: () {
-
+                      ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
+                      productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
+                      productRequisitionRequest.requisitionDate = DateFormat("dd-MM-yyyy").format(selectedStartDate!);
+                      productRequisitionRequest.soleId = selectedPlant!.soleId;
+                      productRequisitionRequest.departmentId = selectedDepartment!.departmentId.toString();
+                      productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
+                      productRequisitionRequest.machineId = machineData?.machineId.toString();
+                      productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
+                      productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
+                      productRequisitionRequest.requiredIn = "1";
+                      productRequisitionRequest.itemDescription = itemDescriptionController.text;
+                      productRequisitionRequest.quantity = requiredQuantityController.text;
+                      productRequisitionRequest.productImage = productImage;
+                      ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
                     },
                     isLoading: false)),
               ],
@@ -417,4 +400,20 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
         })
     );
   }
+}
+
+class ProductRequisitionRequest{
+  String? userId;
+  String? requisitionDate;
+  String? soleId;
+  String? departmentId;
+  String? subDepartmentId;
+  String? machineId;
+  String? itemId;
+  String? otherItem;
+  String? requiredIn;
+  String? itemDescription;
+  String? quantity;
+  File? productImage;
+
 }

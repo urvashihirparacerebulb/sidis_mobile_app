@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:my_projects/controllers/product_requisition_controller.dart';
 import 'package:my_projects/utility/constants.dart';
 
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../models/pillar_data_model.dart';
+import '../../../models/product_requisition_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/screen_utility.dart';
 import 'add_product_requisition_view.dart';
 
 class ProductRequisitionList extends StatefulWidget {
-  const ProductRequisitionList({Key? key}) : super(key: key);
+  final PillarForm pillarForm;
+  const ProductRequisitionList({Key? key, required this.pillarForm}) : super(key: key);
 
   @override
   State<ProductRequisitionList> createState() => _ProductRequisitionListState();
@@ -19,7 +23,13 @@ class ProductRequisitionList extends StatefulWidget {
 class _ProductRequisitionListState extends State<ProductRequisitionList> {
   TextEditingController searchController = TextEditingController();
 
-  Widget productRequisitionView(){
+  @override
+  void initState() {
+    ProductRequisitionController.to.getProductRequisitionListData(selectedFormId: widget.pillarForm.id.toString());
+    super.initState();
+  }
+
+  Widget productRequisitionView({ProductRequisition? productRequisition}){
     return Container(
       margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
       decoration: neurmorphicBoxDecoration,
@@ -30,36 +40,36 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "000013",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: productRequisition!.requestNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Line-8",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                commonHeaderTitle(title: productRequisition.machineDetail ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "SKAPS_Nonwoven_Unit2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: productRequisition.companyBussinessPlant ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Whenever Possible",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: productRequisition.requiredIn ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Spare",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: productRequisition.username ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "M seal",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: productRequisition.requisitionDate ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Mahesh Valand",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: "21-09-2022",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: "Quantity: 2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonVerticalSpacing(),
+                commonHeaderTitle(title: productRequisition.itemStatus ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -67,15 +77,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
               children: [
                 Expanded(
                   flex: 5,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      commonHeaderTitle(title: "Quantity: 2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                      commonVerticalSpacing(),
-                      commonHeaderTitle(title: "Request",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-                    ],
-                  )
+                  child: commonHeaderTitle(title: "Item Type",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
                 ),
 
                 Expanded(flex: 2,child: Align(
@@ -184,11 +186,18 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
             Expanded(
               child: SizedBox(
                 height: getScreenHeight(context) - 150,
-                child: ListView.builder(
-                    itemCount: 10,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) => productRequisitionView()
-                ),
+                child: Obx((){
+                  if(ProductRequisitionController.to.isProductReqLoading.value){
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  return ListView.builder(
+                      itemCount: ProductRequisitionController.to.productRequisitionList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) => productRequisitionView(
+                        productRequisition: ProductRequisitionController.to.productRequisitionList[index]
+                      )
+                  );
+                }),
               ),
             )
           ],

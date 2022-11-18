@@ -7,6 +7,8 @@ import '../authentication_controller.dart';
 import '../dashboard_controller.dart';
 import '../department_controller.dart';
 import '../dropdown_data_controller.dart';
+import '../kaizen_controller.dart';
+import '../product_requisition_controller.dart';
 
 class AppBinding extends Bindings {
   @override
@@ -26,6 +28,10 @@ class AppBinding extends Bindings {
     Get.put<PartController>(PartController(),
         permanent: true);
     Get.put<DashboardController>(DashboardController(),
+        permanent: true);
+    Get.put<KaizenController>(KaizenController(),
+        permanent: true);
+    Get.put<ProductRequisitionController>(ProductRequisitionController(),
         permanent: true);
   }
 }
