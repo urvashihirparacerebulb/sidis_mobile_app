@@ -133,3 +133,68 @@ class RequisitionItemType {
     "typedata": List<dynamic>.from(typedata!.map((x) => List<dynamic>.from(x.map((x) => x)))),
   };
 }
+
+
+class RequisitionRequiredInModel {
+  RequisitionRequiredInModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  RequiredInModel? data;
+
+  factory RequisitionRequiredInModel.fromJson(Map<String, dynamic> json) => RequisitionRequiredInModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: RequiredInModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class RequiredInModel {
+  RequiredInModel({
+    this.requiredInData,
+  });
+
+  List<RequiredIn>? requiredInData;
+
+  factory RequiredInModel.fromJson(Map<String, dynamic> json) => RequiredInModel(
+    requiredInData: List<RequiredIn>.from(json["required_in_data"].map((x) => RequiredIn.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "required_in_data": requiredInData== null ? [] : List<dynamic>.from(requiredInData!.map((x) => x.toJson())),
+  };
+}
+
+class RequiredIn {
+  RequiredIn({
+    this.id,
+    this.value,
+  });
+
+  int? id;
+  String? value;
+
+  factory RequiredIn.fromJson(Map<String, dynamic> json) => RequiredIn(
+    id: json["id"],
+    value: json["value"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "value": value,
+  };
+}

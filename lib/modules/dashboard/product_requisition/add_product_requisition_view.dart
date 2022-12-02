@@ -1,14 +1,15 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/controllers/product_requisition_controller.dart';
+import 'package:my_projects/models/product_requisition_response_model.dart';
 import 'package:my_projects/utility/constants.dart';
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
 import '../../../controllers/department_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
@@ -21,6 +22,7 @@ import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/department_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
+import '../../../textfields/required_in_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/common_methods.dart';
@@ -44,7 +46,7 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
   File? productImage;
   TextEditingController itemDescriptionController = TextEditingController();
   TextEditingController requiredQuantityController = TextEditingController();
-  String requiredIn = "";
+  RequiredIn? requiredIn;
   String selectedItemType = "";
 
   @override
@@ -268,19 +270,18 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
         InkWell(
             onTap: (){
               commonBottomView(context: context,
-                  child: CommonBottomStringView(
+                  child: RequiredInBottomView(
                       hintText: "Select Required In",
-                      myItems: const ["1 Week", "2 Week", "1 Month", "2 Month","Whenever Possible"],
+                      myItems: ProductRequisitionController.to.requiredInData.value,
                       selectionCallBack: (
-                          String val) {
-                        setState(() {
-                          requiredIn = val;
-                        });
+                          MachineData machine) {
+                        machineData = machine;
+                        setState(() {});
                       }));
             },
             child: commonDecoratedTextView(
-              title: requiredIn.isEmpty ? "Select Required In" : requiredIn,
-              isChangeColor: requiredIn.isEmpty ? true : false,
+              title: requiredIn == null ? "Select Required In" : (requiredIn!.value ?? ""),
+              isChangeColor: requiredIn == null ? true : false,
             )
         ),
         InkWell(
@@ -365,22 +366,67 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     width: getScreenWidth(context) - 40,
                     height: 50,
                     tapOnButton: () {
-                      ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
-                      productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
-                      productRequisitionRequest.requisitionDate = DateFormat("dd-MM-yyyy").format(selectedStartDate!);
-                      productRequisitionRequest.soleId = selectedPlant!.soleId;
-                      productRequisitionRequest.departmentId = selectedDepartment!.departmentId.toString();
-                      productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
-                      productRequisitionRequest.machineId = machineData?.machineId.toString();
-                      productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
-                      productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
-                      productRequisitionRequest.requiredIn = "1";
-                      productRequisitionRequest.itemDescription = itemDescriptionController.text;
-                      productRequisitionRequest.quantity = requiredQuantityController.text;
-                      productRequisitionRequest.productImage = productImage;
-                      ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
+                      if(selectedBusiness != null){
+                        if(selectedPlant != null){
+                          if(selectedDepartment != null){
+                            if(selectedSubDepartment != null){
+                              if(machineData != null){
+                                if(selectedStartDate != null){
+                                  if(requiredIn != null){
+                                    if(selectedItemType.isNotEmpty){
+                                      if(itemDescriptionController.text.isNotEmpty){
+                                        if(requiredQuantityController.text.isNotEmpty){
+                                          if(productImage != null){
+                                            ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
+                                            productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
+                                            productRequisitionRequest.requisitionDate = DateFormat("dd-MM-yyyy").format(selectedStartDate!);
+                                            productRequisitionRequest.soleId = selectedPlant!.soleId;
+                                            productRequisitionRequest.departmentId = selectedDepartment!.departmentId.toString();
+                                            productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
+                                            productRequisitionRequest.machineId = machineData?.machineId.toString();
+                                            productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
+                                            productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
+                                            productRequisitionRequest.requiredIn = "1";
+                                            productRequisitionRequest.itemDescription = itemDescriptionController.text;
+                                            productRequisitionRequest.quantity = requiredQuantityController.text;
+                                            productRequisitionRequest.productImage = productImage;
+                                            ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
+                                          }else{
+                                            showSnackBar(title: ApiConfig.error, message: "Please choose product image");
+                                          }
+                                        }else{
+                                          showSnackBar(title: ApiConfig.error, message: "Please enter quantity");
+                                        }
+                                      }else{
+                                        showSnackBar(title: ApiConfig.error, message: "Please enter description");
+                                      }
+                                    }else{
+                                      showSnackBar(title: ApiConfig.error, message: "Please select item type");
+                                    }
+                                  }else{
+                                    showSnackBar(title: ApiConfig.error, message: "Please select requiredIn");
+                                  }
+                                }else{
+                                  showSnackBar(title: ApiConfig.error, message: "Please select date");
+                                }
+                              }else{
+                                showSnackBar(title: ApiConfig.error, message: "Please select machine");
+                              }
+                            }else{
+                              showSnackBar(title: ApiConfig.error, message: "Please select sub department");
+                            }
+                          }else{
+                            showSnackBar(title: ApiConfig.error, message: "Please select department");
+                          }
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                        }
+                      }else{
+                        showSnackBar(title: ApiConfig.error, message: "Please select business");
+                      }
                     },
-                    isLoading: false)),
+                    isLoading: false)
+                )
               ],
             ),
           ),
@@ -415,5 +461,4 @@ class ProductRequisitionRequest{
   String? itemDescription;
   String? quantity;
   File? productImage;
-
 }

@@ -23,7 +23,11 @@ class ApiConfig {
   static const String getKaizenListURL = "${baseURL}fetch-kaizen";
   static const String getProductRequisitionURL = "${baseURL}fetch-product-requisition";
   static const String getRequisitionItemTypeURL = "${baseURL}get-requisition-item-type";
+  static const String getRequisitionRequiredInURL = "${baseURL}get-requisition-required-in";
   static const String addProductRequisitionURL = "${baseURL}manage-product-requisition";
+  static const String getKaizenResultAreaURL = "${baseURL}get-kaizen-result-area";
+  static const String manageKaizenAnalysisURL = "${baseURL}manage-kaizen-analysis";
+  static const String manageKaizenURL = "${baseURL}manage-kaizen";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

@@ -113,7 +113,15 @@ apiServiceCall({
         if (handleResponse(response)) {
           if (tempIsHandleResponse!) {
             BooleanResponseModel? responseData;
-            responseData = BooleanResponseModel.fromJson(jsonDecode(response.data.toString()));
+            if(jsonDecode(response.data.toString()) is String){
+              String decodedString = jsonDecode(response.data.toString());
+              var replacingString = decodedString.replaceAll("\"{", "{");
+              var endString = replacingString.replaceAll('}"', "}");
+              responseData = BooleanResponseModel.fromJson(jsonDecode(endString));
+            }else {
+              responseData = BooleanResponseModel.fromJson(
+                  jsonDecode(response.data.toString()));
+            }
             if (tempIsHideLoader!) {
               hideProgressDialog();
             }

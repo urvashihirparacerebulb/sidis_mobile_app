@@ -1,4 +1,6 @@
 
+import 'dart:io';
+
 class KaizenResponseModel {
   KaizenResponseModel({
     this.statusCode,
@@ -89,4 +91,134 @@ class KaizenList {
     "finish_status": finishStatus,
     "created_at": createdAt,
   };
+}
+
+class KaizenResultAreaModel {
+  KaizenResultAreaModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  KaizenResultArea? data;
+
+  factory KaizenResultAreaModel.fromJson(Map<String, dynamic> json) => KaizenResultAreaModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: KaizenResultArea.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class KaizenResultArea {
+  KaizenResultArea({
+    this.resultdata,
+  });
+
+  List<List<String>>? resultdata;
+
+  factory KaizenResultArea.fromJson(Map<String, dynamic> json) => KaizenResultArea(
+    resultdata: List<List<String>>.from(json["resultdata"].map((x) => List<String>.from(x.map((x) => x)))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "resultdata": List<dynamic>.from(resultdata!.map((x) => List<dynamic>.from(x.map((x) => x)))),
+  };
+}
+
+class KaizenAnalysisModel {
+  KaizenAnalysisModel({
+    this.statusCode,
+    this.status,
+    this.res,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  int? res;
+  String? message;
+  KaizenAnalysis? data;
+
+  factory KaizenAnalysisModel.fromJson(Map<String, dynamic> json) => KaizenAnalysisModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    res: json["res"],
+    message: json["message"],
+    data: KaizenAnalysis.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "res": res,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class KaizenAnalysis {
+  KaizenAnalysis({
+    this.kaizenId,
+    this.why,
+    this.answer,
+    this.modifiedAt,
+  });
+
+  int? kaizenId;
+  String? why;
+  String? answer;
+  DateTime? modifiedAt;
+
+  factory KaizenAnalysis.fromJson(Map<String, dynamic> json) => KaizenAnalysis(
+    kaizenId: json["kaizen_id"],
+    why: json["why"],
+    answer: json["answer"],
+    modifiedAt: DateTime.parse(json["modified_at"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "kaizen_id": kaizenId,
+    "why": why,
+    "answer": answer,
+    "modified_at": modifiedAt?.toIso8601String(),
+  };
+}
+
+
+class AddKaizenModelRequest{
+  String? soleId;
+  String? pillarCategoryId;
+  String? lossNoStep;
+  String? departmentId;
+  String? subDepartmentId;
+  String? machineId;
+  String? resultArea;
+  String? kaizenTheme;
+  String? kaizenIdea;
+  String? presentProblem;
+  String? countermeasure;
+  String? benchMark;
+  String? target;
+  String? startDate;
+  List<String>? teamMemberId;
+  String? rootCause;
+  String? remarks;
+  String? finishStatus;
+  String? manageUserId;
+  String? editKaizenId;
+  File? presentProblemImage;
+  File? countermeasureImage;
 }

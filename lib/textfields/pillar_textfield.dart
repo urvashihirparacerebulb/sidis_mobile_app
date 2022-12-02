@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/theme/convert_theme_colors.dart';
+import 'package:my_projects/models/pillar_data_model.dart';
 
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
-import '../models/business_data_model.dart';
 
-class BusinessBottomView extends StatefulWidget {
-  final List<BusinessData> myItems;
+class PillarBottomView extends StatefulWidget {
+  final List<PillarResponse> myItems;
   final Function? selectionCallBack;
 
-  const BusinessBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
+  const PillarBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
 
   @override
-  State<BusinessBottomView> createState() => _BusinessBottomViewState();
+  State<PillarBottomView> createState() => _PillarBottomViewState();
 }
 
-class _BusinessBottomViewState extends State<BusinessBottomView> {
+class _PillarBottomViewState extends State<PillarBottomView> {
 
   TextEditingController searchController = TextEditingController();
 
@@ -29,7 +28,7 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           commonVerticalSpacing(spacing: 15),
-          commonHeaderTitle(title: "Select Business",fontWeight: 2,fontSize: 1.5),
+          commonHeaderTitle(title: "Select Pillar",fontWeight: 2,fontSize: 1.5),
           commonVerticalSpacing(spacing: 15),
           CommonTextFiled(
             fieldTitleText: "Search",
@@ -44,9 +43,9 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
           ),
           commonVerticalSpacing(spacing: 30),
           ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.businessName!.startsWith(searchController.text)).toList().length,
+              shrinkWrap: true,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.pillarName!.startsWith(searchController.text)).toList().length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
@@ -55,7 +54,7 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].businessName ?? "",
+                      title: widget.myItems[index].pillarName ?? "",
                       fontSize: 1.2
                   ),
                 ),

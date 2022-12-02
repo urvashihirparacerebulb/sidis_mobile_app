@@ -9,7 +9,6 @@ import 'package:my_projects/utility/screen_utility.dart';
 import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
 import '../../my_barcode_scanner_view.dart';
-import '../../speech_view.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/constants.dart';
 

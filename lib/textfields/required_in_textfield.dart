@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/theme/convert_theme_colors.dart';
-
+import 'package:my_projects/controllers/product_requisition_controller.dart';
+import 'package:my_projects/models/part_response_model.dart';
+import 'package:my_projects/models/product_requisition_response_model.dart';
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
-import '../models/business_data_model.dart';
 
-class BusinessBottomView extends StatefulWidget {
-  final List<BusinessData> myItems;
+class RequiredInBottomView extends StatefulWidget {
+  final String hintText;
+  final List<RequiredIn> myItems;
   final Function? selectionCallBack;
 
-  const BusinessBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
+  const RequiredInBottomView({Key? key, required this.myItems, this.selectionCallBack, required this.hintText}) : super(key: key);
 
   @override
-  State<BusinessBottomView> createState() => _BusinessBottomViewState();
+  State<RequiredInBottomView> createState() => _RequiredInBottomViewState();
 }
 
-class _BusinessBottomViewState extends State<BusinessBottomView> {
-
+class _RequiredInBottomViewState extends State<RequiredInBottomView> {
   TextEditingController searchController = TextEditingController();
+  @override
+  void initState() {
+    if(widget.myItems.isEmpty){
+      ProductRequisitionController.to.getRequisitionRequiredIn();
+    }
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +36,7 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           commonVerticalSpacing(spacing: 15),
-          commonHeaderTitle(title: "Select Business",fontWeight: 2,fontSize: 1.5),
+          commonHeaderTitle(title: widget.hintText,fontWeight: 2,fontSize: 1.5),
           commonVerticalSpacing(spacing: 15),
           CommonTextFiled(
             fieldTitleText: "Search",
@@ -41,12 +48,16 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
               setState(() {
               });
             },
+            onFieldSubmit: (text){
+              Get.back();
+              widget.selectionCallBack!(PartArray(partName: text));
+            },
           ),
           commonVerticalSpacing(spacing: 30),
           ListView.builder(
-            shrinkWrap: true,
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.businessName!.startsWith(searchController.text)).toList().length,
+              padding: const EdgeInsets.symmetric(horizontal: 15),
+              shrinkWrap: true,
+              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.value!.startsWith(searchController.text)).toList().length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
@@ -55,14 +66,13 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].businessName ?? "",
+                      title: widget.myItems[index].value ?? "",
                       fontSize: 1.2
                   ),
                 ),
               )
           ),
           commonVerticalSpacing(spacing: 30),
-
         ],
       ),
     );

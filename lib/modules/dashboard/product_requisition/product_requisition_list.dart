@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/controllers/product_requisition_controller.dart';
 import 'package:my_projects/utility/constants.dart';
-
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../models/pillar_data_model.dart';

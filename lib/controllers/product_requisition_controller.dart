@@ -17,6 +17,7 @@ class ProductRequisitionController extends GetxController {
   RxList<ProductRequisition> productRequisitionList = RxList<ProductRequisition>();
   RxBool isProductReqLoading = false.obs;
   RxList<String> requisitionTypes = RxList<String>();
+  RxList<RequiredIn> requiredInData = RxList();
 
   void getProductRequisitionListData({String selectedFormId = ""}) {
     isProductReqLoading.value = true;
@@ -52,6 +53,24 @@ class ProductRequisitionController extends GetxController {
       success: (dio.Response<dynamic> response) {
         RequisitionItemResponseModel requisitionItemResponseModel = RequisitionItemResponseModel.fromJson(jsonDecode(response.data));
         requisitionTypes.value = requisitionItemResponseModel.data!.typedata!.first;
+        getRequisitionRequiredIn();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getRequisitionRequiredIn() {
+    apiServiceCall(
+      params: {
+      },
+      serviceUrl: ApiConfig.getRequisitionRequiredInURL,
+      success: (dio.Response<dynamic> response) {
+        RequisitionRequiredInModel requisitionItemResponseModel = RequisitionRequiredInModel.fromJson(jsonDecode(response.data));
+        requiredInData.value = requisitionItemResponseModel.data!.requiredInData ?? [];
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

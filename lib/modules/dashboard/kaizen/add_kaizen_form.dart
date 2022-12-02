@@ -5,20 +5,27 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
+import 'package:my_projects/controllers/kaizen_controller.dart';
+import 'package:my_projects/models/kaizen_response_model.dart';
 import 'package:my_projects/utility/constants.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../common_widgets/common_textfield.dart';
+import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
+import '../../../controllers/dashboard_controller.dart';
 import '../../../controllers/department_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
 import '../../../models/business_data_model.dart';
 import '../../../models/department_response_model.dart';
 import '../../../models/machines_response_model.dart';
+import '../../../models/pillar_data_model.dart';
 import '../../../models/plants_response_model.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/department_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
+import '../../../textfields/pillar_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
@@ -34,8 +41,7 @@ class AddKaizenFormView extends StatefulWidget {
 
 class _AddKaizenFormViewState extends State<AddKaizenFormView> {
 
-  List<AnalysisView> analysisViews = [];
-
+  PillarResponse? selectedPillar;
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
   Department? selectedDepartment;
@@ -43,8 +49,10 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   MachineData? machineData;
   List<MachineData> subMachineLists = [];
   String selectedStartDate = "";
-  File? productImage;
+  String selectedResultArea = "";
+  File? problemImage;
   File? countermeasureImage;
+  bool isEdit = false;
 
   TextEditingController kaizenLossNoController = TextEditingController();
   TextEditingController kaizenThemeController = TextEditingController();
@@ -57,12 +65,17 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   TextEditingController countermeasureController = TextEditingController();
   TextEditingController analysisTitleController = TextEditingController();
   TextEditingController analysisAnswerController = TextEditingController();
+  KaizenAnalysis? editableKaizen;
+  int? selectedKaizenIndex;
 
   @override
   void initState() {
     if (BusinessController.to.businessData!.isEmpty) {
       BusinessController.to.getBusinesses();
     }
+    Future.delayed(const Duration(seconds: 5),(){
+      KaizenController.to.getKaizenResultArea();
+    });
     super.initState();
   }
 
@@ -78,9 +91,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         });
   }
 
-  imageView({String title = "", File? selectedFile}){
+  imageView({String title = "", Function? onChanged, File? selectedFile}){
     return SizedBox(
-      height: 72,
+      height: selectedFile == null ? 72 : 144,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -93,7 +106,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
           ),
           commonVerticalSpacing(spacing: 8),
           Container(
-            height: 50,
+            height: selectedFile == null ? 50 : 100,
             padding: const EdgeInsets.all(10),
             decoration: neurmorphicBoxDecoration,
             child: Row(
@@ -106,7 +119,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                           source: ImageSource.gallery,
                         );
                         setState(() {
-                          selectedFile = File(pickedFile!.path);
+                          onChanged!(File(pickedFile!.path));
                         });
                       } catch (e) {
                         print(e);
@@ -121,11 +134,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 commonHorizontalSpacing(spacing: 10),
                 Container(height: 40,width: 1,color: fontColor),
                 commonHorizontalSpacing(spacing: 10),
-                commonHeaderTitle(
-                    title: selectedFile == null ? "No File Chosen" : selectedFile!.path,
+                selectedFile == null ? commonHeaderTitle(
+                    title: "No File Chosen",
                     color: blackColor.withOpacity(0.4),
                     isChangeColor: true
-                )
+                ) : Expanded(child: Image.file(selectedFile,height: 100))
               ],
             ),
           ),
@@ -137,9 +150,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   analysisView(){
     return [
       Visibility(
-        visible: analysisViews.isNotEmpty,
+        visible: KaizenController.to.kaizenAnalysisList.isNotEmpty,
         child: ListView.builder(
-          itemCount: analysisViews.length,
+          itemCount: KaizenController.to.kaizenAnalysisList.length,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
@@ -154,11 +167,21 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      commonHeaderTitle(title: analysisViews[index].title ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                      commonHeaderTitle(title: KaizenController.to.kaizenAnalysisList[index].why ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                       commonHorizontalSpacing(),
                       Row(
                         children: [
-                          const Icon(Icons.edit,color: Colors.orange),
+                          InkWell(
+                            onTap: (){
+                              setState(() {
+                                isEdit = true;
+                                selectedKaizenIndex = index;
+                                editableKaizen = KaizenController.to.kaizenAnalysisList[index];
+                                analysisTitleController.text = editableKaizen!.why ?? "";
+                                analysisAnswerController.text = editableKaizen!.answer ?? "";
+                              });
+                            },
+                              child: const Icon(Icons.edit,color: Colors.orange)),
                           commonHorizontalSpacing(),
                           const Icon(Icons.delete_outline,color: Colors.redAccent),
                         ]
@@ -166,11 +189,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                     ]
                   ),
                   commonVerticalSpacing(),
-                  commonHeaderTitle(title: analysisViews[index].answer ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonHeaderTitle(title: KaizenController.to.kaizenAnalysisList[index].answer ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 ],
               ),
             );
-        },),
+        }),
       ),
 
       Row(
@@ -178,11 +201,12 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
           Expanded(
             child: CommonTextFiled(
                 fieldTitleText: "Why",
-                hintText: "why",
+                hintText: "Why",
                 // isBorderEnable: false,
                 isChangeFillColor: true,
                 textEditingController: analysisTitleController,
                 onChangedFunction: (String value){
+
                 },
                 validationFunction: (String value) {
                   return value.toString().isEmpty
@@ -209,23 +233,33 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
           commonHorizontalSpacing(spacing: 10),
           InkWell(
             onTap: (){
-              AnalysisView view = AnalysisView();
-              view.title = analysisTitleController.text;
-              view.answer = analysisAnswerController.text;
-              setState(() {
-                analysisViews.add(view);
+              if(isEdit){
+                KaizenController.to.addManageKaizenAnalysis(
+                    answer: analysisAnswerController.text,
+                    isEdit: true,
+                    index: selectedKaizenIndex,
+                    kaizenAnalysisId: editableKaizen!.kaizenId.toString(),
+                    why: analysisTitleController.text);
                 analysisTitleController.clear();
                 analysisAnswerController.clear();
-              });
+                isEdit = false;
+              }else {
+                KaizenController.to.addManageKaizenAnalysis(
+                    answer: analysisAnswerController.text,
+                    kaizenId: "0",
+                    why: analysisTitleController.text);
+                analysisTitleController.clear();
+                analysisAnswerController.clear();
+              }
             },
             child: Container(
               margin: const EdgeInsets.only(top: 8),
-              padding: const EdgeInsets.all(8),
+              padding: EdgeInsets.all(isEdit ? 12 : 8),
               decoration: BoxDecoration(
                   color: Colors.blue,
                   borderRadius: BorderRadius.circular(8.0)
               ),
-                child: const Icon(Icons.add,color: whiteColor,size: 26)),
+                child: isEdit ? commonHeaderTitle(title: "Edit",isChangeColor: true,color: whiteColor) : const Icon(Icons.add,color: whiteColor,size: 26)),
           )
         ],
       )
@@ -241,11 +275,15 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
-
+            commonBottomView(context: context,child: PillarBottomView(myItems: DashboardController.to.pillarList,
+                selectionCallBack: (PillarResponse pillar){
+                  selectedPillar = pillar;
+              setState(() {});
+            }));
           },
           child: commonDecoratedTextView(
-              title: "Select Pillar",
-              isChangeColor: true
+              title: selectedPillar?.pillarCategoryId == null ? "Select Pillar" : selectedPillar?.pillarName ?? "",
+              isChangeColor: selectedPillar?.pillarCategoryId == null ? true : false
           ),
         ),
         InkWell(
@@ -314,7 +352,8 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                           if (selectedDepartment != null) {
                             DepartmentController.to.getSubDepartment(departmentId: selectedDepartment!.departmentId.toString(),callback: (){});
                           }
-                        }));
+                        })
+                );
               }
             },
             child: commonDecoratedTextView(
@@ -405,7 +444,6 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 )
             )
         ),
-
         commonHeaderTitle(title: "Kaizen Detail",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
         commonVerticalSpacing(spacing: 20),
         Container(
@@ -453,14 +491,23 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
             }),
         commonVerticalSpacing(spacing: 20),
         InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-            bottom: 20,
-              title: "Select Result Area *",
-              isChangeColor: true
-          ),
+            onTap: (){
+              commonBottomView(context: context,
+                  child: CommonBottomStringView(
+                      hintText: "Select Result Area",
+                      myItems: KaizenController.to.kaizenResultArea,
+                      selectionCallBack: (
+                          String val) {
+                        setState(() {
+                          selectedResultArea = val;
+                        });
+                      })
+              );
+            },
+            child: commonDecoratedTextView(
+              title: selectedResultArea.isEmpty ? "Select Result Area *" : selectedResultArea,
+              isChangeColor: selectedResultArea.isEmpty ? true : false,
+            )
         ),
         CommonTextFiled(
             fieldTitleText: "Kaizen Theme *",
@@ -529,7 +576,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   : null;
             }),
         commonVerticalSpacing(spacing: 25),
-        imageView(title: "Problem Image *", selectedFile: productImage),
+        imageView(title: "Problem Image *", onChanged: (File file){
+          setState(() {
+            problemImage = file;
+          });
+        },selectedFile: problemImage),
         commonVerticalSpacing(spacing: 30),
         commonHeaderTitle(title: "Analysis",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
         commonVerticalSpacing(spacing: 20),
@@ -589,8 +640,12 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   : null;
             }),
         commonVerticalSpacing(spacing: 25),
-        imageView(title: "Countermeasure Image *", selectedFile: countermeasureImage),
-        commonVerticalSpacing(spacing: 20),
+        imageView(title: "Countermeasure Image *", onChanged: (File file){
+          setState(() {
+            countermeasureImage = file;
+          });
+        },selectedFile: countermeasureImage),
+        commonVerticalSpacing(spacing: 20)
       ],
     );
   }
@@ -622,7 +677,87 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   width: getScreenWidth(context) - 40,
                   height: 50,
                   tapOnButton: () {
-
+                    if(selectedPillar != null){
+                      if(selectedBusiness != null){
+                        if(selectedPlant != null){
+                          if(selectedDepartment != null){
+                            if(selectedSubDepartment != null){
+                              if(machineData != null){
+                                if(selectedStartDate.isNotEmpty){
+                                  if(kaizenLossNoController.text.isNotEmpty){
+                                    if(selectedResultArea.isNotEmpty){
+                                      if(kaizenThemeController.text.isNotEmpty){
+                                        if(benchMarkController.text.isNotEmpty){
+                                          if(targetController.text.isNotEmpty){
+                                            if(problemImage != null){
+                                              if(kaizenIdeaController.text.isNotEmpty){
+                                                if(countermeasureImage != null){
+                                                  AddKaizenModelRequest addKaizenReq = AddKaizenModelRequest();
+                                                  addKaizenReq.soleId = selectedPlant!.soleId;
+                                                  addKaizenReq.pillarCategoryId = selectedPillar!.pillarCategoryId.toString();
+                                                  addKaizenReq.lossNoStep = kaizenLossNoController.text;
+                                                  addKaizenReq.departmentId = selectedDepartment!.departmentId.toString();
+                                                  addKaizenReq.subDepartmentId = selectedSubDepartment!.departmentId.toString();
+                                                  addKaizenReq.machineId = machineData!.machineId.toString();
+                                                  addKaizenReq.countermeasureImage = countermeasureImage;
+                                                  addKaizenReq.presentProblemImage = problemImage;
+                                                  addKaizenReq.remarks = rootCauseRemarksController.text;
+                                                  addKaizenReq.rootCause = "";
+                                                  addKaizenReq.startDate = selectedStartDate;
+                                                  addKaizenReq.target = targetController.text;
+                                                  addKaizenReq.resultArea = selectedResultArea;
+                                                  addKaizenReq.kaizenTheme = kaizenThemeController.text;
+                                                  addKaizenReq.kaizenIdea = kaizenIdeaController.text;
+                                                  addKaizenReq.benchMark = benchMarkController.text;
+                                                  addKaizenReq.presentProblem = problemController.text;
+                                                  addKaizenReq.finishStatus = "0";
+                                                  addKaizenReq.manageUserId = getLoginData()!.userdata!.first.id.toString();
+                                                  KaizenController.to.addKaizenData(addKaizenModelRequest: addKaizenReq);
+                                                }else{
+                                                  showSnackBar(title: ApiConfig.error, message: "Please choose countermeasure image");
+                                                }
+                                              }else{
+                                                showSnackBar(title: ApiConfig.error, message: "Please enter kaizen idea");
+                                              }
+                                            }else{
+                                              showSnackBar(title: ApiConfig.error, message: "Please choose problem image");
+                                            }
+                                          }else{
+                                            showSnackBar(title: ApiConfig.error, message: "Please enter target");
+                                          }
+                                        }else{
+                                          showSnackBar(title: ApiConfig.error, message: "Please enter benchmark");
+                                        }
+                                      }else{
+                                        showSnackBar(title: ApiConfig.error, message: "Please enter kaizen theme");
+                                      }
+                                    }else{
+                                      showSnackBar(title: ApiConfig.error, message: "Please choose result area");
+                                    }
+                                  }else{
+                                    showSnackBar(title: ApiConfig.error, message: "Please enter kaizen loss no");
+                                  }
+                                }else{
+                                  showSnackBar(title: ApiConfig.error, message: "Please select start date");
+                                }
+                              }else{
+                                showSnackBar(title: ApiConfig.error, message: "Please select machine");
+                              }
+                            }else{
+                              showSnackBar(title: ApiConfig.error, message: "Please select sub department");
+                            }
+                          }else{
+                            showSnackBar(title: ApiConfig.error, message: "Please select department");
+                          }
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                        }
+                      }else{
+                        showSnackBar(title: ApiConfig.error, message: "Please select business");
+                      }
+                    }else{
+                      showSnackBar(title: ApiConfig.error, message: "Please select pillar");
+                    }
                   },
                   isLoading: false)),
             ],
@@ -637,12 +772,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
           children: [
             Padding(
               padding: const EdgeInsets.only(left: 24.0,right: 24.0,top: 24.0),
-              child: Stack(
-                alignment: Alignment.topCenter,
-                children: [
-                  kaizenWhomForm(),
-                ],
-              ),
+              child: kaizenWhomForm(),
             )
           ],
         );
