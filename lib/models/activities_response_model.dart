@@ -247,7 +247,7 @@ class AbnormalityRequest{
   );
 
   Map<String, dynamic> toJson() => {
-    "edit_abnormality_id": editAbnormalityId,
+    "edit_abnormality_id": editAbnormalityId ?? "",
     "sole_id": soleId,
     "department_id": departmentId,
     "subdepartment_id": subDepartmentId,

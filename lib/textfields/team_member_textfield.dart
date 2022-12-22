@@ -1,31 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/models/pillar_data_model.dart';
-
+import 'package:my_projects/common_widgets/common_widget.dart';
 import '../common_widgets/common_textfield.dart';
-import '../common_widgets/common_widget.dart';
+import '../controllers/kaizen_controller.dart';
+import '../models/team_member_model.dart';
 
-class PillarBottomView extends StatefulWidget {
-  final List<PillarResponse> myItems;
+class TeamMemberBottomView extends StatefulWidget {
+  final List<KaizenTeamData> myItems;
   final Function? selectionCallBack;
+  final String plantId;
+  final String departmentId;
+  final String subDepartmentId;
 
-  const PillarBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
+  const TeamMemberBottomView({Key? key, required this.myItems,
+    this.selectionCallBack, this.plantId = "", this.departmentId = "", this.subDepartmentId = ""}) : super(key: key);
 
   @override
-  State<PillarBottomView> createState() => _PillarBottomViewState();
+  State<TeamMemberBottomView> createState() => _TeamMemberBottomViewState();
 }
 
-class _PillarBottomViewState extends State<PillarBottomView> {
-
+class _TeamMemberBottomViewState extends State<TeamMemberBottomView> {
   TextEditingController searchController = TextEditingController();
-  List<PillarResponse> searchedMyItems = [];
+  List<KaizenTeamData> searchedMyItems = [];
 
   @override
   void initState() {
+    if(widget.myItems.isEmpty){
+      KaizenController.to.getTeamMembers(plantId: widget.plantId,departmentId: widget.departmentId.toString(),subDepartmentId: widget.subDepartmentId.toString());
+    }
     searchedMyItems = List.from(widget.myItems);
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +41,7 @@ class _PillarBottomViewState extends State<PillarBottomView> {
         physics: const NeverScrollableScrollPhysics(),
         children: [
           commonVerticalSpacing(spacing: 15),
-          commonHeaderTitle(title: "Select Pillar",fontWeight: 2,fontSize: 1.5),
+          commonHeaderTitle(title: "Select Team Member",fontWeight: 2,fontSize: 1.5),
           commonVerticalSpacing(spacing: 15),
           CommonTextFiled(
             fieldTitleText: "Search",
@@ -49,15 +54,15 @@ class _PillarBottomViewState extends State<PillarBottomView> {
                 if(value.isEmpty){
                   searchedMyItems = widget.myItems;
                 }else{
-                  searchedMyItems = widget.myItems.where((p0) => p0.pillarName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                  searchedMyItems = widget.myItems.where((p0) => p0.userName!.toLowerCase().startsWith(value.toLowerCase())).toList();
                 }
               });
             },
           ),
           commonVerticalSpacing(spacing: 30),
           ListView.builder(
-              shrinkWrap: true,
               padding: const EdgeInsets.symmetric(horizontal: 15),
+              shrinkWrap: true,
               itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
@@ -67,14 +72,13 @@ class _PillarBottomViewState extends State<PillarBottomView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: searchedMyItems[index].pillarName ?? "",
+                      title: searchedMyItems[index].userName ?? "",
                       fontSize: 1.2
                   ),
                 ),
               )
           ),
           commonVerticalSpacing(spacing: 30),
-
         ],
       ),
     );

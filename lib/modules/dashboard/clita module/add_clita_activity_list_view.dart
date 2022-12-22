@@ -12,6 +12,7 @@ import '../../../models/business_data_model.dart';
 import '../../../models/machines_response_model.dart';
 import '../../../models/plants_response_model.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../utility/color_utility.dart';
@@ -80,7 +81,7 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
                           source: ImageSource.gallery,
                         );
                         setState(() {
-                          selectedFile = File(pickedFile!.path);
+                          uploadImage = File(pickedFile!.path);
                         });
                       } catch (e) {
                         print(e);
@@ -96,7 +97,7 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
                 Container(height: 40,width: 1,color: fontColor),
                 commonHorizontalSpacing(spacing: 10),
                 commonHeaderTitle(
-                    title: selectedFile == null ? "No File Chosen" : selectedFile!.path,
+                    title: uploadImage == null ? "No File Chosen" : uploadImage!.path,
                     color: blackColor.withOpacity(0.4),
                     isChangeColor: true
                 )
@@ -229,10 +230,19 @@ class _CLITActivityListFormScreenState extends State<CLITActivityListFormScreen>
           visible: selectedBusiness != null && selectedPlant != null && machineData != null ,
           child: InkWell(
             onTap: (){
-
+              commonBottomView(context: context,
+                  child: CommonBottomStringView(
+                      hintText: "Select CLITA",
+                      myItems: const ["C","L","I","T","A"],
+                      selectionCallBack: (
+                          String val) {
+                        setState(() {
+                          selectedClita = val;
+                        });
+                      }));
             },
             child: commonDecoratedTextView(
-                title: "Select CLITA",
+                title: selectedClita == "" ? "Select CLITA" : selectedClita,
                 isChangeColor: true
             ),
           ),

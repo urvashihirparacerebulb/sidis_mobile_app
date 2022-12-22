@@ -16,6 +16,7 @@ class AbnormalityController extends GetxController {
 
   RxList<AbnormalityType>? abnormalityTypeData = RxList<AbnormalityType>();
   RxList<Abnormality>? allAbnormalities = RxList<Abnormality>();
+  RxList<Abnormality>? searchAllAbnormalities = RxList<Abnormality>();
   RxBool loadingForAbnormality = false.obs;
   Rx<AbnormalityDetail> abnormalityDetail = AbnormalityDetail().obs;
 
@@ -41,6 +42,7 @@ class AbnormalityController extends GetxController {
   void getAbnormalityLists() {
     loadingForAbnormality.value = true;
     allAbnormalities!.clear();
+    searchAllAbnormalities!.clear();
     apiServiceCall(
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
@@ -51,6 +53,7 @@ class AbnormalityController extends GetxController {
         AbnormalityResponseModel abnormalityResponseModel =
         AbnormalityResponseModel.fromJson(jsonDecode(response.data));
         allAbnormalities!.addAll(abnormalityResponseModel.data?.data ?? []);
+        searchAllAbnormalities?.value = List.from(allAbnormalities!);
         loadingForAbnormality.value = false;
       },
       error: (dio.Response<dynamic> response) {

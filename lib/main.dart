@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:device_preview/device_preview.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:get/get.dart';
@@ -13,7 +11,6 @@ import 'controllers/general_controller.dart';
 import 'modules/dashboard/dashboard_listing/common_dashboard.dart';
 import 'modules/login/login_screen.dart';
 import 'modules/splash_screen.dart';
-import 'utility/common_methods.dart';
 
 final getPreferences = GetStorage();
 

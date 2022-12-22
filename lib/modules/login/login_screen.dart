@@ -140,37 +140,37 @@ class _LoginScreenState extends State<LoginScreen> {
                       )
                     ],
                   ),
-                  commonVerticalSpacing(spacing: 30),
-                  commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2,align: TextAlign.center),
-                  commonVerticalSpacing(),
-                  InkWell(
-                    onTap: (){
-                      Get.to(() => const MyBarcodeScannerView());
-                      // Get.to(() => const SpeechSampleApp());
-                    },
-                    child: Center(
-                      child: Neumorphic(
-                          style: NeumorphicStyle(
-                              shape: NeumorphicShape.concave,
-                              boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
-                              depth: 8,
-                              color: Colors.grey
-                          ),
-                          child: Container(
-                            width: 30,
-                            height: 40,
-                            decoration: BoxDecoration(
-                                color: ConvertTheme.convertTheme.getWhiteToFontColor(),
-                                borderRadius: commonBorderRadius
-                            ),
-                            child: Icon(Icons.fingerprint,color: ConvertTheme.convertTheme.getFontToWhiteColor()),
-                          ),
-                      ),
-                    ),
-                  ),
-                  commonVerticalSpacing(spacing: 15),
-                  commonHeaderTitle(title: loginWithFinger,fontWeight: 2,fontSize: 1,align: TextAlign.center),
-                  commonVerticalSpacing(spacing: 60),
+                  // commonVerticalSpacing(spacing: 30),
+                  // commonHeaderTitle(title: orText,fontWeight: 2,fontSize: 1.2,align: TextAlign.center),
+                  // commonVerticalSpacing(),
+                  // InkWell(
+                  //   onTap: (){
+                  //     Get.to(() => const MyBarcodeScannerView());
+                  //     // Get.to(() => const SpeechSampleApp());
+                  //   },
+                  //   child: Center(
+                  //     child: Neumorphic(
+                  //         style: NeumorphicStyle(
+                  //             shape: NeumorphicShape.concave,
+                  //             boxShape: NeumorphicBoxShape.roundRect(BorderRadius.circular(12)),
+                  //             depth: 8,
+                  //             color: Colors.grey
+                  //         ),
+                  //         child: Container(
+                  //           width: 30,
+                  //           height: 40,
+                  //           decoration: BoxDecoration(
+                  //               color: ConvertTheme.convertTheme.getWhiteToFontColor(),
+                  //               borderRadius: commonBorderRadius
+                  //           ),
+                  //           child: Icon(Icons.fingerprint,color: ConvertTheme.convertTheme.getFontToWhiteColor()),
+                  //         ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // commonVerticalSpacing(spacing: 15),
+                  // commonHeaderTitle(title: loginWithFinger,fontWeight: 2,fontSize: 1,align: TextAlign.center),
+                  commonVerticalSpacing(spacing: 20),
                 ],
               ),
             ),

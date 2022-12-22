@@ -28,6 +28,20 @@ class ApiConfig {
   static const String getKaizenResultAreaURL = "${baseURL}get-kaizen-result-area";
   static const String manageKaizenAnalysisURL = "${baseURL}manage-kaizen-analysis";
   static const String manageKaizenURL = "${baseURL}manage-kaizen";
+  static const String getRootCauseURL = "${baseURL}get-kaizen-root-cause";
+  static const String getTeamMembersURL = "${baseURL}get-plant-users";
+  static const String getKaizenBenifitsURL = "${baseURL}fetch-kaizen-benifits";
+  static const String getManageKaizenBenifitsURL = "${baseURL}manage-kaizen-benifits";
+  static const String getDefaultKaizenAnalysisURL = "${baseURL}fetch-kaizen-analysis";
+  static const String deleteKaizenBenifit = "${baseURL}delete-kaizen-benifits";
+  static const String deleteKaizenAnalysis = "${baseURL}delete-kaizen-analysis";
+  static const String needleRecordListURL = "${baseURL}get-needlerecord-fetch";
+  static const String needleBoardNumberURL = "${baseURL}ajax-get-board_number";
+  static const String needleChangeStatusURL = "${baseURL}needles-changed-status";
+  static const String manageNeedleRecordURL = "${baseURL}ajax-insert-needleboard";
+  static const String getLinesURL = "${baseURL}fetch-line";
+  static const String getLoomsURL = "${baseURL}fetch-looms";
+  static const String getMachineLocationURL = "${baseURL}ajax-get-machine-location";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

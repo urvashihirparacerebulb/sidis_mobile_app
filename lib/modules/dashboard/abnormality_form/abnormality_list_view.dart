@@ -188,6 +188,18 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                         isChangeFillColor: true,
                         textEditingController: searchController,
                         onChangedFunction: (String value){
+                          if(value.isEmpty){
+                            AbnormalityController.to.searchAllAbnormalities?.value = AbnormalityController.to.allAbnormalities!;
+                          }else{
+                            AbnormalityController.to.searchAllAbnormalities?.value = AbnormalityController.to.allAbnormalities!.where((p0) => p0.bussinessName!.startsWith(value)
+                                || p0.requestNo!.toLowerCase().startsWith(value) ||
+                                p0.machineDetail!.toLowerCase().startsWith(value) ||
+                                p0.companyShortName!.toLowerCase().startsWith(value) ||
+                                p0.plantShortName!.toLowerCase().startsWith(value) ||
+                                p0.abnormalityTitle!.toLowerCase().startsWith(value) ||
+                                p0.partsName!.toLowerCase().startsWith(value) ||
+                                p0.departmentName!.toLowerCase().startsWith(value)).toList();
+                          }
                         },
                         validationFunction: (String value) {
                           return value.toString().isEmpty
@@ -203,7 +215,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                 child: SizedBox(
                   height: getScreenHeight(context) - 150,
                   child: ListView.builder(
-                      itemCount: AbnormalityController.to.allAbnormalities!.length,
+                      itemCount: AbnormalityController.to.searchAllAbnormalities!.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) => abnormalityCardView(abnormality: AbnormalityController.to.allAbnormalities![index])
                   ),

@@ -8,8 +8,10 @@ import '../../../models/kaizen_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/pdf_with_webview.dart';
 import '../../../utility/screen_utility.dart';
 import 'add_kaizen_form.dart';
+import 'finish_kaizen_form_view.dart';
 
 class KaizenListView extends StatefulWidget {
   const KaizenListView({Key? key}) : super(key: key);
@@ -20,6 +22,7 @@ class KaizenListView extends StatefulWidget {
 
 class _KaizenListViewState extends State<KaizenListView> {
   TextEditingController searchController = TextEditingController();
+  RxList<KaizenList> searchKaizenList = RxList<KaizenList>();
 
   @override
   void initState() {
@@ -82,7 +85,7 @@ class _KaizenListViewState extends State<KaizenListView> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition);
+                          _showPopupMenu(details.globalPosition,kaizen);
                         },
                         child: Container(
                             padding: const EdgeInsets.all(5.0),
@@ -101,7 +104,7 @@ class _KaizenListViewState extends State<KaizenListView> {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset, KaizenList kaizen) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -114,28 +117,33 @@ class _KaizenListViewState extends State<KaizenListView> {
       ),      position: RelativeRect.fromLTRB(left, top, 20, 0),
       items: [
         PopupMenuItem<String>(
-            value: 'Edit',
+            value: 'Edit Finish',
             child: InkWell(
               onTap: (){
                 Get.back();
-                // Get.to(() => AddAbnormalityFormView(isEdit: true,abnormalityId: id.toString()));
+                Get.to(() => FinishKaizenFormView(kaizenList: kaizen));
               },
               child: Row(
                 children: [
                   const Icon(Icons.edit),
                   commonHorizontalSpacing(),
-                  const Text('Edit'),
+                  const Text('Edit Finish'),
                 ],
               ),
             )),
         PopupMenuItem<String>(
-            value: 'Delete',
-            child: Row(
-              children: [
-                const Icon(Icons.delete_forever_outlined),
-                commonHorizontalSpacing(),
-                const Text('Delete'),
-              ],
+            value: 'View PDF',
+            child: InkWell(
+              onTap: (){
+                Get.to(() => PDFViewWithWebView(kaizenId: kaizen.kaizenId.toString()));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_forever_outlined),
+                  commonHorizontalSpacing(),
+                  const Text('View PDF'),
+                ],
+              ),
             )),
       ],
       elevation: 8.0,
@@ -179,7 +187,17 @@ class _KaizenListViewState extends State<KaizenListView> {
                     // isBorderEnable: false,
                     isChangeFillColor: true,
                     textEditingController: searchController,
-                    onChangedFunction: (String value){
+                    onChangedFunction: (String val){
+                      String value = val.toLowerCase();
+                      if(value.isEmpty){
+                        KaizenController.to.searchKaizenList.value = KaizenController.to.kaizenList;
+                      }else{
+                        KaizenController.to.searchKaizenList.value = KaizenController.to.kaizenList.where((p0) => p0.pillarName!.startsWith(value)
+                            || p0.requestNo!.toLowerCase().startsWith(value) ||
+                            p0.machineDetail!.toLowerCase().startsWith(value) ||
+                            p0.companyShortName!.toLowerCase().startsWith(value) ||
+                            p0.plantShortName!.toLowerCase().startsWith(value) || p0.theme!.toLowerCase().startsWith(value)).toList();
+                      }
                     },
                     validationFunction: (String value) {
                       return value.toString().isEmpty
@@ -199,10 +217,10 @@ class _KaizenListViewState extends State<KaizenListView> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 return ListView.builder(
-                    itemCount: KaizenController.to.kaizenList.length,
+                    itemCount: KaizenController.to.searchKaizenList.length,
                     shrinkWrap: true,
                     itemBuilder: (context, index) => kaizenCardView(
-                      kaizen: KaizenController.to.kaizenList[index]
+                      kaizen: KaizenController.to.searchKaizenList[index]
                     )
                 );
               })

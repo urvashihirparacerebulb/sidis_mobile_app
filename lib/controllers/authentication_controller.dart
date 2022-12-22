@@ -19,6 +19,7 @@ class AuthenticationController extends GetxController {
       success: (dio.Response<dynamic> response) {
         LoginResponseModel loginResponseModel =
             LoginResponseModel.fromJson(jsonDecode(response.data));
+        showSnackBar(title: loginResponseModel.status! ? ApiConfig.success : ApiConfig.error, message: loginResponseModel.message ?? "");
         setObject(ApiConfig.loginPref, loginResponseModel);
         setIsLogin(isLogin: true);
         Get.offAll(() => const CommonDashboard());

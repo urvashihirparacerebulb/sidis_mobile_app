@@ -8,6 +8,7 @@ import '../dashboard_controller.dart';
 import '../department_controller.dart';
 import '../dropdown_data_controller.dart';
 import '../kaizen_controller.dart';
+import '../needle_controller.dart';
 import '../product_requisition_controller.dart';
 
 class AppBinding extends Bindings {
@@ -32,6 +33,8 @@ class AppBinding extends Bindings {
     Get.put<KaizenController>(KaizenController(),
         permanent: true);
     Get.put<ProductRequisitionController>(ProductRequisitionController(),
+        permanent: true);
+    Get.put<NeedleController>(NeedleController(),
         permanent: true);
   }
 }

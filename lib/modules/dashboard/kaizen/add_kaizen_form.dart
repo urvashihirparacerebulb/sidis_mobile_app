@@ -21,12 +21,14 @@ import '../../../models/department_response_model.dart';
 import '../../../models/machines_response_model.dart';
 import '../../../models/pillar_data_model.dart';
 import '../../../models/plants_response_model.dart';
+import '../../../models/team_member_model.dart';
 import '../../../textfields/business_textfiled.dart';
 import '../../../textfields/common_bottom_string_view.dart';
 import '../../../textfields/department_textfiled.dart';
 import '../../../textfields/machine_textfield.dart';
 import '../../../textfields/pillar_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
+import '../../../textfields/team_member_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/common_methods.dart';
@@ -50,8 +52,10 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
   List<MachineData> subMachineLists = [];
   String selectedStartDate = "";
   String selectedResultArea = "";
+  String selectedRootCause = "";
   File? problemImage;
   File? countermeasureImage;
+  List<KaizenTeamData> selectedTeamMembers = [];
   bool isEdit = false;
 
   TextEditingController kaizenLossNoController = TextEditingController();
@@ -73,7 +77,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
     if (BusinessController.to.businessData!.isEmpty) {
       BusinessController.to.getBusinesses();
     }
-    Future.delayed(const Duration(seconds: 5),(){
+    Future.delayed(const Duration(seconds: 3),(){
       KaizenController.to.getKaizenResultArea();
     });
     super.initState();
@@ -183,7 +187,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                             },
                               child: const Icon(Icons.edit,color: Colors.orange)),
                           commonHorizontalSpacing(),
-                          const Icon(Icons.delete_outline,color: Colors.redAccent),
+                          InkWell(
+                            onTap: (){
+                              KaizenController.to.deleteKaizenAnalysis(analysisId: KaizenController.to.kaizenAnalysisList[index].analysisId.toString());
+                            },
+                              child: const Icon(Icons.delete_outline,color: Colors.redAccent)),
                         ]
                       )
                     ]
@@ -372,6 +380,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                         myItems: DepartmentController.to.subDepartmentData!,
                         selectionCallBack: (Department subDepartment) {
                           selectedSubDepartment = subDepartment;
+                          KaizenController.to.getTeamMembers(plantId: selectedPlant?.soleId,departmentId: selectedDepartment?.departmentId.toString(),subDepartmentId: selectedSubDepartment?.departmentId.toString());
                           setState(() {});
                         }));
               }
@@ -388,7 +397,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                     child: MachineBottomView(
                         hintText: "Select Machine",
                         soleId: selectedPlant!.soleId ?? "",
-                        machineId: machineData!.machineId ?? 0,
+                        machineId: machineData == null ? 0 : machineData!.machineId ?? 0,
                         myItems: DropDownDataController.to.machinesList!,
                         selectionCallBack: (
                             MachineData machine) {
@@ -552,14 +561,61 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
             }),
         commonVerticalSpacing(spacing: 20),
         InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              bottom: 20,
-              title: "Select Team Members *",
-              isChangeColor: true
-          ),
+            onTap: (){
+              commonBottomView(context: context,
+                  child: TeamMemberBottomView(
+                      myItems: KaizenController.to.plantMembersList,
+                      selectionCallBack: (
+                          KaizenTeamData val) {
+                        setState(() {
+                          selectedTeamMembers.add(val);
+                        });
+                      })
+              );
+            },
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                commonDecoratedTextView(
+                  title: "Select Team Member *",
+                  isChangeColor: true,
+                ),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  direction: Axis.vertical,
+                  alignment: WrapAlignment.start,
+                  crossAxisAlignment: WrapCrossAlignment.start,
+                  runAlignment: WrapAlignment.start,
+                  children: selectedTeamMembers.map((i) => Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                    child: Row(
+                      children: [
+                        Text('${i.userName}',style: const TextStyle(
+                          color: blackColor,
+                          fontSize: 14
+                        )),
+                        InkWell(
+                          onTap: (){
+                            setState(() {
+                              selectedTeamMembers.remove(i);
+                            });
+                          },
+                          child: const Icon(Icons.clear,color: blackColor),
+                        )
+                      ],
+                    ),
+                  )).toList(),
+                ),
+                commonVerticalSpacing(spacing: selectedTeamMembers.isEmpty ? 0 : 20),
+              ],
+            )
         ),
         CommonTextFiled(
             fieldTitleText: "Problem/Present status",
@@ -587,14 +643,23 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         ...analysisView(),
         commonVerticalSpacing(spacing: 20),
         InkWell(
-          onTap: (){
-
-          },
-          child: commonDecoratedTextView(
-              bottom: 20,
-              title: "Select Root Cause",
-              isChangeColor: true
-          ),
+            onTap: (){
+              commonBottomView(context: context,
+                  child: CommonBottomStringView(
+                      hintText: "Select Root Cause",
+                      myItems: KaizenController.to.rootCauseList,
+                      selectionCallBack: (
+                          String val) {
+                        setState(() {
+                          selectedRootCause = val;
+                        });
+                      })
+              );
+            },
+            child: commonDecoratedTextView(
+              title: selectedRootCause.isEmpty ? "Select Root Cause *" : selectedRootCause,
+              isChangeColor: selectedRootCause.isEmpty ? true : false,
+            )
         ),
         CommonTextFiled(
             fieldTitleText: "Remarks (Root Cause)",
@@ -703,6 +768,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                                                   addKaizenReq.presentProblemImage = problemImage;
                                                   addKaizenReq.remarks = rootCauseRemarksController.text;
                                                   addKaizenReq.rootCause = "";
+                                                  addKaizenReq.teamMemberId = selectedTeamMembers.map((e) => e.userId!).toList().join(",");
                                                   addKaizenReq.startDate = selectedStartDate;
                                                   addKaizenReq.target = targetController.text;
                                                   addKaizenReq.resultArea = selectedResultArea;

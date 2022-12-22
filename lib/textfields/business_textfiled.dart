@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/theme/convert_theme_colors.dart';
-
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
 import '../models/business_data_model.dart';
@@ -19,6 +17,13 @@ class BusinessBottomView extends StatefulWidget {
 class _BusinessBottomViewState extends State<BusinessBottomView> {
 
   TextEditingController searchController = TextEditingController();
+  List<BusinessData> searchedMyItems = [];
+
+  @override
+  void initState() {
+    searchedMyItems = List.from(widget.myItems);
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +44,11 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedMyItems = widget.myItems;
+                }else{
+                  searchedMyItems = widget.myItems.where((p0) => p0.businessName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
           ),
@@ -46,16 +56,16 @@ class _BusinessBottomViewState extends State<BusinessBottomView> {
           ListView.builder(
             shrinkWrap: true,
             padding: const EdgeInsets.symmetric(horizontal: 15),
-            itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.businessName!.startsWith(searchController.text)).toList().length,
+            itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedMyItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].businessName ?? "",
+                      title: searchedMyItems[index].businessName ?? "",
                       fontSize: 1.2
                   ),
                 ),

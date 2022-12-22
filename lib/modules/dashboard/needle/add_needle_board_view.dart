@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:my_projects/controllers/needle_controller.dart';
 import 'package:my_projects/utility/constants.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
 import '../../../models/business_data_model.dart';
+import '../../../models/needle_response_model.dart';
 import '../../../models/plants_response_model.dart';
+import '../../../textfields/board_textfiled.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/line_bottom_textfield.dart';
+import '../../../textfields/looms_bottom_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
@@ -26,8 +32,19 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
   BusinessData? selectedBusiness;
   CompanyBusinessPlant? selectedPlant;
   TextEditingController needleConsumedController = TextEditingController();
-  String selectedDate = "";
-  String _selectedGender = "1";
+  LineData? selectedLine;
+  LoomsData? selectedLoom;
+  LocationData? selectedMachineLocation;
+  String selectedDate = DateFormat("dd-MM-yyyy hh:mm").format(DateTime.now());
+  final RxString _selectedGender = "1".obs;
+
+  @override
+  void initState() {
+    if (BusinessController.to.businessData!.isEmpty) {
+      BusinessController.to.getBusinesses();
+    }
+    super.initState();
+  }
 
   boardFormView(){
     return Column(
@@ -63,6 +80,14 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                             CompanyBusinessPlant plant) {
                           selectedPlant = plant;
                           setState(() {});
+                          if(selectedBusiness != null && selectedPlant != null){
+                            List<String> ids = selectedPlant!.soleId!.split(" - ");
+                            NeedleController.to.getLines(
+                              companyId: ids.first,
+                              businessId: ids[1],
+                              plantId: ids.last
+                            );
+                          }
                         }));
               }
             },
@@ -74,22 +99,50 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
 
         InkWell(
           onTap: (){
-
+            commonBottomView(context: context,child: LineBottomView(myItems: NeedleController.to.lineDataList,selectionCallBack: (LineData lineData){
+              selectedLine = lineData;
+              if(selectedLine != null){
+                List<String> ids = selectedPlant!.soleId!.split(" - ");
+                NeedleController.to.getLoomsByLine(
+                  companyId: ids.first,
+                  businessId: ids[1],
+                  plantId: ids.last,
+                  lineId: selectedLine!.lineId.toString()
+                );
+              }
+              setState(() {});
+            }));
           },
           child: commonDecoratedTextView(
-              title: "Select Line *",
-              isChangeColor: true
+              title: selectedLine?.lineId == null ? "Select Line * " : selectedLine?.lineNo ?? "",
+              isChangeColor: selectedLine?.lineId == null ? true : false
           ),
         ),
+
         InkWell(
           onTap: (){
-
+            commonBottomView(context: context,child: LoomsBottomView(myItems: NeedleController.to.loomsDataList,selectionCallBack: (LoomsData loomData){
+              selectedLoom = loomData;
+              if(selectedLoom != null && selectedLine != null){
+                List<String> ids = selectedPlant!.soleId!.split(" - ");
+                NeedleController.to.getMachineLocations(
+                  lineId: selectedLine!.lineId.toString(),
+                  loomID: selectedLoom!.loopsId.toString(),
+                  companyId: ids.first,
+                  businessId: ids[1],
+                  plantId: ids.last,
+                  date: selectedDate
+                );
+              }
+              setState(() {});
+            }));
           },
           child: commonDecoratedTextView(
-              title: "Select Looms * ",
-              isChangeColor: true
+              title: selectedLoom?.loopsId == null ? "Select Looms * " : selectedLoom?.loopsNo ?? "",
+              isChangeColor: selectedLoom?.loopsId == null ? true : false
           ),
         ),
+
         Container(
             height: 50,
             padding: EdgeInsets.symmetric(horizontal: commonHorizontalPadding),
@@ -111,7 +164,7 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                           initialDate: DateTime.now().toString(),
                         ).then((value) {
                           setState(() {
-                            selectedDate = DateFormat("dd MMM,yyyy").format(value);
+                            selectedDate = DateFormat("dd-MM-yyyy hh:mm").format(value);
                           });
                         });
                       },
@@ -134,28 +187,28 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
             children: <Widget>[
               Expanded(
                 child: ListTile(
-                  leading: Radio<String>(
+                  leading: Obx(() => Radio<String>(
                     value: '1',
-                    groupValue: _selectedGender,
+                    groupValue: _selectedGender.value,
                     activeColor: primaryColor,
                     onChanged: (value) {
-                      _selectedGender = value!;
+                      _selectedGender.value = value!;
                     },
-                  ),
+                  )),
                   contentPadding: const EdgeInsets.all(0),
                   title: const Text('Yes'),
                 ),
               ),
               Expanded(
                 child: ListTile(
-                  leading: Radio<String>(
+                  leading: Obx(() => Radio<String>(
                     value: '2',
-                    groupValue: _selectedGender,
+                    groupValue: _selectedGender.value,
                     activeColor: primaryColor,
                     onChanged: (value) {
-                      _selectedGender = value!;
+                      _selectedGender.value = value!;
                     },
-                  ),
+                  )),
                   contentPadding: const EdgeInsets.all(0),
                   title: const Text('No'),
                 ),
@@ -164,6 +217,118 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
           ),
         ),
         commonVerticalSpacing(spacing: 20),
+        Visibility(
+          visible: NeedleController.to.machineLocationList.isNotEmpty,
+            child: commonHeaderTitle(
+          title: "Location",
+              color: blackColor,
+              isChangeColor: true
+        )),
+        commonVerticalSpacing(spacing: 20),
+        ListView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: NeedleController.to.machineLocationList.length,
+          itemBuilder: (context, index) {
+          return Container(
+            decoration: neurmorphicBoxDecoration,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                commonHeaderTitle(title: NeedleController.to.machineLocationList[index].locationLabel ?? "",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                commonVerticalSpacing(spacing: 20),
+                commonHeaderTitle(title: "Old Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                commonVerticalSpacing(),
+                InkWell(
+                  onTap: (){
+                    commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].oldBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
+                      if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
+                        NeedleController.to.locationIds.add(
+                            NeedleController.to.machineLocationList[index]
+                                .locationId ?? "");
+                      }
+                      NeedleController.to.machineLocationList[index].selectedOldBoard!.index = index;
+                      NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.add(board);
+                    }));
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      commonDecoratedTextView(
+                        title: "Select old board needle number",
+                        isChangeColor: true,
+                      ),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        direction: Axis.vertical,
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        children: NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.map((i) => Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                          child: Text('${i.boardNo}',style: const TextStyle(
+                              color: blackColor,
+                              fontSize: 14
+                          )),
+                        )).toList(),
+                      ),
+                      commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.isEmpty ? 0 : 20),
+                    ],
+                  ),
+                ),
+                commonVerticalSpacing(),
+                commonHeaderTitle(title: "New Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                commonVerticalSpacing(),
+                InkWell(
+                  onTap: (){
+                    commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].newBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
+                      if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
+                        NeedleController.to.locationIds.add(
+                            NeedleController.to.machineLocationList[index].locationId ?? "");
+                      }
+                      NeedleController.to.machineLocationList[index].selectedNewBoard?.index = index;
+                      NeedleController.to.machineLocationList[index].selectedNewBoard?.selectedNewBoard!.add(board);
+                    }));
+                  },
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      commonDecoratedTextView(
+                        title: "Select new board needle number",
+                        isChangeColor: true,
+                      ),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        direction: Axis.vertical,
+                        alignment: WrapAlignment.start,
+                        crossAxisAlignment: WrapCrossAlignment.start,
+                        runAlignment: WrapAlignment.start,
+                        children: NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.map((i) => Container(
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade300,
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                          child: Text('${i.boardNo}',style: const TextStyle(
+                              color: blackColor,
+                              fontSize: 14
+                          )),
+                        )).toList(),
+                      ),
+                      commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.isEmpty ? 0 : 20),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        },)
       ],
     );
   }
@@ -195,7 +360,38 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                   width: getScreenWidth(context) - 40,
                   height: 50,
                   tapOnButton: () {
+                    if(selectedBusiness != null){
+                      if(selectedPlant != null){
+                        if(selectedLine != null){
+                          if(selectedLoom != null){
+                            if(selectedDate.isNotEmpty){
+                              AddNeedleBoardRequest addNeedleBoardReq = AddNeedleBoardRequest();
+                              addNeedleBoardReq.userId = getLoginData()!.userdata?.first.id.toString();
+                              addNeedleBoardReq.businessId = selectedBusiness?.businessId.toString();
+                              addNeedleBoardReq.plantId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                              addNeedleBoardReq.companyId = selectedPlant?.soleId?.split(" - ")[0].toString();
+                              addNeedleBoardReq.lineId = selectedLine?.lineId.toString();
+                              addNeedleBoardReq.loomId = selectedLoom?.loopsId.toString();
+                              addNeedleBoardReq.locationId = NeedleController.to.locationIds.join(",");
 
+                              NeedleController.to.addNeedleBoardData(
+
+                              );
+                            }else{
+                              showSnackBar(title: ApiConfig.error, message: "Please select date");
+                            }
+                          }else{
+                            showSnackBar(title: ApiConfig.error, message: "Please select loom");
+                          }
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please select line");
+                        }
+                      }else{
+                        showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                      }
+                    }else{
+                      showSnackBar(title: ApiConfig.error, message: "Please select business");
+                    }
                   },
                   isLoading: false)),
             ],
@@ -212,4 +408,17 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
     ),
     );
   }
+}
+
+class AddNeedleBoardRequest{
+  String? companyId;
+  String? plantId;
+  String? businessId;
+  String? lineId;
+  String? loomId;
+  String? needleBoardDate;
+  String? boardConfirm;
+  String? locationId;
+  LocationData? locationData;
+  String? userId;
 }

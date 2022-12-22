@@ -17,11 +17,14 @@ class AbnormalityTypeBottomView extends StatefulWidget {
 
 class _AbnormalityTypeBottomViewState extends State<AbnormalityTypeBottomView> {
   TextEditingController searchController = TextEditingController();
+  List<AbnormalityType> searchedItems = [];
 
   @override
   void initState() {
     if(widget.myItems.isEmpty){
-      AbnormalityController.to.getAbnormalityType(callback: (){setState(() {});});
+      AbnormalityController.to.getAbnormalityType(callback: (){setState(() {
+        searchedItems = List.from(widget.myItems);
+      });});
     }
     super.initState();
   }
@@ -45,6 +48,11 @@ class _AbnormalityTypeBottomViewState extends State<AbnormalityTypeBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedItems = widget.myItems;
+                }else{
+                  searchedItems = widget.myItems.where((p0) => p0.typeName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
           ),
@@ -52,16 +60,16 @@ class _AbnormalityTypeBottomViewState extends State<AbnormalityTypeBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.typeName!.startsWith(searchController.text)).toList().length,
+              itemCount: searchedItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].typeName ?? "",
+                      title: searchedItems[index].typeName ?? "",
                       fontSize: 1.2
                   ),
                 ),

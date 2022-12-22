@@ -5,11 +5,16 @@ import 'package:my_projects/common_widgets/common_widget.dart';
 import 'package:my_projects/utility/constants.dart';
 
 import '../../../common_widgets/common_textfield.dart';
+import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
 import '../../../controllers/dropdown_data_controller.dart';
+import '../../../controllers/needle_controller.dart';
 import '../../../models/business_data_model.dart';
+import '../../../models/needle_response_model.dart';
 import '../../../models/plants_response_model.dart';
+import '../../../textfields/board_textfiled.dart';
 import '../../../textfields/business_textfiled.dart';
+import '../../../textfields/change_status_textfield.dart';
 import '../../../textfields/plants_textfield.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
@@ -29,6 +34,28 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
   CompanyBusinessPlant? selectedPlant;
   TextEditingController needleConsumedController = TextEditingController();
   String selectedDate = "";
+  NeedleBoardNumber? selectedBoardNumber;
+  ChangeStatus? selectedChangeStatus;
+
+  @override
+  void initState() {
+    if (BusinessController.to.businessData!.isEmpty) {
+      BusinessController.to.getBusinesses();
+    }
+
+    Future.delayed(const Duration(seconds: 1), (){
+      getBoardNumbers();
+    });
+    super.initState();
+  }
+
+  getBoardNumbers(){
+    NeedleController.to.getNeedleBoardNumber(
+      businessId: selectedBusiness == null ? '${getLoginData()!.currentPlants?.first.bussinessId}' : '${selectedBusiness?.businessName}',
+      plantId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.plantId}' : '${selectedPlant?.soleId?.split(' - ')[2]}',
+      companyId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.companyId}' : '${selectedPlant?.soleId?.split(' - ')[0]}',
+    );
+  }
 
   recordFormView(){
     return Column(
@@ -41,7 +68,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
               setState(() {});
               if(selectedBusiness?.businessId != null) {
                 DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness?.businessId.toString(),successCallback: (){
-                  // getActivityList();
+                  getBoardNumbers();
                 });
               }
             }));
@@ -62,6 +89,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                         selectionCallBack: (
                             CompanyBusinessPlant plant) {
                           selectedPlant = plant;
+                          getBoardNumbers();
                           setState(() {});
                         }));
               }
@@ -71,23 +99,28 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
               isChangeColor: selectedPlant == null ? true : false,
             )
         ),
-
         InkWell(
           onTap: (){
-
+            commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.needleBoardList,selectionCallBack: (NeedleBoardNumber boardNo){
+              selectedBoardNumber = boardNo;
+              setState(() {});
+            }));
           },
           child: commonDecoratedTextView(
-              title: "Select Board Number *",
-              isChangeColor: true
+              title: selectedBoardNumber?.boardId == null ? "Select Board Number *" : selectedBoardNumber?.boardNo ?? "",
+              isChangeColor: selectedBoardNumber?.boardId == null ? true : false
           ),
         ),
         InkWell(
           onTap: (){
-
+            commonBottomView(context: context,child: ChangeStatusBottomView(myItems: NeedleController.to.changeStatusList,selectionCallBack: (ChangeStatus statusChange){
+              selectedChangeStatus = statusChange;
+              setState(() {});
+            }));
           },
           child: commonDecoratedTextView(
-              title: "Needles Changed Status * ",
-              isChangeColor: true
+              title: selectedChangeStatus?.id == null ? "Needles Changed Status * " : selectedChangeStatus?.value ?? "",
+              isChangeColor: selectedChangeStatus?.id == null ? true : false
           ),
         ),
         Container(
@@ -164,7 +197,40 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                   width: getScreenWidth(context) - 40,
                   height: 50,
                   tapOnButton: () {
-
+                    if(selectedBusiness != null){
+                      if(selectedPlant != null){
+                        if(selectedBoardNumber != null){
+                          if(selectedChangeStatus != null){
+                            if(selectedDate.isNotEmpty){
+                              if(needleConsumedController.text.isNotEmpty){
+                                AddNeedleRecordRequest addNeedleRecordReq = AddNeedleRecordRequest();
+                                addNeedleRecordReq.userId = getLoginData()!.userdata?.first.id.toString();
+                                addNeedleRecordReq.businessId = selectedBusiness?.businessId.toString();
+                                addNeedleRecordReq.plantId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                                addNeedleRecordReq.companyId = selectedPlant?.soleId?.split(" - ")[0].toString();
+                                addNeedleRecordReq.needleConsumed = needleConsumedController.text;
+                                addNeedleRecordReq.needleBoardNumber = selectedBoardNumber?.boardId.toString();
+                                addNeedleRecordReq.needleStatus = selectedChangeStatus?.id.toString();
+                                addNeedleRecordReq.needleRecordAddDate = selectedDate;
+                                NeedleController.to.addNeedleRecordData(addNeedleRecordRequest: addNeedleRecordReq);
+                              }else{
+                                showSnackBar(title: ApiConfig.error, message: "Please enter number of needle consumed");
+                              }
+                            }else{
+                              showSnackBar(title: ApiConfig.error, message: "Please select date");
+                            }
+                          }else{
+                            showSnackBar(title: ApiConfig.error, message: "Please select change status");
+                          }
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please select board number");
+                        }
+                      }else{
+                        showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                      }
+                    }else{
+                      showSnackBar(title: ApiConfig.error, message: "Please select business");
+                    }
                   },
                   isLoading: false)),
             ],
@@ -180,4 +246,15 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
       ),
     );
   }
+}
+
+class AddNeedleRecordRequest{
+  String? companyId;
+  String? plantId;
+  String? businessId;
+  String? needleRecordAddDate;
+  String? needleStatus;
+  String? needleBoardNumber;
+  String? needleConsumed;
+  String? userId;
 }

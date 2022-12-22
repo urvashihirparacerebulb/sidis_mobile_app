@@ -170,7 +170,19 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                       // isBorderEnable: false,
                       isChangeFillColor: true,
                       textEditingController: searchController,
-                      onChangedFunction: (String value){
+                      onChangedFunction: (String val){
+                        String value = val.toLowerCase();
+                        if(value.isEmpty){
+                          ProductRequisitionController.to.searchProductRequisitionList.value = ProductRequisitionController.to.productRequisitionList;
+                        }else{
+                          ProductRequisitionController.to.searchProductRequisitionList.value = ProductRequisitionController.to.productRequisitionList.where((p0) => p0.username!.startsWith(value)
+                              || p0.requestNo!.toLowerCase().startsWith(value) ||
+                              p0.machineDetail!.toLowerCase().startsWith(value) ||
+                              p0.requiredIn!.toLowerCase().startsWith(value) ||
+                              p0.companyBussinessPlant!.toLowerCase().startsWith(value) ||
+                              p0.requisitionDate!.toLowerCase().startsWith(value) ||
+                              p0.itemStatus!.toLowerCase().startsWith(value)).toList();
+                        }
                       },
                       validationFunction: (String value) {
                         return value.toString().isEmpty
@@ -190,10 +202,10 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                     return const Center(child: CircularProgressIndicator());
                   }
                   return ListView.builder(
-                      itemCount: ProductRequisitionController.to.productRequisitionList.length,
+                      itemCount: ProductRequisitionController.to.searchProductRequisitionList.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) => productRequisitionView(
-                        productRequisition: ProductRequisitionController.to.productRequisitionList[index]
+                        productRequisition: ProductRequisitionController.to.searchProductRequisitionList[index]
                       )
                   );
                 }),

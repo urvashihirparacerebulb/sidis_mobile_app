@@ -1,42 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:my_projects/models/pillar_data_model.dart';
-
 import '../common_widgets/common_textfield.dart';
 import '../common_widgets/common_widget.dart';
+import '../models/needle_response_model.dart';
 
-class PillarBottomView extends StatefulWidget {
-  final List<PillarResponse> myItems;
+class LineBottomView extends StatefulWidget {
+  final List<LineData> myItems;
   final Function? selectionCallBack;
 
-  const PillarBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
+  const LineBottomView({Key? key, required this.myItems, this.selectionCallBack}) : super(key: key);
 
   @override
-  State<PillarBottomView> createState() => _PillarBottomViewState();
+  State<LineBottomView> createState() => _LineBottomViewState();
 }
 
-class _PillarBottomViewState extends State<PillarBottomView> {
+class _LineBottomViewState extends State<LineBottomView> {
 
   TextEditingController searchController = TextEditingController();
-  List<PillarResponse> searchedMyItems = [];
+  List<LineData> searchedMyItems = [];
 
   @override
   void initState() {
     searchedMyItems = List.from(widget.myItems);
     super.initState();
   }
-
-
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       child: ListView(
         shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
         children: [
           commonVerticalSpacing(spacing: 15),
-          commonHeaderTitle(title: "Select Pillar",fontWeight: 2,fontSize: 1.5),
+          commonHeaderTitle(title: "Select Line",fontWeight: 2,fontSize: 1.5),
           commonVerticalSpacing(spacing: 15),
           CommonTextFiled(
             fieldTitleText: "Search",
@@ -49,7 +45,7 @@ class _PillarBottomViewState extends State<PillarBottomView> {
                 if(value.isEmpty){
                   searchedMyItems = widget.myItems;
                 }else{
-                  searchedMyItems = widget.myItems.where((p0) => p0.pillarName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                  searchedMyItems = widget.myItems.where((p0) => p0.lineNo!.toLowerCase().startsWith(value.toLowerCase())).toList();
                 }
               });
             },
@@ -67,7 +63,7 @@ class _PillarBottomViewState extends State<PillarBottomView> {
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: searchedMyItems[index].pillarName ?? "",
+                      title: searchedMyItems[index].lineNo ?? "",
                       fontSize: 1.2
                   ),
                 ),

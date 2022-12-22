@@ -19,12 +19,18 @@ class PartBottomView extends StatefulWidget {
 
 class _PartBottomViewState extends State<PartBottomView> {
   TextEditingController searchController = TextEditingController();
+  List<PartArray> searchedMyItems = [];
+
   @override
   void initState() {
     if(widget.myItems.isEmpty){
       PartController.to.getPartList(machineId: widget.machineId,callback: (){
-        setState(() {});
+        setState(() {
+          searchedMyItems = List.from(widget.myItems);
+        });
       });
+    }else{
+      searchedMyItems = List.from(widget.myItems);
     }
     super.initState();
   }
@@ -48,6 +54,11 @@ class _PartBottomViewState extends State<PartBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedMyItems = widget.myItems;
+                }else{
+                  searchedMyItems = widget.myItems.where((p0) => p0.partName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
             onFieldSubmit: (text){
@@ -59,16 +70,16 @@ class _PartBottomViewState extends State<PartBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.partName!.startsWith(searchController.text)).toList().length,
+              itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedMyItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].partName ?? "",
+                      title:searchedMyItems[index].partName ?? "",
                       fontSize: 1.2
                   ),
                 ),

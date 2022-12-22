@@ -20,6 +20,7 @@ class DepartmentBottomView extends StatefulWidget {
 
 class _DepartmentBottomViewState extends State<DepartmentBottomView> {
   TextEditingController searchController = TextEditingController();
+  List<Department> searchedMyItems = [];
 
   @override
   void initState() {
@@ -28,15 +29,20 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
          DepartmentController.to.getDepartment(
              soleId: widget.soleId,
            callback: (){
-             setState(() {});
+             setState(() {
+               searchedMyItems = List.from(widget.myItems);
+             });
            }
          );
       }else{
         DepartmentController.to.getSubDepartment(departmentId: widget.departmentId.toString(),callback: (){
           setState(() {
+            searchedMyItems = List.from(widget.myItems);
           });
         });
       }
+    }else {
+      searchedMyItems = List.from(widget.myItems);
     }
     super.initState();
   }
@@ -60,6 +66,11 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedMyItems = widget.myItems;
+                }else{
+                  searchedMyItems = widget.myItems.where((p0) => p0.departmentName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
           ),
@@ -67,16 +78,16 @@ class _DepartmentBottomViewState extends State<DepartmentBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.departmentName!.startsWith(searchController.text)).toList().length,
+              itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedMyItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].departmentName ?? "",
+                      title: searchedMyItems[index].departmentName ?? "",
                       fontSize: 1.2
                   ),
                 ),

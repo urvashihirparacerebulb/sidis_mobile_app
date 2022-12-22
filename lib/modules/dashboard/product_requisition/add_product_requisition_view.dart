@@ -44,7 +44,9 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
   MachineData? machineData;
   DateTime? selectedStartDate;
   File? productImage;
+  TextEditingController poNoController = TextEditingController();
   TextEditingController itemDescriptionController = TextEditingController();
+  TextEditingController remarksController = TextEditingController();
   TextEditingController requiredQuantityController = TextEditingController();
   RequiredIn? requiredIn;
   String selectedItemType = "";
@@ -122,6 +124,20 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        CommonTextFiled(
+            fieldTitleText: "Product Requisition * ",
+            hintText: "Product Requisition * ",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            textEditingController: poNoController,
+            onChangedFunction: (String value){
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }),
+        commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
             commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
@@ -270,23 +286,6 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
         InkWell(
             onTap: (){
               commonBottomView(context: context,
-                  child: RequiredInBottomView(
-                      hintText: "Select Required In",
-                      myItems: ProductRequisitionController.to.requiredInData.value,
-                      selectionCallBack: (
-                          MachineData machine) {
-                        machineData = machine;
-                        setState(() {});
-                      }));
-            },
-            child: commonDecoratedTextView(
-              title: requiredIn == null ? "Select Required In" : (requiredIn!.value ?? ""),
-              isChangeColor: requiredIn == null ? true : false,
-            )
-        ),
-        InkWell(
-            onTap: (){
-              commonBottomView(context: context,
                   child: CommonBottomStringView(
                       hintText: "Select Item Type",
                       myItems: ProductRequisitionController.to.requisitionTypes,
@@ -302,7 +301,23 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
               isChangeColor: selectedItemType.isEmpty ? true : false,
             )
         ),
-
+        InkWell(
+            onTap: (){
+              commonBottomView(context: context,
+                  child: RequiredInBottomView(
+                      hintText: "Select Required In",
+                      myItems: ProductRequisitionController.to.requiredInData,
+                      selectionCallBack: (
+                          RequiredIn requiredInVal) {
+                        requiredIn = requiredInVal;
+                        setState(() {});
+                      }));
+            },
+            child: commonDecoratedTextView(
+              title: requiredIn == null ? "Select Required In" : (requiredIn!.value ?? ""),
+              isChangeColor: requiredIn == null ? true : false,
+            )
+        ),
         CommonTextFiled(
             fieldTitleText: "Item Description*",
             hintText: "Item Description*",
@@ -310,6 +325,21 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
             isChangeFillColor: true,
             maxLine: 5,
             textEditingController: itemDescriptionController,
+            onChangedFunction: (String value){
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }),
+        commonVerticalSpacing(spacing: 20),
+        CommonTextFiled(
+            fieldTitleText: "Remarks * ",
+            hintText: "Remarks * ",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            maxLine: 4,
+            textEditingController: remarksController,
             onChangedFunction: (String value){
             },
             validationFunction: (String value) {
@@ -366,63 +396,69 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     width: getScreenWidth(context) - 40,
                     height: 50,
                     tapOnButton: () {
-                      if(selectedBusiness != null){
-                        if(selectedPlant != null){
-                          if(selectedDepartment != null){
-                            if(selectedSubDepartment != null){
-                              if(machineData != null){
-                                if(selectedStartDate != null){
-                                  if(requiredIn != null){
-                                    if(selectedItemType.isNotEmpty){
-                                      if(itemDescriptionController.text.isNotEmpty){
-                                        if(requiredQuantityController.text.isNotEmpty){
-                                          if(productImage != null){
-                                            ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
-                                            productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
-                                            productRequisitionRequest.requisitionDate = DateFormat("dd-MM-yyyy").format(selectedStartDate!);
-                                            productRequisitionRequest.soleId = selectedPlant!.soleId;
-                                            productRequisitionRequest.departmentId = selectedDepartment!.departmentId.toString();
-                                            productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
-                                            productRequisitionRequest.machineId = machineData?.machineId.toString();
-                                            productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
-                                            productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
-                                            productRequisitionRequest.requiredIn = "1";
-                                            productRequisitionRequest.itemDescription = itemDescriptionController.text;
-                                            productRequisitionRequest.quantity = requiredQuantityController.text;
-                                            productRequisitionRequest.productImage = productImage;
-                                            ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
+                      if(poNoController.text.isNotEmpty){
+                        if(selectedBusiness != null){
+                          if(selectedPlant != null){
+                            if(selectedDepartment != null){
+                              if(selectedSubDepartment != null){
+                                if(machineData != null){
+                                  if(selectedStartDate != null){
+                                    if(requiredIn != null){
+                                      if(selectedItemType.isNotEmpty){
+                                        if(itemDescriptionController.text.isNotEmpty){
+                                          if(requiredQuantityController.text.isNotEmpty){
+                                            if(productImage != null){
+                                              ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
+                                              productRequisitionRequest.poNo = poNoController.text;
+                                              productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
+                                              productRequisitionRequest.requisitionDate = DateFormat("dd-MM-yyyy").format(selectedStartDate!);
+                                              productRequisitionRequest.soleId = selectedPlant!.soleId;
+                                              productRequisitionRequest.departmentId = selectedDepartment!.departmentId.toString();
+                                              productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
+                                              productRequisitionRequest.machineId = machineData?.machineId.toString();
+                                              productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
+                                              productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
+                                              productRequisitionRequest.requiredIn = "1";
+                                              productRequisitionRequest.itemDescription = itemDescriptionController.text;
+                                              productRequisitionRequest.quantity = requiredQuantityController.text;
+                                              productRequisitionRequest.remarks = remarksController.text;
+                                              productRequisitionRequest.productImage = productImage;
+                                              ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
+                                            }else{
+                                              showSnackBar(title: ApiConfig.error, message: "Please choose product image");
+                                            }
                                           }else{
-                                            showSnackBar(title: ApiConfig.error, message: "Please choose product image");
+                                            showSnackBar(title: ApiConfig.error, message: "Please enter quantity");
                                           }
                                         }else{
-                                          showSnackBar(title: ApiConfig.error, message: "Please enter quantity");
+                                          showSnackBar(title: ApiConfig.error, message: "Please enter description");
                                         }
                                       }else{
-                                        showSnackBar(title: ApiConfig.error, message: "Please enter description");
+                                        showSnackBar(title: ApiConfig.error, message: "Please select item type");
                                       }
                                     }else{
-                                      showSnackBar(title: ApiConfig.error, message: "Please select item type");
+                                      showSnackBar(title: ApiConfig.error, message: "Please select requiredIn");
                                     }
                                   }else{
-                                    showSnackBar(title: ApiConfig.error, message: "Please select requiredIn");
+                                    showSnackBar(title: ApiConfig.error, message: "Please select date");
                                   }
                                 }else{
-                                  showSnackBar(title: ApiConfig.error, message: "Please select date");
+                                  showSnackBar(title: ApiConfig.error, message: "Please select machine");
                                 }
                               }else{
-                                showSnackBar(title: ApiConfig.error, message: "Please select machine");
+                                showSnackBar(title: ApiConfig.error, message: "Please select sub department");
                               }
                             }else{
-                              showSnackBar(title: ApiConfig.error, message: "Please select sub department");
+                              showSnackBar(title: ApiConfig.error, message: "Please select department");
                             }
                           }else{
-                            showSnackBar(title: ApiConfig.error, message: "Please select department");
+                            showSnackBar(title: ApiConfig.error, message: "Please select plant");
                           }
                         }else{
-                          showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                          showSnackBar(title: ApiConfig.error, message: "Please select business");
                         }
                       }else{
-                        showSnackBar(title: ApiConfig.error, message: "Please select business");
+                        showSnackBar(title: ApiConfig.error, message: "Please product requsition number");
                       }
                     },
                     isLoading: false)
@@ -449,6 +485,8 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
 }
 
 class ProductRequisitionRequest{
+  String? poNo;
+  String? remarks;
   String? userId;
   String? requisitionDate;
   String? soleId;

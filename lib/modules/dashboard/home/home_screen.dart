@@ -28,8 +28,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChartData> getKaizenXData(){
     List<ChartData> myChartData = [];
     var val = DashboardController.to.kaizenCharts.value;
-    for(int i = 0; i < val.value!.length; i ++){
-      myChartData.add(ChartData(val.data![i], val.value![i], 0));
+    if(val.value != null) {
+      for (int i = 0; i < val.value!.length; i ++) {
+        myChartData.add(ChartData(val.data![i], val.value![i], 0));
+      }
     }
     return myChartData;
   }
@@ -37,8 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChartData> getAbnormalityXData(){
     List<ChartData> myChartData = [];
     var val = DashboardController.to.abnormalitiesCharts.value;
-    for(int i = 0; i < val.value!.length; i ++){
-      myChartData.add(ChartData(val.data![i], val.value![i], 0));
+    if(val.value != null) {
+      for (int i = 0; i < val.value!.length; i ++) {
+        myChartData.add(ChartData(val.data![i], val.value![i], 0));
+      }
     }
     return myChartData;
   }
@@ -46,8 +50,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChartData> getKaizenYData(){
     List<ChartData> myChartData = [];
     var val = DashboardController.to.kaizenCharts.value;
-    for(int i = 0; i < val.commpletedvalue!.length; i ++){
-      myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+    if(val.commpletedvalue != null) {
+      for (int i = 0; i < val.commpletedvalue!.length; i ++) {
+        myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+      }
     }
     return myChartData;
   }
@@ -55,8 +61,10 @@ class _HomeScreenState extends State<HomeScreen> {
   List<ChartData> getAbnormalityYData(){
     List<ChartData> myChartData = [];
     var val = DashboardController.to.abnormalitiesCharts.value;
-    for(int i = 0; i < val.commpletedvalue!.length; i ++){
-      myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+    if(val.commpletedvalue != null) {
+      for (int i = 0; i < val.commpletedvalue!.length; i ++) {
+        myChartData.add(ChartData(val.data![i], 0, val.commpletedvalue![i]));
+      }
     }
     return myChartData;
   }

@@ -18,14 +18,18 @@ class PlantBottomView extends StatefulWidget {
 
 class _PlantBottomViewState extends State<PlantBottomView> {
   TextEditingController searchController = TextEditingController();
+  List<CompanyBusinessPlant> searchedMyItems = [];
 
   @override
   void initState() {
     if(widget.myItems.isEmpty){
       DropDownDataController.to.getCompanyPlants(businessId: widget.businessId,successCallback: (){
         setState(() {
+          searchedMyItems = List.from(widget.myItems);
         });
       });
+    }else{
+      searchedMyItems = List.from(widget.myItems);
     }
     super.initState();
   }
@@ -49,6 +53,11 @@ class _PlantBottomViewState extends State<PlantBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedMyItems = widget.myItems;
+                }else{
+                  searchedMyItems = widget.myItems.where((p0) => p0.soleName!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
           ),
@@ -56,16 +65,16 @@ class _PlantBottomViewState extends State<PlantBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.soleName!.startsWith(searchController.text)).toList().length,
+              itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedMyItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].soleName ?? "",
+                      title: searchedMyItems[index].soleName ?? "",
                       fontSize: 1.2
                   ),
                 ),

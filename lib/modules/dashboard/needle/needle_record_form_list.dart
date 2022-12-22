@@ -4,6 +4,8 @@ import 'package:my_projects/common_widgets/common_widget.dart';
 import 'package:my_projects/modules/dashboard/needle/add_needle_record_view.dart';
 
 import '../../../common_widgets/common_textfield.dart';
+import '../../../controllers/needle_controller.dart';
+import '../../../models/needle_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
@@ -19,7 +21,14 @@ class NeedleRecordFormList extends StatefulWidget {
 class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
   TextEditingController searchController = TextEditingController();
 
-  Widget needleRecordView(){
+
+  @override
+  void initState() {
+    NeedleController.to.getNeedleRecordListData();
+    super.initState();
+  }
+
+  Widget needleRecordView({NeedleRecord? needleRecord}){
     return Container(
       margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
       decoration: neurmorphicBoxDecoration,
@@ -30,27 +39,27 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "T162",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: needleRecord?.boardNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "SKAPS",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                commonHeaderTitle(title: needleRecord?.companyShortName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Nonwoven",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: needleRecord?.bussinessName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Athens",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: needleRecord?.plantShortName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Status: Repairing",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "Status: ${needleRecord?.machineDetail}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "21-09-2022",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: needleRecord?.recordDate ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
@@ -58,7 +67,7 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
               children: [
                 Expanded(
                   flex: 6,
-                  child: commonHeaderTitle(title: "Consumed Needle : 1",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  child: commonHeaderTitle(title: "Consumed Needle : ${needleRecord?.consumedNeedle}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 ),
 
                 Expanded(flex: 1,child: Align(
@@ -177,11 +186,13 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
           Expanded(
             child: SizedBox(
               height: getScreenHeight(context) - 150,
-              child: ListView.builder(
-                  itemCount: 10,
+              child: Obx(() => ListView.builder(
+                  itemCount: NeedleController.to.needleRecordList.length,
                   shrinkWrap: true,
-                  itemBuilder: (context, index) => needleRecordView()
-              ),
+                  itemBuilder: (context, index) => needleRecordView(
+                    needleRecord: NeedleController.to.needleRecordList[index]
+                  )
+              ))
             ),
           )
         ],

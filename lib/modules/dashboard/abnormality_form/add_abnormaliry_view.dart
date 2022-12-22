@@ -53,50 +53,50 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   @override
   void initState() {
     if(widget.isEdit){
-      var abnormality = AbnormalityController.to.abnormalityDetail.value;
-      AbnormalityController.to.getAbnormalityByDetail(abnormalityId: widget.abnormalityId,callback: (){
-        if (BusinessController.to.businessData!.isEmpty) {
-          BusinessController.to.getBusinesses();
-        }
-        BusinessData business  = BusinessData();
-        business.businessId = abnormality.bussinessId;
-        business.businessName = abnormality.bussinessName;
-        selectedBusiness = business;
-        CompanyBusinessPlant plant = CompanyBusinessPlant();
-        plant.soleId = "${abnormality.companyId} - ${abnormality.plantId} - ${abnormality.bussinessId}";
-        plant.soleName = abnormality.companyShortName;
-        selectedPlant = plant;
-        Department department = Department();
-        department.departmentId = abnormality.departmentId;
-        department.departmentName = abnormality.departmentShortName;
-        selectedDepartment = department;
-        Department subDepartment = Department();
-        subDepartment.departmentId = abnormality.subdepartmentId;
-        subDepartment.departmentName = abnormality.subdepartmentShortName;
-        selectedSubDepartment = subDepartment;
-        MachineData machine = MachineData();
-        machine.machineId = abnormality.machineId;
-        machine.machineName = abnormality.machineName;
-        machineData = machine;
-        AbnormalityType type = AbnormalityType();
-        type.id = abnormality.abnormalityTypeId;
-        type.typeName = abnormality.typeName;
-        selectedAbnormalityType = type;
-        PartArray part = PartArray();
-        part.partId = abnormality.partsId;
-        part.partName = abnormality.partName;
-        selectedPart = part;
-        abnormality.submachine?.forEach((element) {
-          MachineData subMachine = MachineData();
-          subMachine.machineId = element.id;
-          subMachine.machineName = element.name;
-          subMachineLists.add(subMachine);
+        AbnormalityController.to.getAbnormalityByDetail(abnormalityId: widget.abnormalityId,callback: (){
+          var abnormality = AbnormalityController.to.abnormalityDetail.value;
+          if (BusinessController.to.businessData!.isEmpty) {
+            BusinessController.to.getBusinesses();
+          }
+          BusinessData business  = BusinessData();
+          business.businessId = abnormality.bussinessId;
+          business.businessName = abnormality.bussinessName;
+          selectedBusiness = business;
+          CompanyBusinessPlant plant = CompanyBusinessPlant();
+          plant.soleId = "${abnormality.companyId} - ${abnormality.plantId} - ${abnormality.bussinessId}";
+          plant.soleName = abnormality.companyShortName;
+          selectedPlant = plant;
+          Department department = Department();
+          department.departmentId = abnormality.departmentId;
+          department.departmentName = abnormality.departmentShortName;
+          selectedDepartment = department;
+          Department subDepartment = Department();
+          subDepartment.departmentId = abnormality.subdepartmentId;
+          subDepartment.departmentName = abnormality.subdepartmentShortName;
+          selectedSubDepartment = subDepartment;
+          MachineData machine = MachineData();
+          machine.machineId = abnormality.machineId;
+          machine.machineName = abnormality.machineName;
+          machineData = machine;
+          AbnormalityType type = AbnormalityType();
+          type.id = abnormality.abnormalityTypeId;
+          type.typeName = abnormality.typeName;
+          selectedAbnormalityType = type;
+          PartArray part = PartArray();
+          part.partId = abnormality.partsId;
+          part.partName = abnormality.partName;
+          selectedPart = part;
+          abnormality.submachine?.forEach((element) {
+            MachineData subMachine = MachineData();
+            subMachine.machineId = element.id;
+            subMachine.machineName = element.name;
+            subMachineLists.add(subMachine);
+          });
+          abnormalityController.text = abnormality.abnormalityText ?? "";
+          abnormalityTitleController.text = abnormality.abnormalityTitle ?? "";
+          possibleSolutionController.text = abnormality.solutionText ?? "";
+          setState(() {});
         });
-        abnormalityController.text = abnormality.abnormalityText ?? "";
-        abnormalityTitleController.text = abnormality.abnormalityTitle ?? "";
-        possibleSolutionController.text = abnormality.solutionText ?? "";
-        setState(() {});
-      });
     }else {
       if (BusinessController.to.businessData!.isEmpty) {
         BusinessController.to.getBusinesses();
@@ -322,7 +322,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                       child: MachineBottomView(
                                           hintText: "Select Machine",
                                           soleId: selectedPlant!.soleId ?? "",
-                                          machineId: machineData!.machineId ?? 0,
+                                          machineId: machineData == null ? 0 : machineData!.machineId ?? 0,
                                           myItems: DropDownDataController.to.machinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {

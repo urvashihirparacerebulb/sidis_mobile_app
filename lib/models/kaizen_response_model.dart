@@ -172,28 +172,32 @@ class KaizenAnalysisModel {
 class KaizenAnalysis {
   KaizenAnalysis({
     this.kaizenId,
+    this.analysisId,
     this.why,
     this.answer,
-    this.modifiedAt,
+    // this.modifiedAt,
   });
 
   int? kaizenId;
+  int? analysisId;
   String? why;
   String? answer;
-  DateTime? modifiedAt;
+  // DateTime? modifiedAt;
 
   factory KaizenAnalysis.fromJson(Map<String, dynamic> json) => KaizenAnalysis(
     kaizenId: json["kaizen_id"],
+    analysisId: json["analysis_id"],
     why: json["why"],
     answer: json["answer"],
-    modifiedAt: DateTime.parse(json["modified_at"]),
+    // modifiedAt: DateTime.parse(json["modified_at"]),
   );
 
   Map<String, dynamic> toJson() => {
     "kaizen_id": kaizenId,
+    "analysis_id": analysisId,
     "why": why,
     "answer": answer,
-    "modified_at": modifiedAt?.toIso8601String(),
+    // "modified_at": modifiedAt?.toIso8601String(),
   };
 }
 
@@ -213,7 +217,7 @@ class AddKaizenModelRequest{
   String? benchMark;
   String? target;
   String? startDate;
-  List<String>? teamMemberId;
+  String? teamMemberId;
   String? rootCause;
   String? remarks;
   String? finishStatus;
@@ -221,4 +225,113 @@ class AddKaizenModelRequest{
   String? editKaizenId;
   File? presentProblemImage;
   File? countermeasureImage;
+}
+
+
+class OtherBenifitsResponseModel {
+  OtherBenifitsResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  OtherBenifitsResponse? data;
+
+  factory OtherBenifitsResponseModel.fromJson(Map<String, dynamic> json) => OtherBenifitsResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: OtherBenifitsResponse.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class OtherBenifitsResponse {
+  OtherBenifitsResponse({
+    this.benifitsData,
+  });
+
+  List<BenifitsData>? benifitsData;
+
+  factory OtherBenifitsResponse.fromJson(Map<String, dynamic> json) => OtherBenifitsResponse(
+    benifitsData: List<BenifitsData>.from(json["benifits_data"].map((x) => BenifitsData.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "benifits_data": benifitsData == null ? [] : List<dynamic>.from(benifitsData!.map((x) => x.toJson())),
+  };
+}
+
+class BenifitsData {
+  BenifitsData({
+    this.otherBenifits,
+    this.otherBenifitsId,
+  });
+
+  String? otherBenifits;
+  int? otherBenifitsId;
+
+  factory BenifitsData.fromJson(Map<String, dynamic> json) => BenifitsData(
+    otherBenifits: json["other_benifits"],
+    otherBenifitsId: json["other_benifits_id"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "other_benifits": otherBenifits,
+    "other_benifits_id": otherBenifitsId,
+  };
+}
+
+class KaizenAnalysisResponse {
+  KaizenAnalysisResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  AllKaizenAnalysisModel? data;
+
+  factory KaizenAnalysisResponse.fromJson(Map<String, dynamic> json) => KaizenAnalysisResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: AllKaizenAnalysisModel.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class AllKaizenAnalysisModel {
+  AllKaizenAnalysisModel({
+    this.analysisData,
+  });
+
+  List<KaizenAnalysis>? analysisData;
+
+  factory AllKaizenAnalysisModel.fromJson(Map<String, dynamic> json) => AllKaizenAnalysisModel(
+    analysisData: List<KaizenAnalysis>.from(json["analysis_data"].map((x) => KaizenAnalysis.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "analysis_data": analysisData == null ? [] : List<dynamic>.from(analysisData!.map((x) => x.toJson())),
+  };
 }

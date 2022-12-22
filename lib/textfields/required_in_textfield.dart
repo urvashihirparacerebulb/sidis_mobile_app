@@ -19,11 +19,13 @@ class RequiredInBottomView extends StatefulWidget {
 
 class _RequiredInBottomViewState extends State<RequiredInBottomView> {
   TextEditingController searchController = TextEditingController();
+  List<RequiredIn> searchedMyItems = [];
   @override
   void initState() {
     if(widget.myItems.isEmpty){
       ProductRequisitionController.to.getRequisitionRequiredIn();
     }
+    searchedMyItems = List.from(widget.myItems);
     super.initState();
   }
 
@@ -46,6 +48,11 @@ class _RequiredInBottomViewState extends State<RequiredInBottomView> {
             textEditingController: searchController,
             onChangedFunction: (String value){
               setState(() {
+                if(value.isEmpty){
+                  searchedMyItems = widget.myItems;
+                }else{
+                  searchedMyItems = widget.myItems.where((p0) => p0.value!.toLowerCase().startsWith(value.toLowerCase())).toList();
+                }
               });
             },
             onFieldSubmit: (text){
@@ -57,16 +64,16 @@ class _RequiredInBottomViewState extends State<RequiredInBottomView> {
           ListView.builder(
               padding: const EdgeInsets.symmetric(horizontal: 15),
               shrinkWrap: true,
-              itemCount: searchController.text.isEmpty ? widget.myItems.length : widget.myItems.where((element) => element.value!.startsWith(searchController.text)).toList().length,
+              itemCount: searchedMyItems.length,
               itemBuilder: (context, index) => InkWell(
                 onTap: (){
                   Get.back();
-                  widget.selectionCallBack!(widget.myItems[index]);
+                  widget.selectionCallBack!(searchedMyItems[index]);
                 },
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: commonHeaderTitle(
-                      title: widget.myItems[index].value ?? "",
+                      title: searchedMyItems[index].value ?? "",
                       fontSize: 1.2
                   ),
                 ),

@@ -89,22 +89,22 @@ class _ProfileViewState extends State<ProfileView> {
             ),
           ),
           commonVerticalSpacing(spacing: 20),
-          Container(
-            margin: const EdgeInsets.only(left: 15,right: 15,bottom: 40),
-            padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
-            decoration: neurmorphicBoxDecoration,
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: "Logout",
-                    fontSize: 1.5,fontWeight: 2,color: Colors.red,isChangeColor: true),
-                InkWell(
-                  onTap: (){
-                    AuthenticationController.to.clearPref();
-                    Get.offAll(() => const LoginScreen());
-                  },
-                  child: const Icon(Icons.logout,color: dangerColor)
-                )
-              ],
+          GestureDetector(
+            onTap: (){
+              AuthenticationController.to.clearPref();
+              Get.offAll(() => const LoginScreen());
+            },
+            child: Container(
+              margin: const EdgeInsets.only(left: 15,right: 15,bottom: 40),
+              padding: const EdgeInsets.symmetric(vertical: 15,horizontal: 10),
+              decoration: neurmorphicBoxDecoration,
+              child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: "Logout",
+                      fontSize: 1.5,fontWeight: 2,color: Colors.red,isChangeColor: true),
+                  const Icon(Icons.logout,color: dangerColor)
+                ],
+              ),
             ),
           )
         ],

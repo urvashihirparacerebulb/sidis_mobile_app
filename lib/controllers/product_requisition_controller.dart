@@ -15,6 +15,7 @@ class ProductRequisitionController extends GetxController {
   static ProductRequisitionController get to => Get.find();
 
   RxList<ProductRequisition> productRequisitionList = RxList<ProductRequisition>();
+  RxList<ProductRequisition> searchProductRequisitionList = RxList<ProductRequisition>();
   RxBool isProductReqLoading = false.obs;
   RxList<String> requisitionTypes = RxList<String>();
   RxList<RequiredIn> requiredInData = RxList();
@@ -35,6 +36,7 @@ class ProductRequisitionController extends GetxController {
         ProductRequisitionResponseModel productRequisitionResponseModel = ProductRequisitionResponseModel.fromJson(jsonDecode(response.data));
         isProductReqLoading.value = false;
         productRequisitionList.value = productRequisitionResponseModel.data!.data!;
+        searchProductRequisitionList.value = List.from(productRequisitionList);
       },
       error: (dio.Response<dynamic> response) {
         isProductReqLoading.value = false;
@@ -82,6 +84,7 @@ class ProductRequisitionController extends GetxController {
 
   Future<void> addProductRequisition({ProductRequisitionRequest? productRequisitionRequest}) async {
     dio.FormData formData = dio.FormData.fromMap({
+      "po_no": productRequisitionRequest?.poNo,
       "user_id": productRequisitionRequest?.userId,
       "requisitiondate": productRequisitionRequest?.requisitionDate,
       "sole_id": productRequisitionRequest?.soleId,
@@ -89,6 +92,7 @@ class ProductRequisitionController extends GetxController {
       "subdepartment_id": productRequisitionRequest?.subDepartmentId,
       "machine_id": productRequisitionRequest?.machineId,
       "itemid": productRequisitionRequest?.itemId,
+      "remarks": productRequisitionRequest?.remarks,
       "otheritem": productRequisitionRequest?.otherItem,
       "requiredin": productRequisitionRequest?.requiredIn,
       "itemdescription": productRequisitionRequest?.itemDescription,
@@ -102,6 +106,7 @@ class ProductRequisitionController extends GetxController {
       formValues: formData,
       serviceUrl: ApiConfig.addProductRequisitionURL,
       success: (dio.Response<dynamic> response) {
+        showSnackBar(title: ApiConfig.error, message: "Added Successfully");
         // BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
         Get.back();
       },
