@@ -430,3 +430,103 @@ class SelectedLocationBoardReq {
   List<NeedleBoardNumber>? selectedOldBoard = [];
   List<NeedleBoardNumber>? selectedNewBoard = [];
 }
+
+class NeedleBoardListResponseModel {
+  NeedleBoardListResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  NeedleBoardList? data;
+
+  factory NeedleBoardListResponseModel.fromJson(Map<String, dynamic> json) => NeedleBoardListResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: NeedleBoardList.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class NeedleBoardList {
+  NeedleBoardList({
+    this.data,
+  });
+
+  List<NeedleBoard>? data;
+
+  factory NeedleBoardList.fromJson(Map<String, dynamic> json) => NeedleBoardList(
+    data: List<NeedleBoard>.from(json["data"].map((x) => NeedleBoard.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
+}
+
+class NeedleBoard {
+  NeedleBoard({
+    this.needleRecordId,
+    this.date,
+    this.companyShortName,
+    this.bussinessName,
+    this.plantShortName,
+    this.machineName,
+    this.submachineName,
+    this.location,
+    this.changeBoard,
+    this.oldBoardNo,
+    this.newBoardNo,
+  });
+
+  int? needleRecordId;
+  String? date;
+  String? companyShortName;
+  String? bussinessName;
+  String? plantShortName;
+  String? machineName;
+  String? submachineName;
+  String? location;
+  String? changeBoard;
+  String? oldBoardNo;
+  String? newBoardNo;
+
+  factory NeedleBoard.fromJson(Map<String, dynamic> json) => NeedleBoard(
+    needleRecordId: json["needle_record_id"],
+    date: json["date"],
+    companyShortName: json["company_short_name"],
+    bussinessName: json["bussiness_name"],
+    plantShortName: json["plant_short_name"],
+    machineName: json["machine_name"],
+    submachineName: json["submachine_name"],
+    location: json["location"],
+    changeBoard: json["change_board"],
+    oldBoardNo: json["old_board_no"],
+    newBoardNo: json["new_board_no"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "needle_record_id": needleRecordId,
+    "date": date,
+    "company_short_name": companyShortName,
+    "bussiness_name": bussinessName,
+    "plant_short_name": plantShortName,
+    "machine_name": machineName,
+    "submachine_name": submachineName,
+    "location": location,
+    "change_board": changeBoard,
+    "old_board_no": oldBoardNo,
+    "new_board_no": newBoardNo,
+  };
+}

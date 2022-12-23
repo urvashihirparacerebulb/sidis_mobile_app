@@ -19,6 +19,7 @@ class NeedleController extends GetxController {
   RxList<LineData> lineDataList = RxList<LineData>();
   RxList<LoomsData> loomsDataList = RxList<LoomsData>();
   RxList<LocationData> machineLocationList = RxList<LocationData>();
+  RxList<NeedleBoard> needleBoards = RxList<NeedleBoard>();
   RxList<String> locationIds = RxList<String>();
 
   void getNeedleRecordListData() {
@@ -33,6 +34,27 @@ class NeedleController extends GetxController {
       success: (dio.Response<dynamic> response) {
         NeedleRecordListResponseModel needleRecordListResponseModel = NeedleRecordListResponseModel.fromJson(jsonDecode(response.data));
         needleRecordList.value = needleRecordListResponseModel.data!.data!;
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getNeedleBoardListData() {
+    apiServiceCall(
+      params: {
+        "group_id": getLoginData()!.userdata!.first.groupId,
+        "company_id": (getLoginData()!.currentPlants != null && getLoginData()!.currentPlants!.isNotEmpty) ? getLoginData()!.currentPlants?.first.companyId : "",
+        "business_id": (getLoginData()!.currentPlants != null && getLoginData()!.currentPlants!.isNotEmpty) ? getLoginData()!.currentPlants?.first.bussinessId : "",
+        "plant_id": (getLoginData()!.currentPlants != null && getLoginData()!.currentPlants!.isNotEmpty) ? getLoginData()!.currentPlants?.first.plantId : ""
+      },
+      serviceUrl: ApiConfig.needleBoardListURL,
+      success: (dio.Response<dynamic> response) {
+        NeedleBoardListResponseModel needleBoardListResponseModel = NeedleBoardListResponseModel.fromJson(jsonDecode(response.data));
+        needleBoards.value = needleBoardListResponseModel.data!.data!;
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -79,6 +101,41 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void deleteNeedleBoard({String? boardId}) {
+    apiServiceCall(
+      params: {
+        "id": boardId,
+        "manage_user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.deleteNeedleBoardURL,
+      success: (dio.Response<dynamic> response) {
+        getNeedleBoardListData();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+  void deleteNeedleBoardRecord({String? boardRecordId}) {
+    apiServiceCall(
+      params: {
+        "id": boardRecordId,
+        "manage_user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.deleteNeedleBoardURL,
+      success: (dio.Response<dynamic> response) {
+        getNeedleRecordListData();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
       methodType: ApiConfig.methodPOST,
     );
   }

@@ -36,12 +36,18 @@ class ApiConfig {
   static const String deleteKaizenBenifit = "${baseURL}delete-kaizen-benifits";
   static const String deleteKaizenAnalysis = "${baseURL}delete-kaizen-analysis";
   static const String needleRecordListURL = "${baseURL}get-needlerecord-fetch";
+  static const String needleBoardListURL = "${baseURL}get-needleboard-fetch";
   static const String needleBoardNumberURL = "${baseURL}ajax-get-board_number";
   static const String needleChangeStatusURL = "${baseURL}needles-changed-status";
   static const String manageNeedleRecordURL = "${baseURL}ajax-insert-needleboard";
   static const String getLinesURL = "${baseURL}fetch-line";
   static const String getLoomsURL = "${baseURL}fetch-looms";
   static const String getMachineLocationURL = "${baseURL}ajax-get-machine-location";
+  static const String deleteNeedleBoardURL = "${baseURL}delete-needleboard-data";
+  static const String deleteAbnormalityURL = "${baseURL}delete-abnormality-data";
+  static const String deleteProductRequisitionURL = "${baseURL}delete-requisition-data";
+  static const String getProductRequisitionStatusURL = "${baseURL}get-requisition-status";
+  static const String productRequisitionStatusUpdateURL = "${baseURL}update-requisition-status";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

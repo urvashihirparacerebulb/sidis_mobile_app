@@ -104,4 +104,22 @@ class AbnormalityController extends GetxController {
     );
   }
 
+  void deleteAbnormality({String? abnormalityId}) {
+    apiServiceCall(
+      params: {
+        "abnormality_id": abnormalityId,
+        "manage_user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.deleteAbnormalityURL,
+      success: (dio.Response<dynamic> response) {
+        getAbnormalityLists();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
 }

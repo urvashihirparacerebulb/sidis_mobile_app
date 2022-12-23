@@ -7,6 +7,7 @@ import '../../../models/abnormality_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/delete_dialog_view.dart';
 import '../../../utility/screen_utility.dart';
 import 'add_abnormaliry_view.dart';
 
@@ -132,12 +133,20 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
             )),
         PopupMenuItem<String>(
             value: 'Delete',
-            child: Row(
-              children: [
-                const Icon(Icons.delete_forever_outlined),
-                commonHorizontalSpacing(),
-                const Text('Delete'),
-              ],
+            child: InkWell(
+              onTap: (){
+                Get.back();
+                showDialog(context: context, builder: (BuildContext context) => DeleteDialogView(doneCallback: (){
+                  AbnormalityController.to.deleteAbnormality(abnormalityId: id.toString());
+                }));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_forever_outlined),
+                  commonHorizontalSpacing(),
+                  const Text('Delete'),
+                ],
+              ),
             )),
       ],
       elevation: 8.0,

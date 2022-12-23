@@ -4,9 +4,12 @@ import 'package:my_projects/modules/dashboard/needle/add_needle_board_view.dart'
 
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../controllers/needle_controller.dart';
+import '../../../models/needle_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/delete_dialog_view.dart';
 import '../../../utility/screen_utility.dart';
 
 class NeedleBoardList extends StatefulWidget {
@@ -19,7 +22,13 @@ class NeedleBoardList extends StatefulWidget {
 class _NeedleBoardListState extends State<NeedleBoardList> {
   TextEditingController searchController = TextEditingController();
 
-  Widget needleBoardView(){
+  @override
+  void initState() {
+    NeedleController.to.getNeedleBoardListData();
+    super.initState();
+  }
+
+  Widget needleBoardView({NeedleBoard? needleBoard}){
     return Container(
       margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
       decoration: neurmorphicBoxDecoration,
@@ -30,34 +39,34 @@ class _NeedleBoardListState extends State<NeedleBoardList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Skaps_Nonwoven_Athens",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: '${needleBoard!.companyShortName}-${needleBoard.bussinessName}-${needleBoard.plantShortName}',fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "Line 06",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                commonHeaderTitle(title: needleBoard.machineName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Tracker Loom",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: needleBoard.submachineName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "TOP-ENTRY",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: needleBoard.location ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "New Board No: T160",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "Old Board No: ${needleBoard.oldBoardNo ?? ""}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: "New Board No: T170",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: "New Board No: ${needleBoard.newBoardNo ?? ""}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Charged Board: YES",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                commonHeaderTitle(title: "Charged Board: ${needleBoard.changeBoard ?? ""}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
               ],
             ),
             commonVerticalSpacing(),
@@ -65,14 +74,14 @@ class _NeedleBoardListState extends State<NeedleBoardList> {
               children: [
                 Expanded(
                   flex: 6,
-                  child: commonHeaderTitle(title: "21-09-2022 12:55PM",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                  child: commonHeaderTitle(title: needleBoard.date!.replaceAll('<br>', ''),fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
                 ),
 
                 Expanded(flex: 1,child: Align(
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition);
+                          _showPopupMenu(details.globalPosition,needleBoard.needleRecordId.toString());
                         },
                         child: Container(
                             padding: const EdgeInsets.all(5.0),
@@ -91,7 +100,7 @@ class _NeedleBoardListState extends State<NeedleBoardList> {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset, String boardId) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -104,28 +113,21 @@ class _NeedleBoardListState extends State<NeedleBoardList> {
       ),      position: RelativeRect.fromLTRB(left, top, 20, 0),
       items: [
         PopupMenuItem<String>(
-            value: 'Edit',
+            value: 'Delete',
             child: InkWell(
               onTap: (){
                 Get.back();
-                // Get.to(() => AddAbnormalityFormView(isEdit: true,abnormalityId: id.toString()));
+                showDialog(context: context, builder: (BuildContext context) => DeleteDialogView(doneCallback: (){
+                  NeedleController.to.deleteNeedleBoard(boardId: boardId);
+                }));
               },
               child: Row(
                 children: [
-                  const Icon(Icons.edit),
+                  const Icon(Icons.delete_forever_outlined),
                   commonHorizontalSpacing(),
-                  const Text('Edit'),
+                  const Text('Delete'),
                 ],
               ),
-            )),
-        PopupMenuItem<String>(
-            value: 'Delete',
-            child: Row(
-              children: [
-                const Icon(Icons.delete_forever_outlined),
-                commonHorizontalSpacing(),
-                const Text('Delete'),
-              ],
             )),
       ],
       elevation: 8.0,
@@ -184,11 +186,13 @@ class _NeedleBoardListState extends State<NeedleBoardList> {
             Expanded(
               child: SizedBox(
                 height: getScreenHeight(context) - 150,
-                child: ListView.builder(
-                    itemCount: 10,
+                child: Obx(() => NeedleController.to.needleBoards.isEmpty ? Center(
+                  child: commonHeaderTitle(title: "Boards Not Found",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                ) : ListView.builder(
+                    itemCount: NeedleController.to.needleBoards.length,
                     shrinkWrap: true,
-                    itemBuilder: (context, index) => needleBoardView()
-                ),
+                    itemBuilder: (context, index) => needleBoardView(needleBoard: NeedleController.to.needleBoards[index])
+                )),
               ),
             )
           ],

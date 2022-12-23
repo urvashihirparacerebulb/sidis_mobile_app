@@ -9,6 +9,7 @@ import '../../../models/needle_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/constants.dart';
+import '../../../utility/delete_dialog_view.dart';
 import '../../../utility/screen_utility.dart';
 
 class NeedleRecordFormList extends StatefulWidget {
@@ -74,7 +75,7 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition);
+                          _showPopupMenu(details.globalPosition,needleRecord!.needleRecordId!.toString());
                         },
                         child: Container(
                             padding: const EdgeInsets.all(5.0),
@@ -93,7 +94,7 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset,String boardRecordId) async {
     double left = offset.dx;
     double top = offset.dy;
     await showMenu(
@@ -122,12 +123,20 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
             )),
         PopupMenuItem<String>(
             value: 'Delete',
-            child: Row(
-              children: [
-                const Icon(Icons.delete_forever_outlined),
-                commonHorizontalSpacing(),
-                const Text('Delete'),
-              ],
+            child: InkWell(
+              onTap: (){
+                Get.back();
+                showDialog(context: context, builder: (BuildContext context) => DeleteDialogView(doneCallback: (){
+                  NeedleController.to.deleteNeedleBoardRecord(boardRecordId: boardRecordId);
+                }));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_forever_outlined),
+                  commonHorizontalSpacing(),
+                  const Text('Delete'),
+                ],
+              ),
             )),
       ],
       elevation: 8.0,
@@ -186,7 +195,9 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
           Expanded(
             child: SizedBox(
               height: getScreenHeight(context) - 150,
-              child: Obx(() => ListView.builder(
+              child: Obx(() => NeedleController.to.needleRecordList.isEmpty ? Center(
+                child: commonHeaderTitle(title: "Records Not Found",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+              ) : ListView.builder(
                   itemCount: NeedleController.to.needleRecordList.length,
                   shrinkWrap: true,
                   itemBuilder: (context, index) => needleRecordView(

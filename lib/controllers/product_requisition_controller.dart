@@ -18,6 +18,7 @@ class ProductRequisitionController extends GetxController {
   RxList<ProductRequisition> searchProductRequisitionList = RxList<ProductRequisition>();
   RxBool isProductReqLoading = false.obs;
   RxList<String> requisitionTypes = RxList<String>();
+  RxList<String> requisitionStatues = RxList<String>();
   RxList<RequiredIn> requiredInData = RxList();
 
   void getProductRequisitionListData({String selectedFormId = ""}) {
@@ -109,6 +110,59 @@ class ProductRequisitionController extends GetxController {
         showSnackBar(title: ApiConfig.error, message: "Added Successfully");
         // BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
         Get.back();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void deleteProductRequisition({String? id,selectedFormId}) {
+    apiServiceCall(
+      params: {
+        "id": id,
+        "manage_user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.deleteProductRequisitionURL,
+      success: (dio.Response<dynamic> response) {
+        getProductRequisitionListData(selectedFormId: selectedFormId);
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void productRequisitionStatuses() {
+    apiServiceCall(
+      params: {},
+      serviceUrl: ApiConfig.getProductRequisitionStatusURL,
+      success: (dio.Response<dynamic> response) {
+        RequisitionStatusResponseModel requisitionStatusResponseModel = RequisitionStatusResponseModel.fromJson(jsonDecode(response.data));
+        requisitionStatues.value = requisitionStatusResponseModel.data!.statusdata!.first;
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void productRequisitionStatusUpdate({String? selectedFormId, selectedStatus, productRequisitionId}) {
+    apiServiceCall(
+      params: {
+        "status_id": selectedStatus,
+        "product_requisition_id": productRequisitionId,
+        "manage_user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.productRequisitionStatusUpdateURL,
+      success: (dio.Response<dynamic> response) {
+        getProductRequisitionListData(selectedFormId: selectedFormId!);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

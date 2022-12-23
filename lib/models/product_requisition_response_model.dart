@@ -198,3 +198,47 @@ class RequiredIn {
     "value": value,
   };
 }
+
+class RequisitionStatusResponseModel {
+  RequisitionStatusResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  RequisitionStatus? data;
+
+  factory RequisitionStatusResponseModel.fromJson(Map<String, dynamic> json) => RequisitionStatusResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: RequisitionStatus.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class RequisitionStatus {
+  RequisitionStatus({
+    this.statusdata,
+  });
+
+  List<List<String>>? statusdata;
+
+  factory RequisitionStatus.fromJson(Map<String, dynamic> json) => RequisitionStatus(
+    statusdata: List<List<String>>.from(json["statusdata"].map((x) => List<String>.from(x.map((x) => x)))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusdata": statusdata == null ? [] : List<dynamic>.from(statusdata!.map((x) => List<dynamic>.from(x.map((x) => x)))),
+  };
+}

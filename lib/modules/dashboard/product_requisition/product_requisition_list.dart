@@ -6,8 +6,10 @@ import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
 import '../../../models/pillar_data_model.dart';
 import '../../../models/product_requisition_response_model.dart';
+import '../../../textfields/common_bottom_string_view.dart';
 import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
+import '../../../utility/delete_dialog_view.dart';
 import '../../../utility/screen_utility.dart';
 import 'add_product_requisition_view.dart';
 
@@ -25,6 +27,9 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
   @override
   void initState() {
     ProductRequisitionController.to.getProductRequisitionListData(selectedFormId: widget.pillarForm.id.toString());
+    Future.delayed(const Duration(seconds: 2), (){
+      ProductRequisitionController.to.productRequisitionStatuses();
+    });
     super.initState();
   }
 
@@ -83,7 +88,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                     alignment: Alignment.bottomRight,
                     child: GestureDetector(
                         onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition);
+                          _showPopupMenu(details.globalPosition,productRequisition.productRequisitionId.toString());
                         },
                         child: Container(
                             padding: const EdgeInsets.all(5.0),
@@ -102,9 +107,10 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
     );
   }
 
-  void _showPopupMenu(Offset offset) async {
+  void _showPopupMenu(Offset offset, String requisitionId) async {
     double left = offset.dx;
     double top = offset.dy;
+    String selectedStatus = "";
     await showMenu(
       context: context,
       color: ConvertTheme.convertTheme.getBackGroundColor(),
@@ -115,10 +121,126 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
       ),      position: RelativeRect.fromLTRB(left, top, 20, 0),
       items: [
         PopupMenuItem<String>(
+            value: 'Delete',
+            child: InkWell(
+              onTap: (){
+                Get.back();
+                showDialog(context: context, builder: (BuildContext context) => DeleteDialogView(doneCallback: (){
+                  ProductRequisitionController.to.deleteProductRequisition(
+                      id: requisitionId.toString(),
+                      selectedFormId: widget.pillarForm.id.toString()
+                  );
+                }));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_forever_outlined),
+                  commonHorizontalSpacing(),
+                  const Text('Delete'),
+                ],
+              ),
+            )),
+        PopupMenuItem<String>(
             value: 'Change Status',
             child: InkWell(
               onTap: (){
                 Get.back();
+                showDialog(context: context, builder: (BuildContext context) => Dialog(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+                  elevation: 0.0,
+                  backgroundColor: Colors.transparent,
+                  child: Container(
+                    margin: const EdgeInsets.only(left: 0.0,right: 0.0),
+                    child: Container(
+                      padding: const EdgeInsets.only(top: 18.0,),
+                      margin: const EdgeInsets.only(top: 13.0,right: 8.0),
+                      decoration: BoxDecoration(
+                          color: whiteColor,
+                          shape: BoxShape.rectangle,
+                          borderRadius: BorderRadius.circular(16.0),
+                          boxShadow: const <BoxShadow>[
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 0.0,
+                              offset: Offset(0.0, 0.0),
+                            ),
+                          ]),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            commonHeaderTitle(
+                                title: "Change Product Requisition",
+                                color: blackColor,
+                                isChangeColor: true,
+                                fontSize: 1.7,
+                                fontWeight: 2
+                            ),
+                            commonVerticalSpacing(spacing: 20),
+                            StatefulBuilder(builder: (context, newSetState) {
+                              return InkWell(
+                                  onTap: (){
+                                    commonBottomView(context: context,
+                                        child: CommonBottomStringView(
+                                            hintText: "Select Status",
+                                            myItems: ProductRequisitionController.to.requisitionStatues,
+                                            selectionCallBack: (
+                                                String val) {
+                                              newSetState((){
+                                                selectedStatus = val;
+                                              });
+                                            })
+                                    );
+                                  },
+                                  child: commonDecoratedTextView(
+                                    title: selectedStatus.isEmpty ? "Select Status" : selectedStatus,
+                                    isChangeColor: selectedStatus.isEmpty ? true : false,
+                                  )
+                              );
+                            }),
+                            commonVerticalSpacing(spacing: 20),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: commonBorderButtonView(
+                                      context: context,
+                                      title: "Cancel",
+                                      height: 50,
+                                      tapOnButton: () {
+                                        Get.back();
+                                      },
+                                      isLoading: false),
+                                ),
+                                commonHorizontalSpacing(spacing: 10),
+                                Expanded(
+                                  child: commonFillButtonView(
+                                      context: context,
+                                      title: "Save",
+                                      height: 50,
+                                      color: primaryColor,
+                                      fontColor: blackColor,
+                                      tapOnButton: () {
+                                        Get.back();
+                                        ProductRequisitionController.to.productRequisitionStatusUpdate(
+                                            selectedFormId: widget.pillarForm.id.toString(),
+                                            productRequisitionId: requisitionId.toString(),
+                                            selectedStatus: selectedStatus
+                                        );
+                                      },
+                                      isLoading: false),
+                                )
+                              ],
+                            ),
+                            commonVerticalSpacing(spacing: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ));
               },
               child: Row(
                 children: [

@@ -92,8 +92,8 @@ Widget commonFillButtonView(
       required Function tapOnButton,
       required bool isLoading,
       bool isLightButton = false,
-      Color? color,
-      Color? fontColor,
+      Color color = primaryColor,
+      Color? fontColor = blackColor,
       double? height = 50.0,
       double? width}) {
   return SizedBox(
@@ -107,7 +107,7 @@ Widget commonFillButtonView(
       },
       style: ElevatedButton.styleFrom(
         shadowColor: blackColor.withOpacity(0.8),
-        primary: primaryColor,
+        primary: color,
         shape: RoundedRectangleBorder(borderRadius: commonButtonBorderRadius),
         padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
         elevation: 5.0,
@@ -115,7 +115,7 @@ Widget commonFillButtonView(
       child: Text(
         title,
         style: black15PxW800.copyWith(
-            color: blackColor,
+            color: fontColor,
             fontWeight: isLightButton ? FontWeight.w500 : FontWeight.bold,
             fontSize: height! >= 50.0 ? 16 : 12),
       )
