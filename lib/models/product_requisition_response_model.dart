@@ -45,7 +45,7 @@ class ProductRequisitionResponse {
 class ProductRequisition {
   ProductRequisition({
     this.productRequisitionId,
-    this.requestNo,
+    this.poNo,
     this.requisitionDate,
     this.companyBussinessPlant,
     this.machineDetail,
@@ -56,7 +56,7 @@ class ProductRequisition {
   });
 
   int? productRequisitionId;
-  String? requestNo;
+  String? poNo;
   String? requisitionDate;
   String? companyBussinessPlant;
   String? machineDetail;
@@ -67,7 +67,7 @@ class ProductRequisition {
 
   factory ProductRequisition.fromJson(Map<String, dynamic> json) => ProductRequisition(
     productRequisitionId: json["product_requisition_id"],
-    requestNo: json["request_no"],
+    poNo: json["po_no"],
     requisitionDate: json["requisition_date"],
     companyBussinessPlant: json["company_bussiness_plant"],
     machineDetail: json["machine_detail"],
@@ -79,7 +79,7 @@ class ProductRequisition {
 
   Map<String, dynamic> toJson() => {
     "product_requisition_id": productRequisitionId,
-    "request_no": requestNo,
+    "po_no": poNo,
     "requisition_date": requisitionDate,
     "company_bussiness_plant": companyBussinessPlant,
     "machine_detail": machineDetail,

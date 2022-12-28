@@ -57,6 +57,30 @@ class AuthenticationController extends GetxController {
     setIsLogin(isLogin: false);
     setObject(ApiConfig.loginPref, "");
   }
+
+  void changePasswordAPI(Map<String, dynamic> params) {
+    apiServiceCall(
+      params: params,
+      serviceUrl: '${ApiConfig.changePasswordURL}/${getLoginData()!.userdata?.first.id.toString()}',
+      success: (dio.Response<dynamic> response) {
+        BooleanResponseModel booleanResponseModel =
+        BooleanResponseModel.fromJson(jsonDecode(response.data));
+        if(booleanResponseModel.status!) {
+          showSnackBar(
+              title: ApiConfig.success, message: booleanResponseModel.message ?? "");
+        }else{
+          showSnackBar(
+              title: ApiConfig.error, message: booleanResponseModel.message ?? "");
+        }
+        Get.back();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
 }
 
 void errorHandling(dio.Response<dynamic> response) {

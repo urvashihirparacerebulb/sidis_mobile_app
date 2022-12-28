@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
 import 'package:my_projects/utility/constants.dart';
-
 import '../../../common_widgets/common_textfield.dart';
 import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
@@ -22,7 +21,9 @@ import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
 class AddNeedleRecordView extends StatefulWidget {
-  const AddNeedleRecordView({Key? key}) : super(key: key);
+  final bool isEdit;
+  final String recordId;
+  const AddNeedleRecordView({Key? key, required this.isEdit, required this.recordId}) : super(key: key);
 
   @override
   State<AddNeedleRecordView> createState() => _AddNeedleRecordViewState();
@@ -42,10 +43,36 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
     if (BusinessController.to.businessData!.isEmpty) {
       BusinessController.to.getBusinesses();
     }
-
     Future.delayed(const Duration(seconds: 1), (){
       getBoardNumbers();
     });
+
+    if(widget.isEdit){
+      Future.delayed(const Duration(seconds: 2), (){
+        NeedleController.to.getBoardRecordDetail(boardId: widget.recordId,callback: (){
+          var needleBoard = NeedleController.to.selectedNeedleRecord.value;
+          BusinessData business  = BusinessData();
+          business.businessId = needleBoard.businessId;
+          business.businessName = needleBoard.bussinessName;
+          selectedBusiness = business;
+          CompanyBusinessPlant plant = CompanyBusinessPlant();
+          plant.soleId = "${needleBoard.companyId} - ${needleBoard.plantId} - ${needleBoard.businessId}";
+          plant.soleName = needleBoard.companyShortName;
+          selectedPlant = plant;
+          NeedleBoardNumber boardNumber = NeedleBoardNumber();
+          boardNumber.boardId = int.parse(needleBoard.boardNo ?? "");
+          boardNumber.boardNo = needleBoard.boardNo;
+          selectedBoardNumber = boardNumber;
+          ChangeStatus changeStatus = ChangeStatus();
+          changeStatus.id = needleBoard.needleStatus;
+          changeStatus.value = needleBoard.needleStatusName;
+          selectedChangeStatus = changeStatus;
+          selectedDate = DateFormat("dd MMM,yyyy").format(needleBoard.recordDate!);
+          needleConsumedController.text = needleBoard.consumedNeedle ?? "";
+          setState(() {});
+        });
+      });
+    }
     super.initState();
   }
 
@@ -212,7 +239,10 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                                 addNeedleRecordReq.needleBoardNumber = selectedBoardNumber?.boardId.toString();
                                 addNeedleRecordReq.needleStatus = selectedChangeStatus?.id.toString();
                                 addNeedleRecordReq.needleRecordAddDate = selectedDate;
-                                NeedleController.to.addNeedleRecordData(addNeedleRecordRequest: addNeedleRecordReq);
+                                if(widget.isEdit){
+                                  addNeedleRecordReq.needleRecordId = widget.recordId;
+                                }
+                                NeedleController.to.addNeedleRecordData(addNeedleRecordRequest: addNeedleRecordReq,isEdit: widget.isEdit);
                               }else{
                                 showSnackBar(title: ApiConfig.error, message: "Please enter number of needle consumed");
                               }
@@ -257,4 +287,5 @@ class AddNeedleRecordRequest{
   String? needleBoardNumber;
   String? needleConsumed;
   String? userId;
+  String? needleRecordId;
 }

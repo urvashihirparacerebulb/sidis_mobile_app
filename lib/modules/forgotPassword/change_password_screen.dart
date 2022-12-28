@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:my_projects/controllers/authentication_controller.dart';
 
 import '../../common_widgets/common_textfield.dart';
 import '../../common_widgets/common_widget.dart';
+import '../../configurations/config_file.dart';
 import '../../utility/assets_utility.dart';
 import '../../utility/color_utility.dart';
+import '../../utility/common_methods.dart';
 import '../../utility/constants.dart';
 import '../../utility/screen_utility.dart';
 
@@ -25,7 +28,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
         context: context,
         bgColor: blackColor,
         appBar: commonAppbar(
-          context: context,title: forgotPassword,
+          context: context,title: "Change Password",
           centerTitle: true,
         ),
         child: ListView(
@@ -86,7 +89,28 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                       width: getScreenWidth(context) - 40,
                       height: 50,
                       tapOnButton: () {
-
+                        if(currentPasswordController.text.isNotEmpty){
+                          if(newPasswordController.text.isNotEmpty){
+                            if(confirmPasswordController.text.isNotEmpty){
+                              if(newPasswordController.text == confirmPasswordController.text){
+                                AuthenticationController.to.changePasswordAPI({
+                                  "old_password": currentPasswordController.text,
+                                  "password": newPasswordController.text,
+                                  "cpassword": confirmPasswordController.text,
+                                  "manage_user_id": getLoginData()!.userdata?.first.id.toString()
+                                });
+                              }else{
+                                showSnackBar(title: ApiConfig.error, message: "Password and confirm password doesn't match");
+                              }
+                            }else{
+                              showSnackBar(title: ApiConfig.error, message: "Please enter confirm password");
+                            }
+                          }else{
+                            showSnackBar(title: ApiConfig.error, message: "Please enter new password");
+                          }
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please enter current password");
+                        }
                       },
                       isLoading: false)
                 ],

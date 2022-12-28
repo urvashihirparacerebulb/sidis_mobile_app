@@ -54,6 +54,7 @@ class NeedleRecord {
     this.consumedNeedle,
   });
 
+
   int? needleRecordId;
   String? recordDate;
   String? companyShortName;
@@ -528,5 +529,121 @@ class NeedleBoard {
     "change_board": changeBoard,
     "old_board_no": oldBoardNo,
     "new_board_no": newBoardNo,
+  };
+}
+
+class NeedleRecordDetailResponseModel {
+  NeedleRecordDetailResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  NeedleRecordDetail? data;
+
+  factory NeedleRecordDetailResponseModel.fromJson(Map<String, dynamic> json) => NeedleRecordDetailResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: NeedleRecordDetail.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class NeedleRecordDetail {
+  NeedleRecordDetail({
+    this.id,
+    this.plantId,
+    this.companyId,
+    this.businessId,
+    this.boardNumber,
+    this.needleStatus,
+    this.consumedNeedle,
+    this.recordDate,
+    this.manageUserId,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.boardNo,
+    this.companyName,
+    this.companyShortName,
+    this.plantName,
+    this.plantShortName,
+    this.bussinessName,
+    this.needleStatusName,
+  });
+
+  int? id;
+  int? plantId;
+  int? companyId;
+  int? businessId;
+  int? boardNumber;
+  int? needleStatus;
+  String? consumedNeedle;
+  DateTime? recordDate;
+  int? manageUserId;
+  int? status;
+  DateTime? createdAt;
+  DateTime? updatedAt;
+  String? boardNo;
+  String? companyName;
+  String? companyShortName;
+  String? plantName;
+  String? plantShortName;
+  String? bussinessName;
+  String? needleStatusName;
+
+  factory NeedleRecordDetail.fromJson(Map<String, dynamic> json) => NeedleRecordDetail(
+    id: json["id"],
+    plantId: json["plant_id"],
+    companyId: json["company_id"],
+    businessId: json["business_id"],
+    boardNumber: json["board_number"],
+    needleStatus: json["needle_status"],
+    consumedNeedle: json["consumed_needle"],
+    recordDate: DateTime.parse(json["record_date"]),
+    manageUserId: json["manage_user_id"],
+    status: json["status"],
+    createdAt: DateTime.parse(json["created_at"]),
+    updatedAt: DateTime.parse(json["updated_at"]),
+    boardNo: json["board_no"],
+    companyName: json["company_name"],
+    companyShortName: json["company_short_name"],
+    plantName: json["plant_name"],
+    plantShortName: json["plant_short_name"],
+    bussinessName: json["bussiness_name"],
+    needleStatusName: json["needle_status_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "plant_id": plantId,
+    "company_id": companyId,
+    "business_id": businessId,
+    "board_number": boardNumber,
+    "needle_status": needleStatus,
+    "consumed_needle": consumedNeedle,
+    "record_date": recordDate?.toIso8601String(),
+    "manage_user_id": manageUserId,
+    "status": status,
+    "created_at": createdAt?.toIso8601String(),
+    "updated_at": updatedAt?.toIso8601String(),
+    "board_no": boardNo,
+    "company_name": companyName,
+    "company_short_name": companyShortName,
+    "plant_name": plantName,
+    "plant_short_name": plantShortName,
+    "bussiness_name": bussinessName,
+    "needle_status_name": needleStatusName,
   };
 }

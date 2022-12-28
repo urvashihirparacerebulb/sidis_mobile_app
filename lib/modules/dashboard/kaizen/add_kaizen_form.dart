@@ -35,7 +35,8 @@ import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
 class AddKaizenFormView extends StatefulWidget {
-  const AddKaizenFormView({Key? key}) : super(key: key);
+  final bool isEdit;
+  const AddKaizenFormView({Key? key, this.isEdit = false}) : super(key: key);
 
   @override
   State<AddKaizenFormView> createState() => _AddKaizenFormViewState();
@@ -185,13 +186,15 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                                 analysisAnswerController.text = editableKaizen!.answer ?? "";
                               });
                             },
-                              child: const Icon(Icons.edit,color: Colors.orange)),
+                              child: const Icon(Icons.edit,color: Colors.orange)
+                          ),
                           commonHorizontalSpacing(),
                           InkWell(
                             onTap: (){
                               KaizenController.to.deleteKaizenAnalysis(analysisId: KaizenController.to.kaizenAnalysisList[index].analysisId.toString());
                             },
-                              child: const Icon(Icons.delete_outline,color: Colors.redAccent)),
+                              child: const Icon(Icons.delete_outline,color: Colors.redAccent)
+                          )
                         ]
                       )
                     ]
@@ -283,6 +286,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
+            if(DashboardController.to.pillarList.isEmpty){
+              DashboardController.to.getPillarList();
+            }
             commonBottomView(context: context,child: PillarBottomView(myItems: DashboardController.to.pillarList,
                 selectionCallBack: (PillarResponse pillar){
                   selectedPillar = pillar;
@@ -316,6 +322,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         InkWell(
             onTap: (){
               if(selectedBusiness?.businessId != null) {
+                if(DropDownDataController.to.companyBusinessPlants!.isEmpty){
+                  DropDownDataController.to.getCompanyPlants(businessId: selectedBusiness?.businessId.toString(),successCallback: (){
+                    // getActivityList();
+                  });
+                }
                 commonBottomView(context: context,
                     child: PlantBottomView(
                         myItems: DropDownDataController.to
@@ -348,6 +359,12 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         InkWell(
             onTap: (){
               if(selectedPlant != null) {
+                if(DepartmentController.to.departmentData!.isEmpty){
+                  DepartmentController.to.getDepartment(
+                      soleId: selectedPlant!.soleId,
+                      callback: (){}
+                  );
+                }
                 commonBottomView(context: context,
                     child: DepartmentBottomView(
                         hintText: "Select Department",
@@ -374,6 +391,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         InkWell(
             onTap: (){
               if(selectedDepartment != null) {
+                if(DepartmentController.to.subDepartmentData!.isEmpty){
+                  DepartmentController.to.getSubDepartment(departmentId: selectedDepartment!.departmentId.toString(),callback: (){});
+                }
                 commonBottomView(context: context,
                     child: DepartmentBottomView(
                         hintText: "Select Sub Department",
@@ -393,6 +413,12 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         InkWell(
             onTap: (){
               if(selectedPlant != null) {
+                if(DropDownDataController.to.machinesList!.isEmpty){
+                  DropDownDataController.to.getMachines(
+                      plantId: selectedPlant!.soleId,
+                      successCallback: () {
+                      });
+                }
                 commonBottomView(context: context,
                     child: MachineBottomView(
                         hintText: "Select Machine",
@@ -429,6 +455,12 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 itemCount: subMachineLists.length,
                 itemBuilder: (context, index) => InkWell(
                     onTap: (){
+                      if(DropDownDataController.to.subMachinesList!.isEmpty){
+                        getSubMachineAPI(
+                            plantId: selectedPlant!.soleId,
+                            machineId: machineData!.machineId
+                        );
+                      }
                       commonBottomView(context: context,
                           child: MachineBottomView(
                               hintText: "Select Sub Machine",
@@ -501,6 +533,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         commonVerticalSpacing(spacing: 20),
         InkWell(
             onTap: (){
+              if(KaizenController.to.kaizenResultArea.isEmpty){
+                KaizenController.to.getKaizenResultArea();
+              }
               commonBottomView(context: context,
                   child: CommonBottomStringView(
                       hintText: "Select Result Area",
@@ -562,6 +597,11 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         commonVerticalSpacing(spacing: 20),
         InkWell(
             onTap: (){
+              if(KaizenController.to.plantMembersList.isEmpty){
+                KaizenController.to.getTeamMembers(
+                    plantId: selectedPlant?.soleId,departmentId: selectedDepartment?.departmentId.toString(),subDepartmentId: selectedSubDepartment?.departmentId.toString()
+                );
+              }
               commonBottomView(context: context,
                   child: TeamMemberBottomView(
                       myItems: KaizenController.to.plantMembersList,
@@ -644,6 +684,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
         commonVerticalSpacing(spacing: 20),
         InkWell(
             onTap: (){
+              if(KaizenController.to.rootCauseList.isEmpty){
+                KaizenController.to.getRootCauses();
+              }
               commonBottomView(context: context,
                   child: CommonBottomStringView(
                       hintText: "Select Root Cause",
@@ -825,7 +868,8 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                       showSnackBar(title: ApiConfig.error, message: "Please select pillar");
                     }
                   },
-                  isLoading: false)),
+                  isLoading: false)
+              ),
             ],
           ),
         ),

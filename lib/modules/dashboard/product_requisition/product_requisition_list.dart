@@ -44,7 +44,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: productRequisition!.requestNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                commonHeaderTitle(title: productRequisition!.poNo ?? "-",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
                 commonHorizontalSpacing(),
                 commonHeaderTitle(title: productRequisition.machineDetail ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
               ],
@@ -298,7 +298,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                           ProductRequisitionController.to.searchProductRequisitionList.value = ProductRequisitionController.to.productRequisitionList;
                         }else{
                           ProductRequisitionController.to.searchProductRequisitionList.value = ProductRequisitionController.to.productRequisitionList.where((p0) => p0.username!.startsWith(value)
-                              || p0.requestNo!.toLowerCase().startsWith(value) ||
+                              || p0.poNo!.toLowerCase().startsWith(value) ||
                               p0.machineDetail!.toLowerCase().startsWith(value) ||
                               p0.requiredIn!.toLowerCase().startsWith(value) ||
                               p0.companyBussinessPlant!.toLowerCase().startsWith(value) ||

@@ -117,6 +117,23 @@ class _KaizenListViewState extends State<KaizenListView> {
       ),      position: RelativeRect.fromLTRB(left, top, 20, 0),
       items: [
         PopupMenuItem<String>(
+            value: 'Edit',
+            child: InkWell(
+              onTap: (){
+                Get.back();
+                Get.to(() => const AddKaizenFormView(isEdit: true,));
+
+                Get.to(() => FinishKaizenFormView(kaizenList: kaizen));
+              },
+              child: Row(
+                children: [
+                  const Icon(Icons.edit),
+                  commonHorizontalSpacing(),
+                  const Text('Edit'),
+                ],
+              ),
+            )),
+        PopupMenuItem<String>(
             value: 'Edit Finish',
             child: InkWell(
               onTap: (){

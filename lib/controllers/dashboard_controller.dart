@@ -26,8 +26,9 @@ class DashboardController extends GetxController {
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
         "group_id": getLoginData()!.userdata!.first.groupId,
-        "startdate": "${pastMonth.year}-${pastMonth.month}-${pastMonth.day}",
-        "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
+        "startdate": "${pastMonth.month}-${currentDate.year}",
+        // "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
+        "abnormality_chart_of": 2,
         "company_id": getLoginData()!.currentPlants!.first.companyId,
         "bussiness_id": getLoginData()!.currentPlants!.first.bussinessId,
         "plant_id": getLoginData()!.currentPlants!.first.plantId
@@ -50,8 +51,8 @@ class DashboardController extends GetxController {
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
         "group_id": getLoginData()!.userdata!.first.groupId,
-        "startdate": "${pastMonth.year}-${pastMonth.month}-${pastMonth.day}",
-        "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
+        "startdate": "${pastMonth.month}-${currentDate.year}",
+        // "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
         "company_id": getLoginData()!.currentPlants!.first.companyId,
         "bussiness_id": getLoginData()!.currentPlants!.first.bussinessId,
         "plant_id": getLoginData()!.currentPlants!.first.plantId

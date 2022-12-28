@@ -8,8 +8,8 @@ import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/screen_utility.dart';
 import '../../common_widgets/common_textfield.dart';
 import '../../controllers/authentication_controller.dart';
-import '../../my_barcode_scanner_view.dart';
 import '../../utility/assets_utility.dart';
+import '../../utility/common_methods.dart';
 import '../../utility/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -29,6 +29,12 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   void initState() {
     super.initState();
+    if(getIsRememberMe()){
+      setState(() {
+        userNameController.text = getRememberedEmail();
+        passwordController.text = getRememberedPassword();
+      });
+    }
   }
 
   @override
@@ -37,7 +43,7 @@ class _LoginScreenState extends State<LoginScreen> {
         bottomNavigation: Stack(
           children: [
             Image.asset("assets/images/login_tansparent_curve.png",height: 125,
-              width: getScreenWidth(context),fit: BoxFit.cover,),
+              width: getScreenWidth(context),fit: BoxFit.cover),
             Positioned(
               bottom: 8,left: 5,right: 5,
               child: Row(
@@ -93,6 +99,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
                     textEditingController: userNameController,
                     onChangedFunction: (String value){
+                      if(getIsRememberMe()){
+                        setRememberedEmail(email: value);
+                      }
                     },
                     validationFunction: (String value) {
                       return value.toString().isEmpty
@@ -106,6 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     isPassword: true,
                     textEditingController: passwordController,
                     onChangedFunction: (String value){
+                      if(getIsRememberMe()){
+                        setRememberedPassword(password: value);
+                      }
                     },
                     validationFunction: (String value) {
                       return value.toString().isEmpty
@@ -122,9 +134,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               onTap: (){
                                 newSetState((){
                                   isRemember = !isRemember;
+                                  setIsRememberMe(isRemember: isRemember);
+                                  if(isRemember){
+                                    if(userNameController.text.isNotEmpty && passwordController.text.isNotEmpty){
+                                      setRememberedEmail(email: userNameController.text);
+                                      setRememberedPassword(password: passwordController.text);
+                                    }
+                                  }
                                 });
                               },
-                              child: Image(image: isRemember ? checkedImage : unCheckedImage,
+                              child: Image(image: getIsRememberMe() ? checkedImage : unCheckedImage,
                                   width: 20,height: 20,
                                   color: ConvertTheme.convertTheme.getWhiteToFontColor())
                           ),

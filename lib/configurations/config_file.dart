@@ -48,6 +48,8 @@ class ApiConfig {
   static const String deleteProductRequisitionURL = "${baseURL}delete-requisition-data";
   static const String getProductRequisitionStatusURL = "${baseURL}get-requisition-status";
   static const String productRequisitionStatusUpdateURL = "${baseURL}update-requisition-status";
+  static const String getRecordBoardDetailURL = "${baseURL}getboardrecord";
+  static const String changePasswordURL = "${baseURL}update-password";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

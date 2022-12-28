@@ -55,6 +55,30 @@ bool getIsLogin() {
   return (getPreferences.read('isLogin') ?? false);
 }
 
+setRememberedEmail({required String email}) {
+  getPreferences.write('email', email);
+}
+
+String getRememberedEmail() {
+  return (getPreferences.read('email') ?? "");
+}
+
+setRememberedPassword({required String password}) {
+  getPreferences.write('password', password);
+}
+
+String getRememberedPassword() {
+  return (getPreferences.read('password') ?? "");
+}
+
+setIsRememberMe({required bool isRemember}) {
+  getPreferences.write('isRememberMe', isRemember);
+}
+
+bool getIsRememberMe() {
+  return (getPreferences.read('isRememberMe') ?? false);
+}
+
 getObject(String key) {
   return getPreferences.read(key) != null
       ? json.decode(getPreferences.read(key))

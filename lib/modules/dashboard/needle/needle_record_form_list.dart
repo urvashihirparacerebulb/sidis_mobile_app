@@ -111,7 +111,7 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
             child: InkWell(
               onTap: (){
                 Get.back();
-                // Get.to(() => AddAbnormalityFormView(isEdit: true,abnormalityId: id.toString()));
+                Get.to(() => AddNeedleRecordView(isEdit: true,recordId: boardRecordId.toString()));
               },
               child: Row(
                 children: [
@@ -151,7 +151,7 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
       appBar: commonAppbar(context: context,title: "Needle Record List"),
       floatingAction: InkWell(
         onTap: (){
-          Get.to(() => const AddNeedleRecordView());
+          Get.to(() => const AddNeedleRecordView(isEdit: false,recordId: ""));
         },
         child: Container(
             height: 60,width: 60,

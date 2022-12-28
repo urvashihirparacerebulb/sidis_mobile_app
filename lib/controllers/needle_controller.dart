@@ -21,6 +21,7 @@ class NeedleController extends GetxController {
   RxList<LocationData> machineLocationList = RxList<LocationData>();
   RxList<NeedleBoard> needleBoards = RxList<NeedleBoard>();
   RxList<String> locationIds = RxList<String>();
+  Rx<NeedleRecordDetail> selectedNeedleRecord = NeedleRecordDetail().obs;
 
   void getNeedleRecordListData() {
     apiServiceCall(
@@ -84,7 +85,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
@@ -101,7 +102,27 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
+    );
+  }
+
+  void getBoardRecordDetail({String? boardId,Function? callback}) {
+    apiServiceCall(
+        params: {
+          "board_record_id": boardId,
+          "manage_user_id": getLoginData()!.userdata!.first.id.toString()
+        },
+        serviceUrl: ApiConfig.getRecordBoardDetailURL,
+        success: (dio.Response<dynamic> response) {
+          NeedleRecordDetailResponseModel needleRecordDetailResponseModel = NeedleRecordDetailResponseModel.fromJson(jsonDecode(response.data));
+          selectedNeedleRecord.value = needleRecordDetailResponseModel.data!;
+          callback!();
+        },
+        error: (dio.Response<dynamic> response) {
+          errorHandling(response);
+        },
+        isProgressShow: true,
+        methodType: ApiConfig.methodPOST
     );
   }
 
@@ -119,9 +140,10 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
+
   void deleteNeedleBoardRecord({String? boardRecordId}) {
     apiServiceCall(
       params: {
@@ -136,7 +158,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
@@ -156,7 +178,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
@@ -177,7 +199,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
@@ -200,11 +222,11 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
-  Future<void> addNeedleRecordData({AddNeedleRecordRequest? addNeedleRecordRequest}) async {
+  Future<void> addNeedleRecordData({AddNeedleRecordRequest? addNeedleRecordRequest,bool isEdit = false}) async {
     dio.FormData formData = dio.FormData.fromMap({
       "company_id": addNeedleRecordRequest?.companyId,
       "plant_id": addNeedleRecordRequest?.plantId,
@@ -215,6 +237,9 @@ class NeedleController extends GetxController {
       "needle_consumed": addNeedleRecordRequest?.needleConsumed,
       "user_id": addNeedleRecordRequest?.userId
     });
+    if(isEdit){
+      formData.fields.add(MapEntry("needlerecordid", addNeedleRecordRequest!.needleRecordId!.toString()));
+    }
     apiServiceCall(
       params: {},
       formValues: formData,
@@ -227,7 +252,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
@@ -263,7 +288,7 @@ class NeedleController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: true,
-      methodType: ApiConfig.methodPOST,
+      methodType: ApiConfig.methodPOST
     );
   }
 
