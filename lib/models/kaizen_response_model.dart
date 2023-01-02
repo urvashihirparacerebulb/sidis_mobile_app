@@ -335,3 +335,227 @@ class AllKaizenAnalysisModel {
     "analysis_data": analysisData == null ? [] : List<dynamic>.from(analysisData!.map((x) => x.toJson())),
   };
 }
+
+class KaizenDetailResponse {
+  KaizenDetailResponse({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  KaizenDetail? data;
+
+  factory KaizenDetailResponse.fromJson(Map<String, dynamic> json) => KaizenDetailResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: KaizenDetail.fromJson(json["data"]),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data?.toJson(),
+  };
+}
+
+class KaizenDetail {
+  KaizenDetail({
+    this.id,
+    this.companyId,
+    this.kaizenCategoryId,
+    this.pillarCategoryId,
+    this.pillarStep,
+    this.bussinessId,
+    this.plantId,
+    this.machineId,
+    this.departmentId,
+    this.subdepartmentId,
+    this.requestNo,
+    this.kaizenName,
+    this.theme,
+    this.idea,
+    this.presentProblem,
+    this.countermeasure,
+    this.presentProblemImage,
+    this.countermeasureImage,
+    this.benchMark,
+    this.target,
+    this.startDate,
+    this.lossNoStep,
+    this.resultArea,
+    this.finishDate,
+    this.rootCause,
+    this.teamMemberId,
+    this.remarks,
+    this.finishStatus,
+    this.textResult,
+    this.resultin,
+    this.tableResultColoum,
+    this.tableResultRows,
+    this.showResultTables,
+    this.chartTitle,
+    this.chartResultX,
+    this.chartResultY,
+    this.fromKaizenId,
+    this.status,
+    this.manageUserId,
+    this.createdAt,
+    this.modifiedAt,
+    this.plantShortName,
+    this.machineName,
+    this.teamMembers,
+    this.departmentName,
+    this.pillarName,
+  });
+
+  int? id;
+  int? companyId;
+  int? kaizenCategoryId;
+  int? pillarCategoryId;
+  int? pillarStep;
+  int? bussinessId;
+  int? plantId;
+  int? machineId;
+  int? departmentId;
+  int? subdepartmentId;
+  String? requestNo;
+  String? kaizenName;
+  String? theme;
+  String? idea;
+  String? presentProblem;
+  String? countermeasure;
+  String? presentProblemImage;
+  String? countermeasureImage;
+  String? benchMark;
+  String? target;
+  String? startDate;
+  String? lossNoStep;
+  String? resultArea;
+  String? finishDate;
+  String? rootCause;
+  String? teamMemberId;
+  String? remarks;
+  int? finishStatus;
+  String? textResult;
+  String? resultin;
+  String? tableResultColoum;
+  String? tableResultRows;
+  String? showResultTables;
+  String? chartTitle;
+  String? chartResultX;
+  String? chartResultY;
+  String? fromKaizenId;
+  int? status;
+  int? manageUserId;
+  DateTime? createdAt;
+  DateTime? modifiedAt;
+  String? plantShortName;
+  String? machineName;
+  String? teamMembers;
+  String? departmentName;
+  String? pillarName;
+
+  factory KaizenDetail.fromJson(Map<String, dynamic> json) => KaizenDetail(
+    id: json["id"],
+    companyId: json["company_id"],
+    kaizenCategoryId: json["kaizen_category_id"],
+    pillarCategoryId: json["pillar_category_id"],
+    pillarStep: json["pillar_step"],
+    bussinessId: json["bussiness_id"],
+    plantId: json["plant_id"],
+    machineId: json["machine_id"],
+    departmentId: json["department_id"],
+    subdepartmentId: json["subdepartment_id"],
+    requestNo: json["request_no"],
+    kaizenName: json["kaizen_name"],
+    theme: json["theme"],
+    idea: json["idea"],
+    presentProblem: json["present_problem"],
+    countermeasure: json["countermeasure"],
+    presentProblemImage: json["present_problem_image"],
+    countermeasureImage: json["countermeasure_image"],
+    benchMark: json["bench_mark"],
+    target: json["target"],
+    startDate:json["start_date"],
+    lossNoStep: json["loss_no_step"],
+    resultArea: json["result_area"],
+    finishDate: json["finish_date"],
+    rootCause: json["root_cause"],
+    teamMemberId: json["team_member_id"],
+    remarks: json["remarks"],
+    finishStatus: json["finish_status"],
+    textResult: json["text_result"],
+    resultin: json["resultin"],
+    tableResultColoum: json["table_result_coloum"],
+    tableResultRows: json["table_result_rows"],
+    showResultTables: json["show_result_tables"],
+    chartTitle: json["chart_title"],
+    chartResultX: json["chart_result_x"],
+    chartResultY: json["chart_result_y"],
+    fromKaizenId: json["from_kaizen_id"],
+    status: json["status"],
+    manageUserId: json["manage_user_id"],
+    createdAt: DateTime.parse(json["created_at"]),
+    modifiedAt: DateTime.parse(json["modified_at"]),
+    plantShortName: json["plant_short_name"],
+    machineName: json["machine_name"],
+    teamMembers: json["team_members"],
+    departmentName: json["department_name"],
+    pillarName: json["pillar_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "company_id": companyId,
+    "kaizen_category_id": kaizenCategoryId,
+    "pillar_category_id": pillarCategoryId,
+    "pillar_step": pillarStep,
+    "bussiness_id": bussinessId,
+    "plant_id": plantId,
+    "machine_id": machineId,
+    "department_id": departmentId,
+    "subdepartment_id": subdepartmentId,
+    "request_no": requestNo,
+    "kaizen_name": kaizenName,
+    "theme": theme,
+    "idea": idea,
+    "present_problem": presentProblem,
+    "countermeasure": countermeasure,
+    "present_problem_image": presentProblemImage,
+    "countermeasure_image": countermeasureImage,
+    "bench_mark": benchMark,
+    "target": target,
+    "start_date": startDate,
+    "loss_no_step": lossNoStep,
+    "result_area": resultArea,
+    "finish_date": finishDate,
+    "root_cause": rootCause,
+    "team_member_id": teamMemberId,
+    "remarks": remarks,
+    "finish_status": finishStatus,
+    "text_result": textResult,
+    "resultin": resultin,
+    "table_result_coloum": tableResultColoum,
+    "table_result_rows": tableResultRows,
+    "show_result_tables": showResultTables,
+    "chart_title": chartTitle,
+    "chart_result_x": chartResultX,
+    "chart_result_y": chartResultY,
+    "from_kaizen_id": fromKaizenId,
+    "status": status,
+    "manage_user_id": manageUserId,
+    "created_at": createdAt?.toIso8601String(),
+    "modified_at": modifiedAt?.toIso8601String(),
+    "plant_short_name": plantShortName,
+    "machine_name": machineName,
+    "team_members": teamMembers,
+    "department_name": departmentName,
+    "pillar_name": pillarName,
+  };
+}

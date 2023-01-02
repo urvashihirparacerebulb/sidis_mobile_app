@@ -124,20 +124,6 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CommonTextFiled(
-            fieldTitleText: "Product Requisition * ",
-            hintText: "Product Requisition * ",
-            // isBorderEnable: false,
-            isChangeFillColor: true,
-            textEditingController: poNoController,
-            onChangedFunction: (String value){
-            },
-            validationFunction: (String value) {
-              return value.toString().isEmpty
-                  ? notEmptyFieldMessage
-                  : null;
-            }),
-        commonVerticalSpacing(spacing: 20),
         InkWell(
           onTap: (){
             commonBottomView(context: context,child: BusinessBottomView(myItems: BusinessController.to.businessData!,selectionCallBack: (BusinessData business){
@@ -301,6 +287,20 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
               isChangeColor: selectedItemType.isEmpty ? true : false,
             )
         ),
+        CommonTextFiled(
+            fieldTitleText: "Product Requisition * ",
+            hintText: "Product Requisition * ",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            textEditingController: poNoController,
+            onChangedFunction: (String value){
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }),
+        commonVerticalSpacing(spacing: 20),
         InkWell(
             onTap: (){
               commonBottomView(context: context,
@@ -396,7 +396,6 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                     width: getScreenWidth(context) - 40,
                     height: 50,
                     tapOnButton: () {
-                      if(poNoController.text.isNotEmpty){
                         if(selectedBusiness != null){
                           if(selectedPlant != null){
                             if(selectedDepartment != null){
@@ -457,9 +456,6 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                         }else{
                           showSnackBar(title: ApiConfig.error, message: "Please select business");
                         }
-                      }else{
-                        showSnackBar(title: ApiConfig.error, message: "Please product requsition number");
-                      }
                     },
                     isLoading: false)
                 )

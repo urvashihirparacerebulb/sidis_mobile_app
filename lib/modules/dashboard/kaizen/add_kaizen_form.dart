@@ -36,7 +36,8 @@ import '../../../utility/screen_utility.dart';
 
 class AddKaizenFormView extends StatefulWidget {
   final bool isEdit;
-  const AddKaizenFormView({Key? key, this.isEdit = false}) : super(key: key);
+  final String id;
+  const AddKaizenFormView({Key? key, this.isEdit = false, this.id = ""}) : super(key: key);
 
   @override
   State<AddKaizenFormView> createState() => _AddKaizenFormViewState();
@@ -81,6 +82,48 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
     Future.delayed(const Duration(seconds: 3),(){
       KaizenController.to.getKaizenResultArea();
     });
+
+    // if(widget.isEdit){
+    //   KaizenController.to.getKaizenDetail(kaizenId: widget.id,callback: (){
+    //     var kaizen = KaizenController.to.kaizenDetail.value;
+    //     PillarResponse pillar = PillarResponse();
+    //     pillar.pillarCategoryId = kaizen.pillarCategoryId;
+    //     pillar.pillarName = kaizen.pillarName;
+    //     selectedPillar = pillar;
+    //     BusinessData business  = BusinessData();
+    //     business.businessId = kaizen.bussinessId;
+    //     // business.businessName = kaizen.bussinessName;
+    //     selectedBusiness = business;
+    //     CompanyBusinessPlant plant = CompanyBusinessPlant();
+    //     plant.soleId = "${kaizen.companyId} - ${kaizen.plantId} - ${kaizen.bussinessId}";
+    //     plant.soleName = kaizen.plantShortName;
+    //     selectedPlant = plant;
+    //     Department department = Department();
+    //     department.departmentId = kaizen.departmentId;
+    //     department.departmentName = kaizen.departmentName;
+    //     selectedDepartment = department;
+    //     Department subDepartment = Department();
+    //     subDepartment.departmentId = kaizen.subdepartmentId;
+    //     // subDepartment.departmentName = kaizen.su;
+    //     selectedSubDepartment = subDepartment;
+    //     MachineData machine = MachineData();
+    //     machine.machineId = kaizen.machineId;
+    //     machine.machineName = kaizen.machineName;
+    //     machineData = machine;
+    //     MachineData subMachine = MachineData();
+    //     machine.machineId = kaizen.subdepartmentId;
+    //     // machine.machineName = kaizen.s;
+    //     subMachineLists.add(machine);
+    //
+    //     selectedStartDate = kaizen.startDate ?? "";
+    //     kaizenLossNoController.text = kaizen.lossNoStep ?? "";
+    //     selectedResultArea = kaizen.resultArea ?? "";
+    //     kaizenThemeController.text = kaizen.theme ?? "";
+    //     benchMarkController.text = kaizen.benchMark ?? "";
+    //     targetController.text = kaizen.target ?? "";
+    //
+    //   });
+    // }
     super.initState();
   }
 
@@ -455,27 +498,21 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 itemCount: subMachineLists.length,
                 itemBuilder: (context, index) => InkWell(
                     onTap: (){
-                      if(DropDownDataController.to.subMachinesList!.isEmpty){
-                        getSubMachineAPI(
-                            plantId: selectedPlant!.soleId,
-                            machineId: machineData!.machineId
-                        );
-                      }
                       commonBottomView(context: context,
                           child: MachineBottomView(
                               hintText: "Select Sub Machine",
                               soleId: selectedPlant!.soleId ?? "",
-                              machineId: subMachineLists.last.machineId ?? 0,
+                              machineId: subMachineLists.length == 1 ? (machineData!.machineId ?? 0) : subMachineLists.last.machineId ?? 0,
                               myItems: DropDownDataController.to.subMachinesList!,
                               selectionCallBack: (
                                   MachineData machine) {
                                 subMachineLists[index] = machine;
                                 setState(() {
                                 });
-                                getSubMachineAPI(
-                                    plantId: selectedPlant!.soleId,
-                                    machineId: subMachineLists[index].machineId
-                                );
+                                // getSubMachineAPI(
+                                //     plantId: selectedPlant!.soleId,
+                                //     machineId: subMachineLists[index].machineId
+                                // );
                               }));
                     },
                     child: commonDecoratedTextView(

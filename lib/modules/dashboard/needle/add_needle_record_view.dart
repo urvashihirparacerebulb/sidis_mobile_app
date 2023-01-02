@@ -48,7 +48,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
     });
 
     if(widget.isEdit){
-      Future.delayed(const Duration(seconds: 2), (){
+      Future.delayed(const Duration(microseconds: 500), (){
         NeedleController.to.getBoardRecordDetail(boardId: widget.recordId,callback: (){
           var needleBoard = NeedleController.to.selectedNeedleRecord.value;
           BusinessData business  = BusinessData();
@@ -60,7 +60,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
           plant.soleName = needleBoard.companyShortName;
           selectedPlant = plant;
           NeedleBoardNumber boardNumber = NeedleBoardNumber();
-          boardNumber.boardId = int.parse(needleBoard.boardNo ?? "");
+          boardNumber.boardId = needleBoard.boardNumber;
           boardNumber.boardNo = needleBoard.boardNo;
           selectedBoardNumber = boardNumber;
           ChangeStatus changeStatus = ChangeStatus();
@@ -78,8 +78,8 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
 
   getBoardNumbers(){
     NeedleController.to.getNeedleBoardNumber(
-      businessId: selectedBusiness == null ? '${getLoginData()!.currentPlants?.first.bussinessId}' : '${selectedBusiness?.businessName}',
-      plantId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.plantId}' : '${selectedPlant?.soleId?.split(' - ')[2]}',
+      businessId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.bussinessId}' : '${selectedPlant?.soleId?.split(' - ')[2]}',
+      plantId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.plantId}' : '${selectedPlant?.soleId?.split(' - ')[1]}',
       companyId: selectedPlant == null ? '${getLoginData()!.currentPlants?.first.companyId}' : '${selectedPlant?.soleId?.split(' - ')[0]}',
     );
   }
@@ -232,8 +232,9 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                               if(needleConsumedController.text.isNotEmpty){
                                 AddNeedleRecordRequest addNeedleRecordReq = AddNeedleRecordRequest();
                                 addNeedleRecordReq.userId = getLoginData()!.userdata?.first.id.toString();
-                                addNeedleRecordReq.businessId = selectedBusiness?.businessId.toString();
-                                addNeedleRecordReq.plantId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                                addNeedleRecordReq.businessId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                                addNeedleRecordReq.plantId = selectedPlant?.soleId?.split(" - ")[1].toString();
+                                addNeedleRecordReq.plantId = selectedPlant?.soleId?.split(" - ")[1].toString();
                                 addNeedleRecordReq.companyId = selectedPlant?.soleId?.split(" - ")[0].toString();
                                 addNeedleRecordReq.needleConsumed = needleConsumedController.text;
                                 addNeedleRecordReq.needleBoardNumber = selectedBoardNumber?.boardId.toString();

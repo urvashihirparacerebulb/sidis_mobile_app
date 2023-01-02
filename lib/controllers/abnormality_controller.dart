@@ -21,14 +21,13 @@ class AbnormalityController extends GetxController {
   Rx<AbnormalityDetail> abnormalityDetail = AbnormalityDetail().obs;
 
   void getAbnormalityType({Function? callback}) {
-    abnormalityTypeData!.clear();
     apiServiceCall(
       params: {},
       serviceUrl: ApiConfig.getAbnormalityTypeURL,
       success: (dio.Response<dynamic> response) {
         AbnormalityTypeResponseModel abnormalityTypeResponse =
         AbnormalityTypeResponseModel.fromJson(jsonDecode(response.data));
-        abnormalityTypeData!.addAll(abnormalityTypeResponse.data?.typeData ?? []);
+        abnormalityTypeData!.value = abnormalityTypeResponse.data?.typeData ?? [];
         callback!();
       },
       error: (dio.Response<dynamic> response) {
@@ -112,6 +111,7 @@ class AbnormalityController extends GetxController {
       },
       serviceUrl: ApiConfig.deleteAbnormalityURL,
       success: (dio.Response<dynamic> response) {
+        showSnackBar(title: ApiConfig.success, message: "Deleted Successfully");
         getAbnormalityLists();
       },
       error: (dio.Response<dynamic> response) {

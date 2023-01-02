@@ -77,7 +77,7 @@ class DropDownDataController extends GetxController {
       success: (dio.Response<dynamic> response) {
         SubMachineResponse subMachineResponseModel =
         SubMachineResponse.fromJson(jsonDecode(response.data));
-        subMachinesList!.addAll(subMachineResponseModel.data?.submachineArray ?? []);
+        subMachinesList!.value = subMachineResponseModel.data?.submachineArray ?? [];
         successCallback!();
       },
       error: (dio.Response<dynamic> response) {

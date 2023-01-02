@@ -52,12 +52,16 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
 
   @override
   void initState() {
+    AbnormalityController.to.abnormalityTypeData!.clear();
     if(widget.isEdit){
         AbnormalityController.to.getAbnormalityByDetail(abnormalityId: widget.abnormalityId,callback: (){
           var abnormality = AbnormalityController.to.abnormalityDetail.value;
           if (BusinessController.to.businessData!.isEmpty) {
             BusinessController.to.getBusinesses();
           }
+          Future.delayed(const Duration(seconds: 2), () {
+            AbnormalityController.to.getAbnormalityType(callback: (){});
+          });
           BusinessData business  = BusinessData();
           business.businessId = abnormality.bussinessId;
           business.businessName = abnormality.bussinessName;
@@ -358,7 +362,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                       child: MachineBottomView(
                                           hintText: "Select Sub Machine",
                                           soleId: selectedPlant!.soleId ?? "",
-                                          machineId: subMachineLists.last.machineId ?? 0,
+                                          machineId: subMachineLists.length == 1 ? (machineData!.machineId ?? 0) : subMachineLists.last.machineId ?? 0,
                                           myItems: DropDownDataController.to.subMachinesList!,
                                           selectionCallBack: (
                                               MachineData machine) {

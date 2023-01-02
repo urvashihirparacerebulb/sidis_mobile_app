@@ -402,8 +402,8 @@ class LocationData {
   List<NeedleBoardNumber>? oldBoard;
   List<NeedleBoardNumber>? newBoard;
 
-  SelectedLocationBoardReq? selectedOldBoard;
-  SelectedLocationBoardReq? selectedNewBoard;
+  SelectedLocationBoardReq? selectedOldBoard = SelectedLocationBoardReq();
+  SelectedLocationBoardReq? selectedNewBoard = SelectedLocationBoardReq();
 
   factory LocationData.fromJson(Map<String, dynamic> json) => LocationData(
     locationId: json["location_id"],

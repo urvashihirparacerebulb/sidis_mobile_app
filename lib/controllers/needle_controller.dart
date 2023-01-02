@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../configurations/api_service.dart';
 import '../configurations/config_file.dart';
 import '../models/needle_response_model.dart';
+import '../modules/dashboard/needle/add_needle_board_view.dart';
 import '../modules/dashboard/needle/add_needle_record_view.dart';
 import '../utility/common_methods.dart';
 import 'authentication_controller.dart';
@@ -134,6 +135,7 @@ class NeedleController extends GetxController {
       },
       serviceUrl: ApiConfig.deleteNeedleBoardURL,
       success: (dio.Response<dynamic> response) {
+        showSnackBar(title: ApiConfig.success, message: "Deleted Successfully");
         getNeedleBoardListData();
       },
       error: (dio.Response<dynamic> response) {
@@ -147,11 +149,11 @@ class NeedleController extends GetxController {
   void deleteNeedleBoardRecord({String? boardRecordId}) {
     apiServiceCall(
       params: {
-        "id": boardRecordId,
-        "manage_user_id": getLoginData()!.userdata?.first.id
+        "id": boardRecordId
       },
-      serviceUrl: ApiConfig.deleteNeedleBoardURL,
+      serviceUrl: ApiConfig.deleteNeedleBoardRecordURL,
       success: (dio.Response<dynamic> response) {
+        showSnackBar(title: ApiConfig.success, message: "Deleted Successfully");
         getNeedleRecordListData();
       },
       error: (dio.Response<dynamic> response) {
@@ -256,32 +258,49 @@ class NeedleController extends GetxController {
     );
   }
 
-  Future<void> addNeedleBoardData({AddNeedleRecordRequest? addNeedleRecordRequest}) async {
+  Future<void> addNeedleBoardData({AddNeedleBoardRequest? addNeedleRecordRequest}) async {
     dio.FormData formData = dio.FormData.fromMap({
       "company_id": addNeedleRecordRequest?.companyId,
       "plant_id": addNeedleRecordRequest?.plantId,
       "business_id": addNeedleRecordRequest?.businessId,
-      "needle_record_add_date": addNeedleRecordRequest?.needleRecordAddDate,
-      "needle_status": addNeedleRecordRequest?.needleStatus,
-      "needle_board_number": addNeedleRecordRequest?.needleBoardNumber,
-      "needle_consumed": addNeedleRecordRequest?.needleConsumed,
-      "user_id": addNeedleRecordRequest?.userId
+      "line_id": addNeedleRecordRequest?.lineId,
+      "looms_id": addNeedleRecordRequest?.loomId,
+      "board_confirm": addNeedleRecordRequest?.boardConfirm,
+      "location_id": addNeedleRecordRequest?.locationId,
+      "needleboarddate": addNeedleRecordRequest?.needleBoardDate,
+      "manage_user_id": addNeedleRecordRequest?.userId,
     });
     for (var element in NeedleController.to.machineLocationList) {
-      if(element.selectedOldBoard!.selectedOldBoard!.isNotEmpty){
-        formData.fields.add(MapEntry('old_needle_board${(element.selectedOldBoard?.index)! + 1}', element.selectedOldBoard!.selectedOldBoard!.map((e) => e.boardId).toList().join(",")));
+      if(element.selectedOldBoard != null) {
+        if (element.selectedOldBoard!.selectedOldBoard!.isNotEmpty) {
+          formData.fields.add(MapEntry(
+              'old_needle_board${(element.selectedOldBoard?.index)! + 1}',
+              element.selectedOldBoard!
+                  .selectedOldBoard!
+                  .map((e) => e.boardId)
+                  .toList()
+                  .join(",")));
+        }
       }
 
-      if(element.selectedNewBoard!.selectedNewBoard!.isNotEmpty){
-        formData.fields.add(MapEntry('new_needle_board${(element.selectedNewBoard?.index)! + 1}', element.selectedNewBoard!.selectedNewBoard!.map((e) => e.boardId).toList().join(",")));
+      if(element.selectedNewBoard != null) {
+        if (element.selectedNewBoard!.selectedNewBoard!.isNotEmpty) {
+          formData.fields.add(MapEntry(
+              'new_needle_board${(element.selectedNewBoard?.index)! + 1}',
+              element.selectedNewBoard!
+                  .selectedNewBoard!
+                  .map((e) => e.boardId)
+                  .toList()
+                  .join(",")));
+        }
       }
     }
     apiServiceCall(
       params: {},
       formValues: formData,
-      serviceUrl: ApiConfig.manageNeedleRecordURL,
+      serviceUrl: ApiConfig.manageNeedleBoardURL,
       success: (dio.Response<dynamic> response) {
-        getNeedleRecordListData();
+        getNeedleBoardListData();
         Get.back();
       },
       error: (dio.Response<dynamic> response) {

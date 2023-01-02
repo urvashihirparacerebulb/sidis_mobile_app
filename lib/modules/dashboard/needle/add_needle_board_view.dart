@@ -82,10 +82,11 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                           setState(() {});
                           if(selectedBusiness != null && selectedPlant != null){
                             List<String> ids = selectedPlant!.soleId!.split(" - ");
+                            // business plant seq changed due to backend
                             NeedleController.to.getLines(
                               companyId: ids.first,
-                              businessId: ids[1],
-                              plantId: ids.last
+                              businessId: ids.last,
+                              plantId: ids[1]
                             );
                           }
                         }));
@@ -105,8 +106,8 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                 List<String> ids = selectedPlant!.soleId!.split(" - ");
                 NeedleController.to.getLoomsByLine(
                   companyId: ids.first,
-                  businessId: ids[1],
-                  plantId: ids.last,
+                  businessId: ids.last,
+                  plantId: ids[1],
                   lineId: selectedLine!.lineId.toString()
                 );
               }
@@ -129,8 +130,8 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                   lineId: selectedLine!.lineId.toString(),
                   loomID: selectedLoom!.loopsId.toString(),
                   companyId: ids.first,
-                  businessId: ids[1],
-                  plantId: ids.last,
+                  businessId: ids.last,
+                  plantId: ids[1],
                   date: selectedDate
                 );
               }
@@ -219,11 +220,21 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
         commonVerticalSpacing(spacing: 20),
         Visibility(
           visible: NeedleController.to.machineLocationList.isNotEmpty,
-            child: commonHeaderTitle(
-          title: "Location",
-              color: blackColor,
-              isChangeColor: true
-        )),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                commonHeaderTitle(
+                    title: "Location",
+                    color: blackColor,
+                    align: TextAlign.start,
+                    fontWeight: 1,
+                    fontSize: 1.3,
+                    isChangeColor: true
+                )
+              ],
+            )
+        ),
         commonVerticalSpacing(spacing: 20),
         ListView.builder(
           shrinkWrap: true,
@@ -233,99 +244,126 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
           return Container(
             decoration: neurmorphicBoxDecoration,
             padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                commonHeaderTitle(title: NeedleController.to.machineLocationList[index].locationLabel ?? "",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
-                commonVerticalSpacing(spacing: 20),
-                commonHeaderTitle(title: "Old Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
-                commonVerticalSpacing(),
-                InkWell(
-                  onTap: (){
-                    commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].oldBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
-                      if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
-                        NeedleController.to.locationIds.add(
-                            NeedleController.to.machineLocationList[index]
-                                .locationId ?? "");
-                      }
-                      NeedleController.to.machineLocationList[index].selectedOldBoard!.index = index;
-                      NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.add(board);
-                    }));
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      commonDecoratedTextView(
-                        title: "Select old board needle number",
-                        isChangeColor: true,
-                      ),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        direction: Axis.vertical,
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        runAlignment: WrapAlignment.start,
-                        children: NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.map((i) => Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(10)
+            child: StatefulBuilder(
+              builder: (context, newSetState) {
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    commonHeaderTitle(title: NeedleController.to.machineLocationList[index].locationLabel ?? "",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                    commonVerticalSpacing(spacing: 20),
+                    commonHeaderTitle(title: "Old Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                    commonVerticalSpacing(),
+                    InkWell(
+                      onTap: (){
+                        commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].oldBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
+                          if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
+                            NeedleController.to.locationIds.add(
+                                NeedleController.to.machineLocationList[index]
+                                    .locationId ?? "");
+                          }
+                          if(NeedleController.to.machineLocationList[index].selectedOldBoard == null){
+                            SelectedLocationBoardReq selectedBoard = SelectedLocationBoardReq();
+                            selectedBoard.index = index;
+                            selectedBoard.selectedNewBoard = [];
+                            selectedBoard.selectedOldBoard = [];
+                            selectedBoard.selectedOldBoard!.add(board);
+                            NeedleController.to.machineLocationList[index].selectedOldBoard = selectedBoard;
+                          }else{
+                            NeedleController.to.machineLocationList[index].selectedOldBoard!.index = index;
+                            NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.add(board);
+                          }
+                          newSetState((){});
+                        }));
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          commonDecoratedTextView(
+                            title: "Select old board needle number",
+                            isChangeColor: true,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                          child: Text('${i.boardNo}',style: const TextStyle(
-                              color: blackColor,
-                              fontSize: 14
+                          Obx(() => Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            direction: Axis.horizontal,
+                            alignment: WrapAlignment.start,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            runAlignment: WrapAlignment.start,
+                            children: NeedleController.to.machineLocationList[index].selectedOldBoard == null ? [] : NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.map((i) => Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                              child: Text('${i.boardNo}',style: const TextStyle(
+                                  color: blackColor,
+                                  fontSize: 14
+                              )),
+                            )).toList(),
                           )),
-                        )).toList(),
+                          commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedOldBoard == null ? 0 :NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.isEmpty ? 0 : 20),
+                        ],
                       ),
-                      commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.isEmpty ? 0 : 20),
-                    ],
-                  ),
-                ),
-                commonVerticalSpacing(),
-                commonHeaderTitle(title: "New Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
-                commonVerticalSpacing(),
-                InkWell(
-                  onTap: (){
-                    commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].newBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
-                      if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
-                        NeedleController.to.locationIds.add(
-                            NeedleController.to.machineLocationList[index].locationId ?? "");
-                      }
-                      NeedleController.to.machineLocationList[index].selectedNewBoard?.index = index;
-                      NeedleController.to.machineLocationList[index].selectedNewBoard?.selectedNewBoard!.add(board);
-                    }));
-                  },
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      commonDecoratedTextView(
-                        title: "Select new board needle number",
-                        isChangeColor: true,
-                      ),
-                      Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-                        direction: Axis.vertical,
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.start,
-                        runAlignment: WrapAlignment.start,
-                        children: NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.map((i) => Container(
-                          decoration: BoxDecoration(
-                              color: Colors.grey.shade300,
-                              borderRadius: BorderRadius.circular(10)
+                    ),
+                    commonVerticalSpacing(),
+                    commonHeaderTitle(title: "New Needle Board Number Which you are swapping? *",color: blackColor,fontSize: 1.2,fontWeight: 1,align: TextAlign.start),
+                    commonVerticalSpacing(),
+                    InkWell(
+                      onTap: (){
+                        commonBottomView(context: context,child: BoardBottomView(myItems: NeedleController.to.machineLocationList[index].newBoard ?? [],selectionCallBack: (NeedleBoardNumber board){
+                          if(!NeedleController.to.locationIds.contains(NeedleController.to.machineLocationList[index].locationId)) {
+                            NeedleController.to.locationIds.add(
+                                NeedleController.to.machineLocationList[index].locationId ?? "");
+                          }
+                          if(NeedleController.to.machineLocationList[index].selectedNewBoard == null){
+                            SelectedLocationBoardReq selectedBoard = SelectedLocationBoardReq();
+                            selectedBoard.index = index;
+                            selectedBoard.selectedOldBoard = [];
+                            selectedBoard.selectedNewBoard = [];
+                            selectedBoard.selectedNewBoard!.add(board);
+                            NeedleController.to.machineLocationList[index].selectedNewBoard = selectedBoard;
+                          }else{
+                            NeedleController.to.machineLocationList[index].selectedNewBoard?.index = index;
+                            NeedleController.to.machineLocationList[index].selectedNewBoard?.selectedNewBoard!.add(board);
+                          }
+                          newSetState((){});
+                        }));
+                      },
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          commonDecoratedTextView(
+                            title: "Select new board needle number",
+                            isChangeColor: true,
                           ),
-                          padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                          child: Text('${i.boardNo}',style: const TextStyle(
-                              color: blackColor,
-                              fontSize: 14
+                          Obx(() => Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            direction: Axis.horizontal,
+                            alignment: WrapAlignment.start,
+                            crossAxisAlignment: WrapCrossAlignment.start,
+                            runAlignment: WrapAlignment.start,
+                            children: NeedleController.to.machineLocationList[index].selectedNewBoard == null ? [] :NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.map((i) => Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.grey.shade300,
+                                  borderRadius: BorderRadius.circular(10)
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
+                              child: Text('${i.boardNo}',style: const TextStyle(
+                                  color: blackColor,
+                                  fontSize: 14
+                              )),
+                            )).toList(),
                           )),
-                        )).toList(),
+                          commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedNewBoard== null ? 0 : NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.isEmpty ? 0 : 20),
+                        ],
                       ),
-                      commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.isEmpty ? 0 : 20),
-                    ],
-                  ),
-                ),
-              ],
+                    ),
+                  ],
+                );
+              },
             ),
           );
         },)
@@ -367,15 +405,14 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                             if(selectedDate.isNotEmpty){
                               AddNeedleBoardRequest addNeedleBoardReq = AddNeedleBoardRequest();
                               addNeedleBoardReq.userId = getLoginData()!.userdata?.first.id.toString();
-                              addNeedleBoardReq.businessId = selectedBusiness?.businessId.toString();
-                              addNeedleBoardReq.plantId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                              addNeedleBoardReq.businessId = selectedPlant?.soleId?.split(" - ")[2].toString();
+                              addNeedleBoardReq.plantId = selectedPlant?.soleId?.split(" - ")[1].toString();
                               addNeedleBoardReq.companyId = selectedPlant?.soleId?.split(" - ")[0].toString();
                               addNeedleBoardReq.lineId = selectedLine?.lineId.toString();
                               addNeedleBoardReq.loomId = selectedLoom?.loopsId.toString();
                               addNeedleBoardReq.locationId = NeedleController.to.locationIds.join(",");
-
                               NeedleController.to.addNeedleBoardData(
-
+                                addNeedleRecordRequest: addNeedleBoardReq
                               );
                             }else{
                               showSnackBar(title: ApiConfig.error, message: "Please select date");

@@ -107,7 +107,7 @@ class ProductRequisitionController extends GetxController {
       formValues: formData,
       serviceUrl: ApiConfig.addProductRequisitionURL,
       success: (dio.Response<dynamic> response) {
-        showSnackBar(title: ApiConfig.error, message: "Added Successfully");
+        showSnackBar(title: ApiConfig.success, message: "Added Successfully");
         // BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
         Get.back();
       },
@@ -127,6 +127,7 @@ class ProductRequisitionController extends GetxController {
       },
       serviceUrl: ApiConfig.deleteProductRequisitionURL,
       success: (dio.Response<dynamic> response) {
+        showSnackBar(title: ApiConfig.success, message: "Deleted Successfully");
         getProductRequisitionListData(selectedFormId: selectedFormId);
       },
       error: (dio.Response<dynamic> response) {

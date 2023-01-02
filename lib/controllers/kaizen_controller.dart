@@ -24,6 +24,7 @@ class KaizenController extends GetxController {
   RxBool isKaizenLoading = false.obs;
   RxList<String> kaizenResultArea = RxList<String>();
   RxList<String> kaizenResultInList = RxList<String>();
+  Rx<KaizenDetail> kaizenDetail = KaizenDetail().obs;
 
   void getKaizenListData() {
     isKaizenLoading.value = true;
@@ -239,6 +240,25 @@ class KaizenController extends GetxController {
         errorHandling(response);
       },
       isProgressShow: false,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getKaizenDetail({String? kaizenId, Function? callback}) {
+    apiServiceCall(
+      params: {
+        "id": kaizenId
+      },
+      serviceUrl: ApiConfig.getKaizenDetailURL,
+      success: (dio.Response<dynamic> response) {
+        KaizenDetailResponse kaizenDetailResponse = KaizenDetailResponse.fromJson(jsonDecode(response.data));
+        kaizenDetail.value = kaizenDetailResponse.data!;
+        callback!();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
       methodType: ApiConfig.methodPOST,
     );
   }

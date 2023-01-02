@@ -22,9 +22,11 @@ class _AbnormalityTypeBottomViewState extends State<AbnormalityTypeBottomView> {
   @override
   void initState() {
     if(widget.myItems.isEmpty){
-      AbnormalityController.to.getAbnormalityType(callback: (){setState(() {
-        searchedItems = List.from(widget.myItems);
-      });});
+      AbnormalityController.to.getAbnormalityType(callback: (){
+         searchedItems = List.from(widget.myItems);
+      });
+    }else{
+      searchedItems = List.from(widget.myItems);
     }
     super.initState();
   }

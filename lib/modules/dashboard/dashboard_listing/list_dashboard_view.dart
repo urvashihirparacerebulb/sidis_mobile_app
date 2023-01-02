@@ -120,7 +120,7 @@ class _ListDashboardViewState extends State<ListDashboardView> {
   Widget build(BuildContext context) {
     return commonStructure(
       context: context,
-      appBar: commonAppbar(context: context,title: "JH"),
+      appBar: commonAppbar(context: context,title: widget.pillarCat.pillarName ?? ""),
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 10),
         child: Obx((){
