@@ -212,6 +212,7 @@ class AbnormalityRequest{
   String? abnormalityTypeId;
   String? abnormalityText;
   String? possibleSolution;
+  String? abnormalityDate;
   String? userId;
 
   AbnormalityRequest({
@@ -227,6 +228,7 @@ class AbnormalityRequest{
     this.abnormalityTypeId,
     this.abnormalityText,
     this.possibleSolution,
+    this.abnormalityDate,
     this.userId
   });
 
@@ -259,6 +261,195 @@ class AbnormalityRequest{
     "abnormality_type_id": abnormalityTypeId,
     "abnormality_text": abnormalityText,
     "possible_solution": possibleSolution,
+    "abnormlity_date": abnormalityDate,
     "user_id": userId,
+  };
+}
+
+class FilterDepartmentResponseModel {
+  FilterDepartmentResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  List<FilterDepartment>? data;
+
+  factory FilterDepartmentResponseModel.fromJson(Map<String, dynamic> json) => FilterDepartmentResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: List<FilterDepartment>.from(json["data"].map((x) => FilterDepartment.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
+}
+
+class FilterDepartment {
+  FilterDepartment({
+    this.id,
+    this.transactionId,
+    this.parentId,
+    this.companyId,
+    this.bussinessId,
+    this.plantId,
+    this.name,
+    this.shortName,
+    this.status,
+    this.manageUserId,
+    this.createdAt,
+    this.modifiedAt,
+    this.departmentShortName,
+    this.departmentId,
+    this.subdepartmentId,
+    this.subdepartmentShortName,
+  });
+
+  int? id;
+  String? transactionId;
+  int? parentId;
+  String? companyId;
+  String? bussinessId;
+  String? plantId;
+  String? name;
+  String? shortName;
+  int? status;
+  int? manageUserId;
+  String? createdAt;
+  String? modifiedAt;
+  String? departmentShortName;
+  int? departmentId;
+  int? subdepartmentId;
+  String? subdepartmentShortName;
+
+  factory FilterDepartment.fromJson(Map<String, dynamic> json) => FilterDepartment(
+    id: json["id"],
+    transactionId: json["transaction_id"],
+    parentId: json["parent_id"],
+    companyId: json["company_id"],
+    bussinessId: json["bussiness_id"],
+    plantId: json["plant_id"],
+    name: json["name"],
+    shortName: json["short_name"],
+    status: json["status"],
+    manageUserId: json["manage_user_id"],
+    createdAt: json["created_at"],
+    modifiedAt: json["modified_at"],
+    departmentShortName: json["department_short_name"],
+    departmentId: json["department_id"],
+    subdepartmentId: json["subdepartment_id"],
+    subdepartmentShortName: json["subdepartment_short_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "id": id,
+    "transaction_id": transactionId,
+    "parent_id": parentId,
+    "company_id": companyId,
+    "bussiness_id": bussinessId,
+    "plant_id": plantId,
+    "name": name,
+    "short_name": shortName,
+    "status": status,
+    "manage_user_id": manageUserId,
+    "created_at": createdAt,
+    "modified_at": modifiedAt,
+    "department_short_name": departmentShortName,
+    "department_id": departmentId,
+    "subdepartment_id": subdepartmentId,
+    "subdepartment_short_name": subdepartmentShortName,
+  };
+}
+
+class UserFilterResponseModel {
+  UserFilterResponseModel({
+    this.statusCode,
+    this.status,
+    this.message,
+    this.data,
+  });
+
+  int? statusCode;
+  bool? status;
+  String? message;
+  List<UserFilterResponse>? data;
+
+  factory UserFilterResponseModel.fromJson(Map<String, dynamic> json) => UserFilterResponseModel(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: List<UserFilterResponse>.from(json["data"].map((x) => UserFilterResponse.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": data == null ? [] : List<dynamic>.from(data!.map((x) => x.toJson())),
+  };
+}
+
+class UserFilterResponse {
+  UserFilterResponse({
+    this.userId,
+    this.firstName,
+    this.lastName,
+    this.userName
+  });
+
+  int? userId;
+  String? firstName;
+  String? lastName;
+  String? userName;
+
+  factory UserFilterResponse.fromJson(Map<String, dynamic> json) => UserFilterResponse(
+    userId: json["user_id"],
+    firstName: json["first_name"],
+    lastName: json["last_name"],
+    userName: json["user_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "user_id": userId,
+    "first_name": firstName,
+    "last_name": lastName,
+    "user_name": userName,
+  };
+}
+
+class TagResponse {
+  TagResponse({
+    required this.statusCode,
+    required this.status,
+    required this.message,
+    required this.data,
+  });
+
+  int statusCode;
+  bool status;
+  String message;
+  Map<String, String> data;
+
+  factory TagResponse.fromJson(Map<String, dynamic> json) => TagResponse(
+    statusCode: json["statusCode"],
+    status: json["status"],
+    message: json["message"],
+    data: Map.from(json["data"]).map((k, v) => MapEntry<String, String>(k, v)),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "statusCode": statusCode,
+    "status": status,
+    "message": message,
+    "data": Map.from(data).map((k, v) => MapEntry<String, dynamic>(k, v)),
   };
 }

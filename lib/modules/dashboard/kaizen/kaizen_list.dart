@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
 import 'package:my_projects/controllers/kaizen_controller.dart';
-
 import '../../../common_widgets/common_textfield.dart';
 import '../../../models/kaizen_response_model.dart';
 import '../../../theme/convert_theme_colors.dart';
@@ -61,15 +60,14 @@ class _KaizenListViewState extends State<KaizenListView> {
               children: [
                 commonHeaderTitle(title: kaizen.machineDetail ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
                 commonHorizontalSpacing(),
-                commonHeaderTitle(title: kaizen.finishStatus ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                commonHeaderTitle(title: kaizen.finishStatus ?? "",fontWeight: 2,fontSize: isTablet() ? 1.11 : 0.90,isChangeColor: true,
+                    color: kaizen.finishStatus == "Complete" ? Colors.green : Colors.purple)
               ],
             ),
             commonVerticalSpacing(),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                commonHeaderTitle(title: "Tej Patel",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
                 commonHeaderTitle(title: kaizen.createdAt ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
               ],
             ),
@@ -93,13 +91,14 @@ class _KaizenListViewState extends State<KaizenListView> {
                                 shape: BoxShape.circle,
                                 color: Color(0xffD9D9D9)
                             ),
-                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
+                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20)
+                        )
                     )
                 ))
               ],
             )
           ],
-        ),
+        )
       ),
     );
   }
@@ -156,14 +155,31 @@ class _KaizenListViewState extends State<KaizenListView> {
               },
               child: Row(
                 children: [
-                  const Icon(Icons.delete_forever_outlined),
+                  const Icon(Icons.picture_as_pdf),
                   commonHorizontalSpacing(),
                   const Text('View PDF'),
                 ],
               ),
             )),
+
+        if(kaizen.finishStatus == "Created")
+          PopupMenuItem<String>(
+              value: 'Delete',
+              child: InkWell(
+                onTap: (){
+                  KaizenController.to.deleteKaizenData(kaizenId: kaizen.kaizenId.toString());
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.delete_forever_outlined),
+                    commonHorizontalSpacing(),
+                    const Text('Delete')
+                  ]
+                )
+              )
+          ),
       ],
-      elevation: 8.0,
+      elevation: 8.0
     );
   }
 
@@ -220,7 +236,7 @@ class _KaizenListViewState extends State<KaizenListView> {
                       return value.toString().isEmpty
                           ? notEmptyFieldMessage
                           : null;
-                    },),
+                    }),
                 )
               ],
             ),

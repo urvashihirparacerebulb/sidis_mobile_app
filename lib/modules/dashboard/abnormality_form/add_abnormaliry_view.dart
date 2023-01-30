@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:my_projects/configurations/config_file.dart';
 import 'package:my_projects/controllers/abnormality_controller.dart';
 import 'package:my_projects/controllers/department_controller.dart';
@@ -49,6 +50,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
   PartArray? selectedPart;
   // MachineData? subMachineData;
   List<MachineData> subMachineLists = [];
+  String selectedDate = DateFormat("dd MMM,yyyy").format(DateTime.now());
 
   @override
   void initState() {
@@ -96,6 +98,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
             subMachine.machineName = element.name;
             subMachineLists.add(subMachine);
           });
+          selectedDate = DateFormat("dd MMM,yyyy").format(DateFormat("yyyy-MM-dd hh:mm:ss").parse(abnormality.createdAt ?? ""));
           abnormalityController.text = abnormality.abnormalityText ?? "";
           abnormalityTitleController.text = abnormality.abnormalityTitle ?? "";
           possibleSolutionController.text = abnormality.solutionText ?? "";
@@ -154,6 +157,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
     abnormalityRequest.abnormalityTypeId = selectedAbnormalityType!.id.toString();
     abnormalityRequest.abnormalityText = abnormalityController.text;
     abnormalityRequest.possibleSolution = possibleSolutionController.text;
+    abnormalityRequest.abnormalityDate = selectedDate;
     abnormalityRequest.userId = getLoginData()!.userdata!.first.id.toString();
     List<String> subMachineIds = [];
     for (var element in subMachineLists) {
@@ -182,7 +186,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                       tapOnButton: () {
                         Get.back();
                       },
-                      isLoading: false)),
+                      isLoading: false)
+                  ),
                   commonHorizontalSpacing(),
                   Expanded(child: commonFillButtonView(
                       context: context,
@@ -222,6 +227,36 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           commonHeaderTitle(title: "Where is Abnormality?",fontSize: isTablet() ? 1.5 : 1.2,fontWeight: 2,color: darkFontColor),
+                          commonVerticalSpacing(spacing: 20),
+                          Container(
+                              height: 50,
+                              padding: EdgeInsets.symmetric(horizontal: commonHorizontalPadding),
+                              decoration: neurmorphicBoxDecoration,
+                              child: Stack(
+                                children: [
+                                  Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: commonHeaderTitle(
+                                          fontSize: isTablet() ? 1.3 : 1,
+                                          title: selectedDate.isEmpty ? "Select Date" : selectedDate)
+                                  ),
+                                  Align(
+                                      alignment: Alignment.centerRight,
+                                      child: InkWell(
+                                        onTap: () {
+                                          openCalendarView(
+                                            context,
+                                            initialDate: DateTime.now().toString(),
+                                          ).then((value) {
+                                            setState(() {
+                                              selectedDate = DateFormat("dd MMM,yyyy").format(value);
+                                            });
+                                          });
+                                        },
+                                        child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
+                                      )),
+                                ],
+                              )),
                           commonVerticalSpacing(spacing: 20),
                           InkWell(
                             onTap: (){

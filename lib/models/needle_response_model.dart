@@ -422,12 +422,12 @@ class LocationData {
 
 class SelectedLocationBoardReq {
   SelectedLocationBoardReq({
-    this.index,
+    this.locationId,
     this.selectedOldBoard,
     this.selectedNewBoard
   });
 
-  int? index;
+  String? locationId;
   List<NeedleBoardNumber>? selectedOldBoard = [];
   List<NeedleBoardNumber>? selectedNewBoard = [];
 }

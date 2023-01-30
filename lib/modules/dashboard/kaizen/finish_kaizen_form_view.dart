@@ -6,8 +6,10 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
+import '../../../configurations/config_file.dart';
 import '../../../controllers/kaizen_controller.dart';
 import '../../../textfields/common_bottom_string_view.dart';
+import '../../../theme/convert_theme_colors.dart';
 import '../../../utility/color_utility.dart';
 import '../../../utility/common_methods.dart';
 import '../../../utility/constants.dart';
@@ -23,15 +25,23 @@ class FinishKaizenFormView extends StatefulWidget {
 }
 
 class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
-
+  KaizenDetail? kaizen;
+  TableReqParameter? reqTableParams = TableReqParameter();
   @override
   void initState() {
-    KaizenController.to.getKaizenOtherBenifits(kaizenId: widget.kaizenList.kaizenId.toString());
+    KaizenController.to.getKaizenOtherBenifits(kaizenId: widget.kaizenList.kaizenId.toString(),callback: (){
+      KaizenController.to.getKaizenDetail(kaizenId: widget.kaizenList.kaizenId.toString(),callback: (){
+        kaizen = KaizenController.to.kaizenDetail.value;
+      });
+    });
     super.initState();
   }
 
   String kaizenFinishDate = "";
   TextEditingController waitingTimeController = TextEditingController();
+  TextEditingController columnsController = TextEditingController();
+  TextEditingController rowsController = TextEditingController();
+  TextEditingController textViewController = TextEditingController();
   TextEditingController chartXAxisController = TextEditingController();
   TextEditingController chartYAxisController = TextEditingController();
   TextEditingController otherBenifitsController = TextEditingController();
@@ -48,7 +58,6 @@ class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
       for (int i = 0; i < splitedXAxis.length; i ++) {
         myChartData.add(ChartData(splitedXAxis[i], splitedYAxis.length == splitedXAxis.length ? num.parse(splitedYAxis[i]) : 0, 0));
       }
-
     }
     return myChartData;
   }
@@ -151,13 +160,252 @@ class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
     ];
   }
 
+  chartViewFields(){
+    return StatefulBuilder(builder: (context, newSetState) {
+      return Column(
+        children: [
+          CommonTextFiled(
+              fieldTitleText: "Waiting Time (In Hours)",
+              hintText: "Waiting Time (In Hours)",
+              // isBorderEnable: false,
+              isChangeFillColor: true,
+              textEditingController: waitingTimeController,
+              onChangedFunction: (String value){
+              },
+              validationFunction: (String value) {
+                return value.toString().isEmpty
+                    ? notEmptyFieldMessage
+                    : null;
+              }),
+          commonVerticalSpacing(spacing: 20),
+          CommonTextFiled(
+              fieldTitleText: "Chart X Axis",
+              hintText: "Chart X Axis",
+              // isBorderEnable: false,
+              isChangeFillColor: true,
+              textEditingController: chartXAxisController,
+              onChangedFunction: (String value){
+                newSetState((){});
+              },
+              validationFunction: (String value) {
+                return value.toString().isEmpty
+                    ? notEmptyFieldMessage
+                    : null;
+              }),
+
+          commonVerticalSpacing(spacing: 20),
+          CommonTextFiled(
+              fieldTitleText: "Chart Y Axis with number value",
+              hintText: "Chart Y Axis(Num value seperated By ,) ",
+              // isBorderEnable: false,
+              isChangeFillColor: true,
+              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+              textEditingController: chartYAxisController,
+              onFieldSubmit: (){
+                newSetState((){});
+              },
+              onChangedFunction: (String value){
+              },
+              validationFunction: (String value) {
+                return value.toString().isEmpty
+                    ? notEmptyFieldMessage
+                    : null;
+              }),
+          commonVerticalSpacing(spacing: chartXAxisController.text.isNotEmpty && chartYAxisController.text.isNotEmpty ? 20 : 0),
+          Visibility(
+            visible: chartXAxisController.text.isNotEmpty && chartYAxisController.text.isNotEmpty,
+            child: SfCartesianChart(
+                palette: const [
+                  Color(0xff147AD6),
+                ],
+                primaryXAxis: CategoryAxis(),
+                series: <ChartSeries<ChartData, String>>[
+                  ColumnSeries<ChartData, String>(
+                    dataSource: listOfChartData(),
+                    xValueMapper: (ChartData sales, _) => sales.x,
+                    yValueMapper: (ChartData sales, _) => sales.y, // same y variable used but assign y data value from series -1 data source.
+                  ),
+                ]
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  tableViewFields(){
+    return Column(
+      children: [
+        CommonTextFiled(
+            fieldTitleText: "Columns",
+            hintText: "Columns",
+            // isBorderEnable: false,
+            keyboardType: TextInputType.number,
+            isChangeFillColor: true,
+            textEditingController: columnsController,
+            onChangedFunction: (String value){
+              reqTableParams?.columns = [];
+              for(int i =0; i < int.parse(columnsController.text); i++){
+                reqTableParams?.columns?.add("");
+              }
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }),
+        commonVerticalSpacing(spacing: 20),
+        CommonTextFiled(
+            fieldTitleText: "Rows",
+            hintText: "Rows",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            keyboardType: TextInputType.number,
+            textEditingController: rowsController,
+            onChangedFunction: (String value){
+              reqTableParams?.rows = [];
+              for(int i =0; i < int.parse(rowsController.text); i++){
+                reqTableParams?.rows?.add([]);
+              }
+              reqTableParams?.rows?.forEach((element) {
+                for(int i = 0; i < int.parse(columnsController.text); i++){
+                  element.add("");
+                }
+              });
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }),
+        commonVerticalSpacing(spacing: 20),
+        columnsController.text.isNotEmpty && rowsController.text.isNotEmpty ?
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: DataTable(
+              rows: <DataRow>[
+            for (int i = 0; i < reqTableParams!.rows!.length; i++) _getDataRow(i),
+          ], columns: <DataColumn>[
+            for (int i = 0; i < reqTableParams!.columns!.length; i++) _getDataColumn(i),
+          ]),
+        )
+            : Container()
+      ],
+    );
+  }
+
+  textViewFields(){
+    return Container(
+      margin: const EdgeInsets.only(bottom: 20),
+      child: CommonTextFiled(
+          fieldTitleText: "Enter text result",
+          hintText: "Enter text result",
+          // isBorderEnable: false,
+          isChangeFillColor: true,
+          maxLine: 4,
+          textEditingController: textViewController,
+          onChangedFunction: (String value){
+          },
+          validationFunction: (String value) {
+            return value.toString().isEmpty
+                ? notEmptyFieldMessage
+                : null;
+          }),
+    );
+  }
+
+  DataRow _getDataRow(int rowIndex) {
+    return DataRow(
+      cells: <DataCell>[
+        for (int i = 0; i < reqTableParams!.columns!.length; i++) getCells(i,rowIndex)
+      ],
+    );
+  }
+
+  DataCell getCells(int i, rowIndex){
+    return DataCell(DataTableTextFieldView(initialText: reqTableParams?.columns == null || reqTableParams!.columns!.isEmpty ? "" : reqTableParams!.columns![i],onChange: (String val){
+        reqTableParams!.rows![rowIndex][i] = val;
+      },
+    ));
+  }
+
+  DataColumn _getDataColumn(int i) {
+    return DataColumn(
+      label: DataTableTextFieldView(initialText: reqTableParams?.columns == null || reqTableParams!.columns!.isEmpty ? "" : reqTableParams!.columns![i],onChange: (String val){
+        reqTableParams!.columns![i] = val;
+      },
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return commonStructure(
       context: context,
       bgColor: blackColor,
       appBar: commonAppbar(context: context,title: "Finish Kaizen"),
-      child: Padding(
+      bottomNavigation: Container(
+          color: ConvertTheme.convertTheme.getBackGroundColor(),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 16,right: 16,bottom: 16,top: 10),
+            child: Row(
+              children: [
+                Expanded(child: commonBorderButtonView(
+                    context: context,
+                    title: "Cancel",
+                    height: 50,
+                    tapOnButton: () {
+                      Get.back();
+                    },
+                    isLoading: false)),
+                commonHorizontalSpacing(),
+                Expanded(child: commonFillButtonView(
+                    context: context,
+                    title: "Save",
+                    width: getScreenWidth(context) - 40,
+                    height: 50,
+                    tapOnButton: () {
+                      if(KaizenController.to.kaizenResultInList.contains("Text")){
+                        if(textViewController.text.isEmpty){
+                          return showSnackBar(title: ApiConfig.error, message: "Please enter text result");
+                        }
+                      }
+                      if(KaizenController.to.kaizenResultInList.contains("Table")){
+                        if(columnsController.text.isEmpty || rowsController.text.isEmpty){
+                          return showSnackBar(title: ApiConfig.error, message: "Please enter table values");
+                        }
+                      }
+                      if(KaizenController.to.kaizenResultInList.contains("Chart")){
+                        if(waitingTimeController.text.isEmpty || chartXAxisController.text.isEmpty || chartYAxisController.text.isEmpty){
+                          return showSnackBar(title: ApiConfig.error, message: "Please enter chart field values");
+                        }
+                      }
+                      KaizenFinishRequestModel finishKaizen = KaizenFinishRequestModel();
+                      finishKaizen.kaizenId = widget.kaizenList.kaizenId.toString();
+                      finishKaizen.plantId = kaizen?.plantId.toString();
+                      finishKaizen.pillarCategoryId = kaizen?.pillarCategoryId.toString();
+                      finishKaizen.departmentId = kaizen?.departmentId.toString();
+                      finishKaizen.plantShortName = kaizen?.plantShortName;
+                      finishKaizen.pillarName = kaizen?.pillarName;
+                      finishKaizen.departmentName = kaizen?.departmentName;
+                      finishKaizen.finishDate = kaizenFinishDate;
+                      finishKaizen.kaizenTheme = kaizen?.theme;
+                      finishKaizen.textResult = textViewController.text;
+                      finishKaizen.tableResultColoum = columnsController.text;
+                      finishKaizen.tableResultRows = rowsController.text;
+                      finishKaizen.showTableResult = reqTableParams;
+                      finishKaizen.chartTitle = waitingTimeController.text;
+                      finishKaizen.chartResultX = chartXAxisController.text;
+                      finishKaizen.chartResultY = chartYAxisController.text;
+                      finishKaizen.manageUserId = getLoginData()!.userdata!.first.id.toString();
+                      KaizenController.to.finishKaizenForm(kaizenFinishRequestModel: finishKaizen);
+                    },
+                    isLoading: false)
+                ),
+              ],
+            ),
+          ),
+        ),
+        child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: ListView(
           children: [
@@ -259,7 +507,11 @@ class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
                               fontSize: 14
                           )),
                           commonHorizontalSpacing(),
-                          const Icon(Icons.close,color: whiteColor,size: 20)
+                          InkWell(
+                            onTap: (){
+                              KaizenController.to.kaizenResultInList.remove(i);
+                            },
+                              child: const Icon(Icons.close,color: whiteColor,size: 20))
                         ],
                       )
                   )).toList(),
@@ -267,77 +519,14 @@ class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
               ),
             ),
             commonVerticalSpacing(spacing: 20),
-            CommonTextFiled(
-                fieldTitleText: "Waiting Time (In Hours)",
-                hintText: "Waiting Time (In Hours)",
-                // isBorderEnable: false,
-                isChangeFillColor: true,
-                textEditingController: waitingTimeController,
-                onChangedFunction: (String value){
-                },
-                validationFunction: (String value) {
-                  return value.toString().isEmpty
-                      ? notEmptyFieldMessage
-                      : null;
-                }),
-
-            StatefulBuilder(builder: (context, newSetState) {
-              return Column(
-                children: [
-                  commonVerticalSpacing(spacing: 20),
-                  CommonTextFiled(
-                      fieldTitleText: "Chart X Axis",
-                      hintText: "Chart X Axis",
-                      // isBorderEnable: false,
-                      isChangeFillColor: true,
-                      textEditingController: chartXAxisController,
-                      onChangedFunction: (String value){
-                        newSetState((){});
-                      },
-                      validationFunction: (String value) {
-                        return value.toString().isEmpty
-                            ? notEmptyFieldMessage
-                            : null;
-                      }),
-
-                  commonVerticalSpacing(spacing: 20),
-                  CommonTextFiled(
-                      fieldTitleText: "Chart Y Axis with number value",
-                      hintText: "Chart Y Axis(Num value seperated By ,) ",
-                      // isBorderEnable: false,
-                      isChangeFillColor: true,
-                      keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                      textEditingController: chartYAxisController,
-                      onFieldSubmit: (){
-                        newSetState((){});
-                      },
-                      onChangedFunction: (String value){
-                      },
-                      validationFunction: (String value) {
-                        return value.toString().isEmpty
-                            ? notEmptyFieldMessage
-                            : null;
-                      }),
-                  commonVerticalSpacing(spacing: chartXAxisController.text.isNotEmpty && chartYAxisController.text.isNotEmpty ? 20 : 0),
-                  Visibility(
-                    visible: chartXAxisController.text.isNotEmpty && chartYAxisController.text.isNotEmpty,
-                    child: SfCartesianChart(
-                        palette: const [
-                          Color(0xff147AD6),
-                        ],
-                        primaryXAxis: CategoryAxis(),
-                        series: <ChartSeries<ChartData, String>>[
-                          ColumnSeries<ChartData, String>(
-                            dataSource: listOfChartData(),
-                            xValueMapper: (ChartData sales, _) => sales.x,
-                            yValueMapper: (ChartData sales, _) => sales.y, // same y variable used but assign y data value from series -1 data source.
-                          ),
-                        ]
-                    ),
-                  ),
-                ],
-              );
-            },),
+            Obx(() => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                KaizenController.to.kaizenResultInList.contains("Text") ? textViewFields() : Container(),
+                KaizenController.to.kaizenResultInList.contains("Table") ? tableViewFields() : Container(),
+                KaizenController.to.kaizenResultInList.contains("Chart") ? chartViewFields() : Container()
+              ],
+            ),),
             commonVerticalSpacing(spacing: 30),
             commonHeaderTitle(title: "Other Benifits",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
             commonVerticalSpacing(spacing: 20),
@@ -348,4 +537,66 @@ class _FinishKaizenFormViewState extends State<FinishKaizenFormView> {
       )
     );
   }
+}
+
+class KaizenFinishRequestModel{
+  String? kaizenId;
+  String? plantId;
+  String? pillarCategoryId;
+  String? departmentId;
+  String? plantShortName;
+  String? pillarName;
+  String? departmentName;
+  String? finishDate;
+  String? kaizenTheme;
+  String? textResult;
+  String? tableResultColoum;
+  String? tableResultRows;
+  TableReqParameter? showTableResult;
+  String? chartTitle;
+  String? chartResultX;
+  String? chartResultY;
+  String? manageUserId;
+}
+
+class DataTableTextFieldView extends StatefulWidget {
+  final String initialText;
+  final Function onChange;
+  const DataTableTextFieldView({Key? key, required this.initialText, required this.onChange}) : super(key: key);
+
+  @override
+  State<DataTableTextFieldView> createState() => _DataTableTextFieldViewState();
+}
+
+class _DataTableTextFieldViewState extends State<DataTableTextFieldView> {
+  TextEditingController searchController = TextEditingController();
+
+  @override
+  void initState() {
+    searchController.text = widget.initialText;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 100,
+      child: TextField(
+        controller: searchController,
+        onChanged: (String value){
+          // setState(() {
+          //   searchController.text = value;
+          // });
+        },
+        onSubmitted: (String value){
+          widget.onChange(value);
+        },
+      ),
+    );
+  }
+}
+
+class TableReqParameter{
+  List<String>? columns = [];
+  List<List<String>>? rows = [];
 }

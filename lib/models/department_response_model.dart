@@ -61,3 +61,25 @@ class Department {
     "department_name": departmentName,
   };
 }
+
+
+
+class SubDepartment {
+  SubDepartment({
+    this.departmentId,
+    this.departmentName,
+  });
+
+  int? departmentId;
+  String? departmentName;
+
+  factory SubDepartment.fromJson(Map<String, dynamic> json) => SubDepartment(
+    departmentId: json["subdepartment_id"],
+    departmentName: json["subdepartment_name"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "subdepartment_id": departmentId,
+    "subdepartment_name": departmentName,
+  };
+}

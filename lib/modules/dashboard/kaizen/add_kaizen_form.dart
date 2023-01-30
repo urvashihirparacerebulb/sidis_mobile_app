@@ -9,9 +9,7 @@ import 'package:my_projects/controllers/kaizen_controller.dart';
 import 'package:my_projects/models/kaizen_response_model.dart';
 import 'package:my_projects/utility/constants.dart';
 import 'package:image_picker/image_picker.dart';
-
 import '../../../common_widgets/common_textfield.dart';
-import '../../../configurations/config_file.dart';
 import '../../../controllers/business_controller.dart';
 import '../../../controllers/dashboard_controller.dart';
 import '../../../controllers/department_controller.dart';
@@ -80,54 +78,71 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
       BusinessController.to.getBusinesses();
     }
     Future.delayed(const Duration(seconds: 3),(){
-      KaizenController.to.getKaizenResultArea();
-    });
+      KaizenController.to.getKaizenResultArea(callback: (){
+        if(widget.isEdit){
+          Future.delayed(const Duration(seconds: 2),(){
+            KaizenController.to.getKaizenDetail(kaizenId: widget.id,callback: (){
+              var kaizen = KaizenController.to.kaizenDetail.value;
+              PillarResponse pillar = PillarResponse();
+              pillar.pillarCategoryId = kaizen.pillarCategoryId;
+              pillar.pillarName = kaizen.pillarName;
+              selectedPillar = pillar;
+              BusinessData business  = BusinessData();
+              business.businessId = kaizen.bussinessId;
+              business.businessName = kaizen.businessName;
+              selectedBusiness = business;
+              CompanyBusinessPlant plant = CompanyBusinessPlant();
+              plant.soleId = "${kaizen.companyId} - ${kaizen.plantId} - ${kaizen.bussinessId}";
+              plant.soleName = kaizen.plantShortName;
+              selectedPlant = plant;
+              Department department = Department();
+              department.departmentId = kaizen.departmentId;
+              department.departmentName = kaizen.departmentName;
+              selectedDepartment = department;
+              Department subDepartment = Department();
+              subDepartment.departmentId = kaizen.subdepartmentId;
+              subDepartment.departmentName = kaizen.subdepartmentName;
+              selectedSubDepartment = subDepartment;
+              MachineData machine = MachineData();
+              machine.machineId = kaizen.machineId;
+              machine.machineName = kaizen.machineName;
+              machineData = machine;
+              MachineData subMachine = MachineData();
+              subMachine.machineId = kaizen.subdepartmentId;
+              subMachine.machineName = kaizen.submachineName;
+              subMachineLists.add(subMachine);
 
-    // if(widget.isEdit){
-    //   KaizenController.to.getKaizenDetail(kaizenId: widget.id,callback: (){
-    //     var kaizen = KaizenController.to.kaizenDetail.value;
-    //     PillarResponse pillar = PillarResponse();
-    //     pillar.pillarCategoryId = kaizen.pillarCategoryId;
-    //     pillar.pillarName = kaizen.pillarName;
-    //     selectedPillar = pillar;
-    //     BusinessData business  = BusinessData();
-    //     business.businessId = kaizen.bussinessId;
-    //     // business.businessName = kaizen.bussinessName;
-    //     selectedBusiness = business;
-    //     CompanyBusinessPlant plant = CompanyBusinessPlant();
-    //     plant.soleId = "${kaizen.companyId} - ${kaizen.plantId} - ${kaizen.bussinessId}";
-    //     plant.soleName = kaizen.plantShortName;
-    //     selectedPlant = plant;
-    //     Department department = Department();
-    //     department.departmentId = kaizen.departmentId;
-    //     department.departmentName = kaizen.departmentName;
-    //     selectedDepartment = department;
-    //     Department subDepartment = Department();
-    //     subDepartment.departmentId = kaizen.subdepartmentId;
-    //     // subDepartment.departmentName = kaizen.su;
-    //     selectedSubDepartment = subDepartment;
-    //     MachineData machine = MachineData();
-    //     machine.machineId = kaizen.machineId;
-    //     machine.machineName = kaizen.machineName;
-    //     machineData = machine;
-    //     MachineData subMachine = MachineData();
-    //     machine.machineId = kaizen.subdepartmentId;
-    //     // machine.machineName = kaizen.s;
-    //     subMachineLists.add(machine);
-    //
-    //     selectedStartDate = kaizen.startDate ?? "";
-    //     kaizenLossNoController.text = kaizen.lossNoStep ?? "";
-    //     selectedResultArea = kaizen.resultArea ?? "";
-    //     kaizenThemeController.text = kaizen.theme ?? "";
-    //     benchMarkController.text = kaizen.benchMark ?? "";
-    //     targetController.text = kaizen.target ?? "";
-    //
-    //   });
-    // }
+              selectedRootCause = kaizen.rootCause ?? "";
+              selectedStartDate = kaizen.startDate ?? "";
+              kaizenLossNoController.text = kaizen.lossNoStep ?? "";
+              selectedResultArea = kaizen.resultArea ?? "";
+              kaizenThemeController.text = kaizen.theme ?? "";
+              benchMarkController.text = kaizen.benchMark ?? "";
+              targetController.text = kaizen.target ?? "";
+              countermeasureController.text = kaizen.countermeasure ?? "";
+
+              List<String>? teamsIds = kaizen.teamMemberId?.split(",");
+              List<String>? teamsNames = kaizen.teamMembers?.split(",");
+              for(int i = 0; i < teamsIds!.length; i++){
+                KaizenTeamData teamObj = KaizenTeamData();
+                teamObj.userId = int.parse(teamsIds[i]);
+                teamObj.userName = teamsNames![i];
+                selectedTeamMembers.add(teamObj);
+              }
+
+              problemController.text = kaizen.presentProblem ?? "";
+              rootCauseRemarksController.text = kaizen.remarks ?? "";
+              kaizenIdeaController.text = kaizen.idea ?? "";
+              setState(() {});
+            });
+          });
+        }
+      });
+    });
     super.initState();
   }
 
-  getSubMachineAPI({String? plantId, int? machineId}){
+  getSubMachineAPI({String? plantId, int? machineId}) {
     DropDownDataController.to.getSubMachines(plantId: plantId,
         machineId: machineId,successCallback: (){
           if(DropDownDataController.to.subMachinesList!.isNotEmpty){
@@ -153,6 +168,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
               isChangeColor: true
           ),
           commonVerticalSpacing(spacing: 8),
+          widget.isEdit ?
           Container(
             height: selectedFile == null ? 50 : 100,
             padding: const EdgeInsets.all(10),
@@ -160,7 +176,43 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
             child: Row(
               children: [
                 InkWell(
-                    onTap: () async{
+                    onTap: () async {
+                      final ImagePicker picker = ImagePicker();
+                      try {
+                        final XFile? pickedFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                        );
+                        setState(() {
+                          onChanged!(File(pickedFile!.path));
+                        });
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: commonHeaderTitle(
+                        title: "Change File",
+                        color: blackColor.withOpacity(0.4),
+                        isChangeColor: true
+                    )
+                ),
+                commonHorizontalSpacing(spacing: 10),
+                Container(height: 40,width: 1,color: fontColor),
+                commonHorizontalSpacing(spacing: 10),
+                Expanded(child: selectedFile == null ? Image.network(
+                    title == "Problem Image *" ?
+                    KaizenController.to.kaizenDetail.value.presentProblemImage ?? "" :
+                    KaizenController.to.kaizenDetail.value.countermeasureImage ?? "",height: 100) : Image.file(selectedFile!, height: 100))
+              ],
+            ),
+          )
+              : Container(
+            height: selectedFile == null ? 50 : 100,
+            padding: const EdgeInsets.all(10),
+            decoration: neurmorphicBoxDecoration,
+            child: Row(
+              children: [
+                InkWell(
+                    onTap: () async {
                       final ImagePicker picker = ImagePicker();
                       try {
                         final XFile? pickedFile = await picker.pickImage(
@@ -234,7 +286,9 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                           commonHorizontalSpacing(),
                           InkWell(
                             onTap: (){
-                              KaizenController.to.deleteKaizenAnalysis(analysisId: KaizenController.to.kaizenAnalysisList[index].analysisId.toString());
+                              KaizenController.to.deleteKaizenAnalysis(analysisId: KaizenController.to.kaizenAnalysisList[index].analysisId.toString(),callback: (){
+                                KaizenController.to.kaizenAnalysisList.removeAt(index);
+                              });
                             },
                               child: const Icon(Icons.delete_outline,color: Colors.redAccent)
                           )
@@ -370,10 +424,10 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                     // getActivityList();
                   });
                 }
-                commonBottomView(context: context,
+                commonBottomView(
+                    context: context,
                     child: PlantBottomView(
-                        myItems: DropDownDataController.to
-                            .companyBusinessPlants!,
+                        myItems: DropDownDataController.to.companyBusinessPlants!,
                         businessId: selectedBusiness!.businessId.toString(),
                         selectionCallBack: (
                             CompanyBusinessPlant plant) {
@@ -507,8 +561,7 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                               selectionCallBack: (
                                   MachineData machine) {
                                 subMachineLists[index] = machine;
-                                setState(() {
-                                });
+                                setState(() {});
                                 // getSubMachineAPI(
                                 //     plantId: selectedPlant!.soleId,
                                 //     machineId: subMachineLists[index].machineId
@@ -822,88 +875,92 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                   width: getScreenWidth(context) - 40,
                   height: 50,
                   tapOnButton: () {
-                    if(selectedPillar != null){
-                      if(selectedBusiness != null){
-                        if(selectedPlant != null){
-                          if(selectedDepartment != null){
-                            if(selectedSubDepartment != null){
-                              if(machineData != null){
-                                if(selectedStartDate.isNotEmpty){
-                                  if(kaizenLossNoController.text.isNotEmpty){
-                                    if(selectedResultArea.isNotEmpty){
-                                      if(kaizenThemeController.text.isNotEmpty){
-                                        if(benchMarkController.text.isNotEmpty){
-                                          if(targetController.text.isNotEmpty){
-                                            if(problemImage != null){
-                                              if(kaizenIdeaController.text.isNotEmpty){
-                                                if(countermeasureImage != null){
-                                                  AddKaizenModelRequest addKaizenReq = AddKaizenModelRequest();
-                                                  addKaizenReq.soleId = selectedPlant!.soleId;
-                                                  addKaizenReq.pillarCategoryId = selectedPillar!.pillarCategoryId.toString();
-                                                  addKaizenReq.lossNoStep = kaizenLossNoController.text;
-                                                  addKaizenReq.departmentId = selectedDepartment!.departmentId.toString();
-                                                  addKaizenReq.subDepartmentId = selectedSubDepartment!.departmentId.toString();
-                                                  addKaizenReq.machineId = machineData!.machineId.toString();
-                                                  addKaizenReq.countermeasureImage = countermeasureImage;
-                                                  addKaizenReq.presentProblemImage = problemImage;
-                                                  addKaizenReq.remarks = rootCauseRemarksController.text;
-                                                  addKaizenReq.rootCause = "";
-                                                  addKaizenReq.teamMemberId = selectedTeamMembers.map((e) => e.userId!).toList().join(",");
-                                                  addKaizenReq.startDate = selectedStartDate;
-                                                  addKaizenReq.target = targetController.text;
-                                                  addKaizenReq.resultArea = selectedResultArea;
-                                                  addKaizenReq.kaizenTheme = kaizenThemeController.text;
-                                                  addKaizenReq.kaizenIdea = kaizenIdeaController.text;
-                                                  addKaizenReq.benchMark = benchMarkController.text;
-                                                  addKaizenReq.presentProblem = problemController.text;
-                                                  addKaizenReq.finishStatus = "0";
-                                                  addKaizenReq.manageUserId = getLoginData()!.userdata!.first.id.toString();
-                                                  KaizenController.to.addKaizenData(addKaizenModelRequest: addKaizenReq);
-                                                }else{
-                                                  showSnackBar(title: ApiConfig.error, message: "Please choose countermeasure image");
-                                                }
-                                              }else{
-                                                showSnackBar(title: ApiConfig.error, message: "Please enter kaizen idea");
-                                              }
-                                            }else{
-                                              showSnackBar(title: ApiConfig.error, message: "Please choose problem image");
-                                            }
-                                          }else{
-                                            showSnackBar(title: ApiConfig.error, message: "Please enter target");
-                                          }
-                                        }else{
-                                          showSnackBar(title: ApiConfig.error, message: "Please enter benchmark");
-                                        }
-                                      }else{
-                                        showSnackBar(title: ApiConfig.error, message: "Please enter kaizen theme");
-                                      }
-                                    }else{
-                                      showSnackBar(title: ApiConfig.error, message: "Please choose result area");
-                                    }
-                                  }else{
-                                    showSnackBar(title: ApiConfig.error, message: "Please enter kaizen loss no");
-                                  }
-                                }else{
-                                  showSnackBar(title: ApiConfig.error, message: "Please select start date");
-                                }
-                              }else{
-                                showSnackBar(title: ApiConfig.error, message: "Please select machine");
-                              }
-                            }else{
-                              showSnackBar(title: ApiConfig.error, message: "Please select sub department");
-                            }
-                          }else{
-                            showSnackBar(title: ApiConfig.error, message: "Please select department");
-                          }
-                        }else{
-                          showSnackBar(title: ApiConfig.error, message: "Please select plant");
-                        }
-                      }else{
-                        showSnackBar(title: ApiConfig.error, message: "Please select business");
-                      }
-                    }else{
-                      showSnackBar(title: ApiConfig.error, message: "Please select pillar");
+                    AddKaizenModelRequest addKaizenReq = AddKaizenModelRequest();
+                    addKaizenReq.soleId = selectedPlant!.soleId;
+                    addKaizenReq.pillarCategoryId = selectedPillar!.pillarCategoryId.toString();
+                    addKaizenReq.lossNoStep = kaizenLossNoController.text;
+                    addKaizenReq.departmentId =  selectedDepartment == null ? "" : selectedDepartment!.departmentId.toString();
+                    addKaizenReq.subDepartmentId = selectedSubDepartment == null ? "" : selectedSubDepartment!.departmentId.toString();
+                    addKaizenReq.machineId = machineData == null ? "" : machineData!.machineId.toString();
+                    addKaizenReq.countermeasureImage = countermeasureImage;
+                    addKaizenReq.presentProblemImage = problemImage;
+                    addKaizenReq.remarks = rootCauseRemarksController.text;
+                    addKaizenReq.rootCause = selectedRootCause;
+                    addKaizenReq.teamMemberId = selectedTeamMembers.isEmpty ? "" : selectedTeamMembers.map((e) => e.userId!).toList().join(",");
+                    addKaizenReq.startDate = selectedStartDate;
+                    addKaizenReq.target = targetController.text;
+                    addKaizenReq.resultArea = selectedResultArea;
+                    addKaizenReq.kaizenTheme = kaizenThemeController.text;
+                    addKaizenReq.kaizenIdea = kaizenIdeaController.text;
+                    addKaizenReq.benchMark = benchMarkController.text;
+                    addKaizenReq.presentProblem = problemController.text;
+                    addKaizenReq.finishStatus = "0";
+                    addKaizenReq.manageUserId = getLoginData()!.userdata!.first.id.toString();
+                    if(widget.isEdit){
+                      addKaizenReq.editKaizenId = widget.id;
                     }
+                    KaizenController.to.addKaizenData(addKaizenModelRequest: addKaizenReq,isEdit: widget.isEdit);
+                    // if(selectedPillar != null){
+                    //   if(selectedBusiness != null){
+                    //     if(selectedPlant != null){
+                    //       if(selectedDepartment != null){
+                    //         if(selectedSubDepartment != null){
+                    //           if(machineData != null){
+                    //             if(selectedStartDate.isNotEmpty){
+                    //               if(kaizenLossNoController.text.isNotEmpty){
+                    //                 if(selectedResultArea.isNotEmpty){
+                    //                   if(kaizenThemeController.text.isNotEmpty){
+                    //                     if(benchMarkController.text.isNotEmpty){
+                    //                       if(targetController.text.isNotEmpty){
+                    //                         if(problemImage != null){
+                    //                           if(kaizenIdeaController.text.isNotEmpty){
+                    //                             if(countermeasureImage != null){
+                    //
+                    //                             }else{
+                    //                               showSnackBar(title: ApiConfig.error, message: "Please choose countermeasure image");
+                    //                             }
+                    //                           }else{
+                    //                             showSnackBar(title: ApiConfig.error, message: "Please enter kaizen idea");
+                    //                           }
+                    //                         }else{
+                    //                           showSnackBar(title: ApiConfig.error, message: "Please choose problem image");
+                    //                         }
+                    //                       }else{
+                    //                         showSnackBar(title: ApiConfig.error, message: "Please enter target");
+                    //                       }
+                    //                     }else{
+                    //                       showSnackBar(title: ApiConfig.error, message: "Please enter benchmark");
+                    //                     }
+                    //                   }else{
+                    //                     showSnackBar(title: ApiConfig.error, message: "Please enter kaizen theme");
+                    //                   }
+                    //                 }else{
+                    //                   showSnackBar(title: ApiConfig.error, message: "Please choose result area");
+                    //                 }
+                    //               }else{
+                    //                 showSnackBar(title: ApiConfig.error, message: "Please enter kaizen loss no");
+                    //               }
+                    //             }else{
+                    //               showSnackBar(title: ApiConfig.error, message: "Please select start date");
+                    //             }
+                    //           }else{
+                    //             showSnackBar(title: ApiConfig.error, message: "Please select machine");
+                    //           }
+                    //         }else{
+                    //           showSnackBar(title: ApiConfig.error, message: "Please select sub department");
+                    //         }
+                    //       }else{
+                    //         showSnackBar(title: ApiConfig.error, message: "Please select department");
+                    //       }
+                    //     }else{
+                    //       showSnackBar(title: ApiConfig.error, message: "Please select plant");
+                    //     }
+                    //   }else{
+                    //     showSnackBar(title: ApiConfig.error, message: "Please select business");
+                    //   }
+                    // }else{
+                    //   showSnackBar(title: ApiConfig.error, message: "Please select pillar");
+                    // }
                   },
                   isLoading: false)
               ),

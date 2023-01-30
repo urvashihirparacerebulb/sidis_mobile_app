@@ -26,7 +26,7 @@ class DashboardController extends GetxController {
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
         "group_id": getLoginData()!.userdata!.first.groupId,
-        "startdate": "${pastMonth.month}-${currentDate.year}",
+        "startdate": "${pastMonth.month}-${pastMonth.year}",
         // "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
         "abnormality_chart_of": 2,
         "company_id": getLoginData()!.currentPlants!.first.companyId,
@@ -51,7 +51,7 @@ class DashboardController extends GetxController {
       params: {
         "user_id": getLoginData()!.userdata!.first.id,
         "group_id": getLoginData()!.userdata!.first.groupId,
-        "startdate": "${pastMonth.month}-${currentDate.year}",
+        "startdate": "${pastMonth.month}-${pastMonth.year}",
         // "enddate": "${currentDate.year}-${currentDate.month}-${currentDate.day}",
         "company_id": getLoginData()!.currentPlants!.first.companyId,
         "bussiness_id": getLoginData()!.currentPlants!.first.bussinessId,

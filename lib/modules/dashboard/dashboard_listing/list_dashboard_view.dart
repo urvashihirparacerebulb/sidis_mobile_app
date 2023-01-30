@@ -92,23 +92,19 @@ class _ListDashboardViewState extends State<ListDashboardView> {
           }
         },
         child: Padding(
-          padding: EdgeInsets.all(isTablet() ? 25 : 10),
+          padding: EdgeInsets.only(top: isTablet() ? 25 : 10,left: isTablet() ? 25 : 10,right: isTablet() ? 25 : 10),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: EdgeInsets.only(top: isTablet() ? 10 : 5),
                 child: SvgPicture.string(pillarForm!.icon!,height: isTablet() ? 50 : 30,width: isTablet() ? 50 : 40,fit: BoxFit.contain)
-                // Image(image: getMenuIcon(index!), height: isTablet() ? 50 : 30,
-                //     width: isTablet() ? 50 : 40,fit: BoxFit.contain),
               ),
               commonVerticalSpacing(spacing: isTablet() ? 25 : 20),
-              Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: commonHeaderTitle(title: pillarForm.name ?? "",
-                    fontSize: isTablet() ? 1.5 : 1.1,fontWeight: 2),
-              ),
+              commonHeaderTitle(title: pillarForm.name ?? "",
+                  fontSize: isTablet() ? 1.5 : 1.1,fontWeight: 2),
             ],
           ),
         ),

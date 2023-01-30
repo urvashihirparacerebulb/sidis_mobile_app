@@ -35,6 +35,7 @@ class ApiConfig {
   static const String getDefaultKaizenAnalysisURL = "${baseURL}fetch-kaizen-analysis";
   static const String deleteKaizenBenifit = "${baseURL}delete-kaizen-benifits";
   static const String deleteKaizenAnalysis = "${baseURL}delete-kaizen-analysis";
+  static const String deleteKaizenData = "${baseURL}delete-kaizen-data";
   static const String needleRecordListURL = "${baseURL}get-needlerecord-fetch";
   static const String needleBoardListURL = "${baseURL}get-needleboard-fetch";
   static const String needleBoardNumberURL = "${baseURL}ajax-get-board_number";
@@ -53,6 +54,14 @@ class ApiConfig {
   static const String changePasswordURL = "${baseURL}update-password";
   static const String getKaizenDetailURL = "${baseURL}get-kaizen";
   static const String manageNeedleBoardURL = "${baseURL}ajax-insert-needleboard";
+  static const String finishKaizenURL = "${baseURL}finish-kaizen";
+  static const String getFilterDepartmentURL = "${baseURL}fetch-filter-department";
+  static const String getUserFiltersURL = "${baseURL}fetch-user-filter";
+  static const String fetchAbnormalitiesTagsURL = "${baseURL}fetch-abnormalities-tags";
+  static const String getAbnormalityAssignDataURL = "${baseURL}abnormality-assign-data";
+  static const String assignAbnormalityURL = "${baseURL}ajax-assign-abnormality";
+  static const String abnormalityNotSolveURL = "${baseURL}abnormality-not-solve";
+  static const String completeAbnormalityURL = "${baseURL}ajax-complete-abnormality";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

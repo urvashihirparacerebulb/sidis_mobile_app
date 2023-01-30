@@ -411,7 +411,10 @@ class KaizenDetail {
     this.machineName,
     this.teamMembers,
     this.departmentName,
+    this.submachineName,
+    this.subdepartmentName,
     this.pillarName,
+    this.businessName
   });
 
   int? id;
@@ -450,16 +453,19 @@ class KaizenDetail {
   String? chartTitle;
   String? chartResultX;
   String? chartResultY;
-  String? fromKaizenId;
+  dynamic fromKaizenId;
   int? status;
   int? manageUserId;
-  DateTime? createdAt;
-  DateTime? modifiedAt;
+  String? createdAt;
+  String? modifiedAt;
   String? plantShortName;
   String? machineName;
   String? teamMembers;
+  String? subdepartmentName;
+  String? submachineName;
   String? departmentName;
   String? pillarName;
+  String? businessName;
 
   factory KaizenDetail.fromJson(Map<String, dynamic> json) => KaizenDetail(
     id: json["id"],
@@ -501,13 +507,16 @@ class KaizenDetail {
     fromKaizenId: json["from_kaizen_id"],
     status: json["status"],
     manageUserId: json["manage_user_id"],
-    createdAt: DateTime.parse(json["created_at"]),
-    modifiedAt: DateTime.parse(json["modified_at"]),
+    createdAt: json["created_at"],
+    modifiedAt: json["modified_at"],
     plantShortName: json["plant_short_name"],
     machineName: json["machine_name"],
     teamMembers: json["team_members"],
     departmentName: json["department_name"],
+    submachineName: json["submachine_name"],
+    subdepartmentName: json["subdepartment_name"],
     pillarName: json["pillar_name"],
+    businessName: json["business_name"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -550,12 +559,15 @@ class KaizenDetail {
     "from_kaizen_id": fromKaizenId,
     "status": status,
     "manage_user_id": manageUserId,
-    "created_at": createdAt?.toIso8601String(),
-    "modified_at": modifiedAt?.toIso8601String(),
+    "created_at": createdAt,
+    "modified_at": modifiedAt,
     "plant_short_name": plantShortName,
     "machine_name": machineName,
     "team_members": teamMembers,
     "department_name": departmentName,
+    "subdepartment_name": subdepartmentName,
+    "submachine_name": submachineName,
     "pillar_name": pillarName,
+    "business_name": businessName,
   };
 }

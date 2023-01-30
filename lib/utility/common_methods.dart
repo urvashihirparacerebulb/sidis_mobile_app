@@ -162,13 +162,11 @@ Future<DateTime> openCalendarView(BuildContext buildContext, {int selectedYear =
       // initialDateObj == null ? DateTime.now() : initialDateObj,
       firstDate: DateTime(DateTime.now().year - 100),
   // (date != null ? date : DateTime(DateTime.now().year - selectedYear)),
-  lastDate: DateTime.now(),
+  lastDate: DateTime.now().add(const Duration(days: 365)),
   builder: (context, child) {
     return Theme(data: ThemeData.light().copyWith(colorScheme: const ColorScheme.light(onPrimary: bgColor,primary: primaryColor,surface: primaryColor)), child: child!);
   },
   );
   if (picked != null) return picked;
-  return
-  picked
-  !;
+  return DateTime.now();
 }

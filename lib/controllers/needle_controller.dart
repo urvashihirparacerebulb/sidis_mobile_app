@@ -274,19 +274,20 @@ class NeedleController extends GetxController {
       if(element.selectedOldBoard != null) {
         if (element.selectedOldBoard!.selectedOldBoard!.isNotEmpty) {
           formData.fields.add(MapEntry(
-              'old_needle_board${(element.selectedOldBoard?.index)! + 1}',
+              'old_needle_board${element.selectedOldBoard?.locationId}',
               element.selectedOldBoard!
                   .selectedOldBoard!
                   .map((e) => e.boardId)
                   .toList()
-                  .join(",")));
+                  .join(","))
+          );
         }
       }
 
       if(element.selectedNewBoard != null) {
         if (element.selectedNewBoard!.selectedNewBoard!.isNotEmpty) {
           formData.fields.add(MapEntry(
-              'new_needle_board${(element.selectedNewBoard?.index)! + 1}',
+              'new_needle_board${element.selectedNewBoard?.locationId}',
               element.selectedNewBoard!
                   .selectedNewBoard!
                   .map((e) => e.boardId)

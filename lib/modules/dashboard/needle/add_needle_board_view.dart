@@ -265,13 +265,13 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                           }
                           if(NeedleController.to.machineLocationList[index].selectedOldBoard == null){
                             SelectedLocationBoardReq selectedBoard = SelectedLocationBoardReq();
-                            selectedBoard.index = index;
+                            selectedBoard.locationId = NeedleController.to.machineLocationList[index].locationId;
                             selectedBoard.selectedNewBoard = [];
                             selectedBoard.selectedOldBoard = [];
                             selectedBoard.selectedOldBoard!.add(board);
                             NeedleController.to.machineLocationList[index].selectedOldBoard = selectedBoard;
                           }else{
-                            NeedleController.to.machineLocationList[index].selectedOldBoard!.index = index;
+                            NeedleController.to.machineLocationList[index].selectedOldBoard!.locationId = NeedleController.to.machineLocationList[index].locationId;
                             NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.add(board);
                           }
                           newSetState((){});
@@ -319,13 +319,13 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                           }
                           if(NeedleController.to.machineLocationList[index].selectedNewBoard == null){
                             SelectedLocationBoardReq selectedBoard = SelectedLocationBoardReq();
-                            selectedBoard.index = index;
+                            selectedBoard.locationId = NeedleController.to.machineLocationList[index].locationId;
                             selectedBoard.selectedOldBoard = [];
                             selectedBoard.selectedNewBoard = [];
                             selectedBoard.selectedNewBoard!.add(board);
                             NeedleController.to.machineLocationList[index].selectedNewBoard = selectedBoard;
                           }else{
-                            NeedleController.to.machineLocationList[index].selectedNewBoard?.index = index;
+                            NeedleController.to.machineLocationList[index].selectedNewBoard?.locationId = NeedleController.to.machineLocationList[index].locationId;
                             NeedleController.to.machineLocationList[index].selectedNewBoard?.selectedNewBoard!.add(board);
                           }
                           newSetState((){});
@@ -345,7 +345,7 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                             alignment: WrapAlignment.start,
                             crossAxisAlignment: WrapCrossAlignment.start,
                             runAlignment: WrapAlignment.start,
-                            children: NeedleController.to.machineLocationList[index].selectedNewBoard == null ? [] :NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.map((i) => Container(
+                            children: NeedleController.to.machineLocationList[index].selectedNewBoard == null ? [] : NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.map((i) => Container(
                               decoration: BoxDecoration(
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(10)
