@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
@@ -101,9 +102,9 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
             }));
           },
           child: commonDecoratedTextView(
-              title: selectedBusiness?.businessId == null ? "Select Business" : selectedBusiness?.businessName ?? "",
+              title: selectedBusiness?.businessId == null ? "Select Business *" : selectedBusiness?.businessName ?? "",
               isChangeColor: selectedBusiness?.businessId == null ? true : false
-          ),
+          )
         ),
         InkWell(
             onTap: (){
@@ -122,7 +123,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
               }
             },
             child: commonDecoratedTextView(
-              title: selectedPlant == null ? "Select Plant" : selectedPlant!.soleName ?? "",
+              title: selectedPlant == null ? "Select Plant *" : selectedPlant!.soleName ?? "",
               isChangeColor: selectedPlant == null ? true : false,
             )
         ),
@@ -136,7 +137,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
           child: commonDecoratedTextView(
               title: selectedBoardNumber?.boardId == null ? "Select Board Number *" : selectedBoardNumber?.boardNo ?? "",
               isChangeColor: selectedBoardNumber?.boardId == null ? true : false
-          ),
+          )
         ),
         InkWell(
           onTap: (){
@@ -148,7 +149,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
           child: commonDecoratedTextView(
               title: selectedChangeStatus?.id == null ? "Needles Changed Status * " : selectedChangeStatus?.value ?? "",
               isChangeColor: selectedChangeStatus?.id == null ? true : false
-          ),
+          )
         ),
         Container(
             height: 50,
@@ -160,7 +161,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                     alignment: Alignment.centerLeft,
                     child: commonHeaderTitle(
                         fontSize: isTablet() ? 1.3 : 1,
-                        title: selectedDate.isEmpty ? "Date" : selectedDate)
+                        title: selectedDate.isEmpty ? "Date *" : selectedDate)
                 ),
                 Align(
                     alignment: Alignment.centerRight,
@@ -177,7 +178,7 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                       },
                       child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
                     )),
-              ],
+              ]
             )),
         commonVerticalSpacing(spacing: 20),
         CommonTextFiled(
@@ -185,6 +186,10 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
             hintText: "No of Needles Consumed *",
             // isBorderEnable: false,
             isChangeFillColor: true,
+            keyboardType: TextInputType.number,
+            inputFormatter: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly
+            ],
             textEditingController: needleConsumedController,
             onChangedFunction: (String value){
             },
@@ -216,7 +221,8 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                   tapOnButton: () {
                     Get.back();
                   },
-                  isLoading: false)),
+                  isLoading: false)
+              ),
               commonHorizontalSpacing(),
               Expanded(child: commonFillButtonView(
                   context: context,
@@ -243,7 +249,10 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                                 if(widget.isEdit){
                                   addNeedleRecordReq.needleRecordId = widget.recordId;
                                 }
-                                NeedleController.to.addNeedleRecordData(addNeedleRecordRequest: addNeedleRecordReq,isEdit: widget.isEdit);
+                                NeedleController.to.addNeedleRecordData(
+                                    addNeedleRecordRequest: addNeedleRecordReq,
+                                    isEdit: widget.isEdit
+                                );
                               }else{
                                 showSnackBar(title: ApiConfig.error, message: "Please enter number of needle consumed");
                               }
@@ -263,7 +272,8 @@ class _AddNeedleRecordViewState extends State<AddNeedleRecordView> {
                       showSnackBar(title: ApiConfig.error, message: "Please select business");
                     }
                   },
-                  isLoading: false)),
+                  isLoading: false)
+              ),
             ],
           ),
         ),

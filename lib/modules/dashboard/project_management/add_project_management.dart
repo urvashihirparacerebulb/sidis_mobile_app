@@ -53,6 +53,7 @@ class _AddProjectViewState extends State<AddProjectView> {
                     },
                     isLoading: false)),
                 commonHorizontalSpacing(),
+
                 Expanded(child: commonFillButtonView(
                     context: context,
                     title: "Save",

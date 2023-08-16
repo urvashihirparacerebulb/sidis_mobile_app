@@ -3,6 +3,7 @@ class ApiConfig {
   // static const String baseURL = "https://sidis.cerebulb.com/api/";
   static const String baseURL = "http://sidis.skapsindia.com/test/api/";
   static const String loginURL = "${baseURL}ajax-login";
+  static const String forgotPassURL = "${baseURL}forget-password";
   static const String businessListURL = "${baseURL}fetch-bussiness";
   static const String plantsListURL = "${baseURL}fetch-plant-bussiness";
   static const String machineListURL = "${baseURL}fetch-machine";
@@ -62,6 +63,7 @@ class ApiConfig {
   static const String assignAbnormalityURL = "${baseURL}ajax-assign-abnormality";
   static const String abnormalityNotSolveURL = "${baseURL}abnormality-not-solve";
   static const String completeAbnormalityURL = "${baseURL}ajax-complete-abnormality";
+  static const String productRequisitionDetailURL = "${baseURL}get-requisition-detail";
 
   static const String methodPOST = "post";
   static const String methodGET = "get";

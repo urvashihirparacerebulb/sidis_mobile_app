@@ -62,6 +62,7 @@ class Abnormality {
     this.machineDetail,
     this.partsName,
     this.abnormalityTitle,
+    this.abnormalityType,
     this.abnormalityTag,
     this.findUserName,
     this.findUserId,
@@ -88,6 +89,7 @@ class Abnormality {
   String? machineDetail;
   String? partsName;
   String? abnormalityTitle;
+  String? abnormalityType;
   String? abnormalityTag;
   String? findUserName;
   int? findUserId;
@@ -114,6 +116,7 @@ class Abnormality {
     machineDetail: json["machine_detail"],
     partsName: json["parts_name"],
     abnormalityTitle: json["abnormality_title"],
+    abnormalityType: json["abnormality_type"],
     abnormalityTag: json["abnormality_tag"],
     findUserName: json["find_user_name"],
     findUserId: json["find_user_id"],
@@ -141,6 +144,7 @@ class Abnormality {
     "machine_detail": machineDetail,
     "parts_name": partsName,
     "abnormality_title": abnormalityTitle,
+    "abnormality_type": abnormalityType,
     "abnormality_tag": abnormalityTag,
     "find_user_name": findUserName,
     "find_user_id": findUserId,

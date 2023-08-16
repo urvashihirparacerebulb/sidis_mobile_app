@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:my_projects/controllers/product_requisition_controller.dart';
+import 'package:my_projects/utility/common_methods.dart';
 import 'package:my_projects/utility/constants.dart';
 import '../../../common_widgets/common_textfield.dart';
 import '../../../common_widgets/common_widget.dart';
@@ -12,6 +13,7 @@ import '../../../utility/color_utility.dart';
 import '../../../utility/delete_dialog_view.dart';
 import '../../../utility/screen_utility.dart';
 import 'add_product_requisition_view.dart';
+import 'product_requisition_filter.dart';
 
 class ProductRequisitionList extends StatefulWidget {
   final PillarForm pillarForm;
@@ -34,80 +36,85 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
   }
 
   Widget productRequisitionView({ProductRequisition? productRequisition}){
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
-      decoration: neurmorphicBoxDecoration,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: productRequisition!.poNo ?? "-",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: productRequisition.machineDetail ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: productRequisition.companyBussinessPlant ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: productRequisition.requiredIn ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: productRequisition.username ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: productRequisition.requisitionDate ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: "Quantity: 2",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonVerticalSpacing(),
-                commonHeaderTitle(title: productRequisition.itemStatus ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              children: [
-                Expanded(
-                  flex: 5,
-                  child: commonHeaderTitle(title: "Item Type",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-                ),
+    return InkWell(
+      onTap: (){
+        showDialog(context: context, builder: (BuildContext context) => detailView(productRequisition: productRequisition));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
+        decoration: neurmorphicBoxDecoration,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: productRequisition!.poNo ?? "-",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: productRequisition.requisitionDate ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: productRequisition.companyBussinessPlant ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: productRequisition.machineDetail ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: productRequisition.itemType ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: productRequisition.itemStatus ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: "Quantity: ${productRequisition.quantity.toString()}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonVerticalSpacing(),
+                  commonHeaderTitle(title: productRequisition.username ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 5,
+                    child: commonHeaderTitle(title: "Required In: ${productRequisition.requiredIn}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                  ),
 
-                Expanded(flex: 2,child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: GestureDetector(
-                        onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition,productRequisition.productRequisitionId.toString());
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffD9D9D9)
-                            ),
-                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
-                    )
-                ))
-              ],
-            )
-          ],
+                  Expanded(flex: 2,child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: GestureDetector(
+                          onTapDown: (TapDownDetails details) {
+                            _showPopupMenu(details.globalPosition,productRequisition);
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xffD9D9D9)
+                              ),
+                              child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
+                      )
+                  ))
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
   }
 
-  void _showPopupMenu(Offset offset, String requisitionId) async {
+  void _showPopupMenu(Offset offset, ProductRequisition productRequisition) async {
     double left = offset.dx;
     double top = offset.dy;
     String selectedStatus = "";
@@ -120,6 +127,26 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
         ),
       ),      position: RelativeRect.fromLTRB(left, top, 20, 0),
       items: [
+        if(productRequisition.itemStatus == "Request" && (productRequisition.requestedUserId == getLoginData()!.userdata!.first.id))
+          PopupMenuItem<String>(
+              value: 'Edit',
+              child: InkWell(
+                onTap: (){
+                  Get.back();
+                  Get.to(() => AddProductRequisitionView(
+                      pillarId: widget.pillarForm.id.toString(),
+                      isEdit: true,
+                      requisitionId: productRequisition.productRequisitionId.toString(),
+                  ));
+                },
+                child: Row(
+                  children: [
+                    const Icon(Icons.edit),
+                    commonHorizontalSpacing(),
+                    const Text('Edit'),
+                  ],
+                ),
+              )),
         PopupMenuItem<String>(
             value: 'Delete',
             child: InkWell(
@@ -127,7 +154,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                 Get.back();
                 showDialog(context: context, builder: (BuildContext context) => DeleteDialogView(doneCallback: (){
                   ProductRequisitionController.to.deleteProductRequisition(
-                      id: requisitionId.toString(),
+                      id: productRequisition.productRequisitionId.toString(),
                       selectedFormId: widget.pillarForm.id.toString()
                   );
                 }));
@@ -226,7 +253,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                                         Get.back();
                                         ProductRequisitionController.to.productRequisitionStatusUpdate(
                                             selectedFormId: widget.pillarForm.id.toString(),
-                                            productRequisitionId: requisitionId.toString(),
+                                            productRequisitionId: productRequisition.productRequisitionId.toString(),
                                             selectedStatus: selectedStatus
                                         );
                                       },
@@ -255,6 +282,94 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
     );
   }
 
+  detailView({ProductRequisition? productRequisition}){
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 0.0,right: 0.0),
+            child: Container(
+              padding: const EdgeInsets.only(top: 18.0,),
+              margin: const EdgeInsets.only(top: 13.0,right: 8.0),
+              decoration: BoxDecoration(
+                  color: whiteColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: const <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 0.0,
+                      offset: Offset(0.0, 0.0),
+                    ),
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    commonHeaderTitle(
+                        title: "Product Requisition Detail",
+                        color: blackColor,
+                        isChangeColor: true,
+                        fontSize: 1.7,
+                        height: 1.4,
+                        fontWeight: 2,align: TextAlign.center
+                    ),
+                    commonVerticalSpacing(spacing: 20),
+                    commonDetailRowView(title: "Po No",subTitle: productRequisition?.poNo ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Requisition Date",subTitle: productRequisition?.requisitionDate ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Business Name",subTitle: (productRequisition?.companyBussinessPlant ?? "").split('_')[1]),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Plant Name",subTitle: (productRequisition?.companyBussinessPlant ?? "").split('_')[2]),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Company Name",subTitle: (productRequisition?.companyBussinessPlant ?? "").split('_')[0]),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Machine Detail",subTitle: productRequisition?.machineDetail ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Item Type",subTitle: productRequisition?.itemType ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Quantity",subTitle: productRequisition?.quantity.toString() ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Required In",subTitle: productRequisition?.requiredIn ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Item Status",subTitle: productRequisition?.itemStatus ?? ""),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Requested By",subTitle: productRequisition?.username ?? ""),
+                    commonVerticalSpacing(spacing: 20),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(
+            right: 0.0,
+            child: GestureDetector(
+              onTap: (){
+                Get.back();
+              },
+              child: const Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 14.0,
+                  backgroundColor: blackColor,
+                  child: Icon(Icons.close, color: whiteColor),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return commonStructure(
@@ -263,7 +378,7 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
         appBar: commonAppbar(context: context,title: productRequisitionText),
         floatingAction: InkWell(
           onTap: (){
-            Get.to(() => const AddProductRequisitionView());
+            Get.to(() => AddProductRequisitionView(pillarId: widget.pillarForm.id.toString(),));
           },
           child: Container(
               height: 60,width: 60,
@@ -306,6 +421,12 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                               p0.itemStatus!.toLowerCase().startsWith(value)).toList();
                         }
                       },
+                      suffixIcon: InkWell(
+                        onTap: (){
+                          Get.to(() => ProductRequisitionFilter(pillarFormId: widget.pillarForm.id.toString()));
+                        },
+                        child: const Icon(Icons.filter_list_alt,color: blackColor),
+                      ),
                       validationFunction: (String value) {
                         return value.toString().isEmpty
                             ? notEmptyFieldMessage

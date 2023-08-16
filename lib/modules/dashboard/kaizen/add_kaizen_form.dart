@@ -201,7 +201,8 @@ class _AddKaizenFormViewState extends State<AddKaizenFormView> {
                 Expanded(child: selectedFile == null ? Image.network(
                     title == "Problem Image *" ?
                     KaizenController.to.kaizenDetail.value.presentProblemImage ?? "" :
-                    KaizenController.to.kaizenDetail.value.countermeasureImage ?? "",height: 100) : Image.file(selectedFile!, height: 100))
+                    KaizenController.to.kaizenDetail.value.countermeasureImage ?? "",
+                    height: 100) : Image.file(selectedFile, height: 100))
               ],
             ),
           )

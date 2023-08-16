@@ -32,6 +32,26 @@ class AuthenticationController extends GetxController {
     );
   }
 
+  void forgotPasswordAPI(String email) {
+    apiServiceCall(
+      params: {
+        "forgotuser": email
+      },
+      serviceUrl: ApiConfig.forgotPassURL,
+      success: (dio.Response<dynamic> response) {
+        BooleanResponseModel booleanResponseModel =
+        BooleanResponseModel.fromJson(jsonDecode(response.data));
+        showSnackBar(title: booleanResponseModel.status! ? ApiConfig.success : ApiConfig.error, message: booleanResponseModel.message ?? "");
+        Get.back();
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
   // void logoutAPI() {
   //   apiServiceCall(
   //     params: {},

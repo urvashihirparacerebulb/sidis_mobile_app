@@ -120,7 +120,8 @@ apiServiceCall({
               responseData = BooleanResponseModel.fromJson(jsonDecode(endString));
             }else {
               responseData = BooleanResponseModel.fromJson(
-                  jsonDecode(response.data.toString()));
+                  jsonDecode(response.data.toString())
+              );
             }
             if (tempIsHideLoader!) {
               hideProgressDialog();

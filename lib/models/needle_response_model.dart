@@ -489,6 +489,8 @@ class NeedleBoard {
     this.changeBoard,
     this.oldBoardNo,
     this.newBoardNo,
+    this.loomsName,
+    this.lineName
   });
 
   int? needleRecordId;
@@ -502,6 +504,8 @@ class NeedleBoard {
   String? changeBoard;
   String? oldBoardNo;
   String? newBoardNo;
+  String? loomsName;
+  String? lineName;
 
   factory NeedleBoard.fromJson(Map<String, dynamic> json) => NeedleBoard(
     needleRecordId: json["needle_record_id"],
@@ -515,6 +519,8 @@ class NeedleBoard {
     changeBoard: json["change_board"],
     oldBoardNo: json["old_board_no"],
     newBoardNo: json["new_board_no"],
+    loomsName: json["looms_name"],
+    lineName: json["line_name"],
   );
 
   Map<String, dynamic> toJson() => {
@@ -529,6 +535,8 @@ class NeedleBoard {
     "change_board": changeBoard,
     "old_board_no": oldBoardNo,
     "new_board_no": newBoardNo,
+    "looms_name": loomsName,
+    "line_name": lineName,
   };
 }
 

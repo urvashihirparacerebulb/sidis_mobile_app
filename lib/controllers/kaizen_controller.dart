@@ -151,7 +151,7 @@ class KaizenController extends GetxController {
       serviceUrl: ApiConfig.manageKaizenURL,
       success: (dio.Response<dynamic> response) {
         // BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
-        showSnackBar(title: ApiConfig.error, message: "Added Successfully");
+        showSnackBar(title: ApiConfig.success, message: "Added Successfully");
         Get.back();
         getKaizenListData();
       },

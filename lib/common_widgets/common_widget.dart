@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:my_projects/utility/color_utility.dart';
 import '../controllers/general_controller.dart';
 import '../models/activities_response_model.dart';
-import '../modules/dashboard/dashboard_listing/dashboard_view.dart';
 import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
 import '../utility/screen_utility.dart';
@@ -106,8 +105,7 @@ Widget commonFillButtonView(
         }
       },
       style: ElevatedButton.styleFrom(
-        shadowColor: blackColor.withOpacity(0.8),
-        primary: color,
+        shadowColor: blackColor.withOpacity(0.8), backgroundColor: color,
         shape: RoundedRectangleBorder(borderRadius: commonButtonBorderRadius),
         padding: EdgeInsets.symmetric(vertical: height == 50.0 ? 15 : 2),
         elevation: 5.0,
@@ -117,7 +115,8 @@ Widget commonFillButtonView(
         style: black15PxW800.copyWith(
             color: fontColor,
             fontWeight: isLightButton ? FontWeight.w500 : FontWeight.bold,
-            fontSize: height! >= 50.0 ? 16 : 12),
+            fontSize: height! >= 50.0 ? 16 : 12
+        ),
       )
     )
   );
@@ -142,13 +141,8 @@ Widget commonBorderButtonView(
         }
       },
       style: ElevatedButton.styleFrom(
-        // shadowColor: blackColor.withOpacity(0.8),
         alignment: Alignment.center,
-        primary: ConvertTheme.convertTheme.getBackGroundColor(),
-        // side: const BorderSide(
-        //   color: blackColor,
-        //   width: 1.0,
-        // ),
+        backgroundColor: ConvertTheme.convertTheme.getBackGroundColor(),
         shape: RoundedRectangleBorder(
           borderRadius: commonBorderRadius,
         ),
@@ -182,7 +176,8 @@ Widget commonBorderButtonView(
 
 commonHeaderTitle({String title = "",
   double height = 1.0,
-  double fontSize = 1,int fontWeight = 0,
+  double fontSize = 1,
+  int fontWeight = 0,
   Color color = whiteColor,
   bool isChangeColor = false,
   TextAlign align = TextAlign.start,
@@ -207,6 +202,27 @@ commonVerticalSpacing({double spacing = 10}){
 
 commonHorizontalSpacing({double spacing = 10}){
   return SizedBox(width: spacing);
+}
+
+commonDetailRowView({String title = "", subTitle}){
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      commonHeaderTitle(
+          title: title,
+          color: blackColor,
+          isChangeColor: true,
+          fontSize: 1.0,
+          fontWeight: 2
+      ),
+      commonHorizontalSpacing(spacing: 20),
+      Expanded(child: commonHeaderTitle(
+          title: subTitle,
+          fontWeight: 1,
+          fontSize: isTablet() ? 1.11 : 0.90,align: TextAlign.end
+      )),
+    ],
+  );
 }
 
 PreferredSize commonAppbar({BuildContext? context,
@@ -238,13 +254,13 @@ PreferredSize commonAppbar({BuildContext? context,
 
 List<Widget> actionIcons(BuildContext context,{isAllowSpacing = false}){
   return [
-    InkWell(
-      onTap: (){
-        showDialog(context: context, builder: (BuildContext context) => const CustomDialog());
-      },
-      child: Image
-        (image: plantIconImage,color: ConvertTheme.convertTheme.getWhiteToFontColor()),
-    ),
+    // InkWell(
+    //   onTap: (){
+    //     showDialog(context: context, builder: (BuildContext context) => const CustomDialog());
+    //   },
+    //   child: Image
+    //     (image: plantIconImage,color: ConvertTheme.convertTheme.getWhiteToFontColor()),
+    // ),
     if(isAllowSpacing)
       commonHorizontalSpacing(spacing: 15),
     Icon(Icons.notifications,color: ConvertTheme.convertTheme.getWhiteToFontColor(),size: 32),

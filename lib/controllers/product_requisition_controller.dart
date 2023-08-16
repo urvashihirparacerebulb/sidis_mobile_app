@@ -21,10 +21,21 @@ class ProductRequisitionController extends GetxController {
   RxList<String> requisitionStatues = RxList<String>();
   RxList<RequiredIn> requiredInData = RxList();
 
-  void getProductRequisitionListData({String selectedFormId = ""}) {
+  void getProductRequisitionListData({String selectedFormId = "", bool isFilter = false,String status = "",String user = ""}) {
+    productRequisitionList.clear();
+    searchProductRequisitionList.clear();
     isProductReqLoading.value = true;
     apiServiceCall(
-      params: {
+      params: isFilter ? {
+        "user_id": getLoginData()!.userdata!.first.id,
+        "group_id": getLoginData()!.userdata!.first.groupId,
+        "form_id": selectedFormId,
+        "company_id": getLoginData()!.currentPlants!.first.companyId,
+        "bussiness_id": getLoginData()!.currentPlants!.first.bussinessId,
+        "plant_id": getLoginData()!.currentPlants!.first.plantId,
+        "pro_reqstatus": status,
+        "pro_requser": user
+      } : {
         "user_id": getLoginData()!.userdata!.first.id,
         "group_id": getLoginData()!.userdata!.first.groupId,
         "form_id": selectedFormId,
@@ -83,7 +94,7 @@ class ProductRequisitionController extends GetxController {
     );
   }
 
-  Future<void> addProductRequisition({ProductRequisitionRequest? productRequisitionRequest}) async {
+  Future<void> addProductRequisition({ProductRequisitionRequest? productRequisitionRequest, String? pillarId, bool isEdit = false}) async {
     dio.FormData formData = dio.FormData.fromMap({
       "po_no": productRequisitionRequest?.poNo,
       "user_id": productRequisitionRequest?.userId,
@@ -99,9 +110,16 @@ class ProductRequisitionController extends GetxController {
       "itemdescription": productRequisitionRequest?.itemDescription,
       "quantity": productRequisitionRequest?.quantity
     });
-    formData.files.add(
-        MapEntry("productimage", await dio.MultipartFile.fromFile(productRequisitionRequest!.productImage!.path)),
-    );
+    if(productRequisitionRequest!.productImage != null) {
+      formData.files.add(
+        MapEntry("productimage", await dio.MultipartFile.fromFile(
+            productRequisitionRequest.productImage!.path)),
+      );
+    }
+    
+    if(isEdit){
+      formData.fields.add(MapEntry("updateid", productRequisitionRequest.updateId ?? ""));
+    }
     apiServiceCall(
       params: {},
       formValues: formData,
@@ -110,6 +128,7 @@ class ProductRequisitionController extends GetxController {
         showSnackBar(title: ApiConfig.success, message: "Added Successfully");
         // BooleanResponseModel booleanResponseModel = BooleanResponseModel.fromJson(jsonDecode(response.data));
         Get.back();
+        getProductRequisitionListData(selectedFormId: pillarId!);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);
@@ -129,6 +148,25 @@ class ProductRequisitionController extends GetxController {
       success: (dio.Response<dynamic> response) {
         showSnackBar(title: ApiConfig.success, message: "Deleted Successfully");
         getProductRequisitionListData(selectedFormId: selectedFormId);
+      },
+      error: (dio.Response<dynamic> response) {
+        errorHandling(response);
+      },
+      isProgressShow: true,
+      methodType: ApiConfig.methodPOST,
+    );
+  }
+
+  void getProductRequisitionDetail({String? requisitionId, Function? callback}) {
+    apiServiceCall(
+      params: {
+        "product_requisition_id": requisitionId,
+        "user_id": getLoginData()!.userdata?.first.id
+      },
+      serviceUrl: ApiConfig.productRequisitionDetailURL,
+      success: (dio.Response<dynamic> response) {
+        ProductRequisitionDetailResponse productRequisitionDetailResponse = ProductRequisitionDetailResponse.fromJson(jsonDecode(response.data));
+        callback!(productRequisitionDetailResponse.data);
       },
       error: (dio.Response<dynamic> response) {
         errorHandling(response);

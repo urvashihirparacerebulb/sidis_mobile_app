@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "939907619805",
+    "project_id": "sidisapp-7ae17",
+    "storage_bucket": "sidisapp-7ae17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:939907619805:android:73edc0d0f76046b3f37434",
+        "android_client_info": {
+          "package_name": "com.app.sidisapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "939907619805-gom7gtahr7prrgkfij3s2gqmv8mmc4rs.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9spy-U5c19EOunYoPWxDakbg7EvHYINI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "939907619805-gom7gtahr7prrgkfij3s2gqmv8mmc4rs.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -29,7 +30,11 @@ import '../../../utility/common_methods.dart';
 import '../../../utility/screen_utility.dart';
 
 class AddProductRequisitionView extends StatefulWidget {
-  const AddProductRequisitionView({Key? key}) : super(key: key);
+  final String pillarId;
+  final bool isEdit;
+  final String requisitionId;
+
+  const AddProductRequisitionView({Key? key, required this.pillarId, this.isEdit = false, this.requisitionId = ""}) : super(key: key);
 
   @override
   State<AddProductRequisitionView> createState() => _AddProductRequisitionViewState();
@@ -42,23 +47,69 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
   Department? selectedDepartment;
   Department? selectedSubDepartment;
   MachineData? machineData;
-  DateTime? selectedStartDate;
+  DateTime? selectedStartDate = DateTime.now();
   File? productImage;
   TextEditingController poNoController = TextEditingController();
+  TextEditingController otherItemTypeController = TextEditingController();
   TextEditingController itemDescriptionController = TextEditingController();
   TextEditingController remarksController = TextEditingController();
   TextEditingController requiredQuantityController = TextEditingController();
   RequiredIn? requiredIn;
   String selectedItemType = "";
+  String editTimeImgURL = "";
 
   @override
   void initState() {
     if (BusinessController.to.businessData!.isEmpty) {
       BusinessController.to.getBusinesses();
     }
-
     Future.delayed(const Duration(seconds: 5),(){
       ProductRequisitionController.to.getRequisitionType();
+    });
+
+    Future.delayed(const Duration(seconds: 2),(){
+      if(widget.isEdit){
+        ProductRequisitionController.to.getProductRequisitionDetail(requisitionId: widget.requisitionId,callback: (ProductRequisitionDetail resultData){
+          BusinessData business  = BusinessData();
+          business.businessId = resultData.businessId;
+          business.businessName = resultData.bussinessName;
+          selectedBusiness = business;
+
+          CompanyBusinessPlant plant = CompanyBusinessPlant();
+          plant.soleId = "${resultData.companyId} - ${resultData.plantId} - ${resultData.businessId}";
+          plant.soleName = resultData.companyShortName;
+          selectedPlant = plant;
+
+          Department department = Department();
+          department.departmentId = resultData.departmentId;
+          department.departmentName = resultData.departmentShortName;
+          selectedDepartment = department;
+
+          Department subDepartment = Department();
+          subDepartment.departmentId = resultData.subdepartmentId;
+          subDepartment.departmentName = resultData.subdepartmentShortName;
+          selectedSubDepartment = subDepartment;
+
+          MachineData machine = MachineData();
+          machine.machineId = resultData.machineId;
+          machine.machineName = resultData.machineName;
+          machineData = machine;
+
+          selectedStartDate = DateTime.parse(resultData.requisitionDate ?? "");
+          selectedItemType = resultData.itemType ?? "";
+          otherItemTypeController.text = resultData.itemType == "Others" ? (resultData.otherItem ?? "") : "";
+          poNoController.text = resultData.poNo ?? "";
+          RequiredIn requiredInVal = RequiredIn();
+          requiredInVal.id = resultData.requiredInId ?? 0;
+          requiredInVal.value = resultData.requiredIn ?? "";
+          requiredIn = requiredInVal;
+          itemDescriptionController.text = resultData.itemDescription ?? "";
+          remarksController.text = resultData.remarks ?? "";
+          requiredQuantityController.text = resultData.quantity.toString();
+          editTimeImgURL = resultData.productImage ?? "";
+          setState(() {});
+        });
+      }
     });
     super.initState();
   }
@@ -77,7 +128,44 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
               isChangeColor: true
           ),
           commonVerticalSpacing(spacing: 8),
+          widget.isEdit ?
           Container(
+            height: selectedFile == null ? 50 : 100,
+            padding: const EdgeInsets.all(10),
+            decoration: neurmorphicBoxDecoration,
+            child: Row(
+              children: [
+                InkWell(
+                    onTap: () async {
+                      final ImagePicker picker = ImagePicker();
+                      try {
+                        final XFile? pickedFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                        );
+                        setState(() {
+                          productImage = File(pickedFile!.path);
+                        });
+                      } catch (e) {
+                        if (kDebugMode) {
+                          print(e);
+                        }
+                      }
+                    },
+                    child: commonHeaderTitle(
+                        title: "Change File",
+                        color: blackColor.withOpacity(0.4),
+                        isChangeColor: true
+                    )
+                ),
+                commonHorizontalSpacing(spacing: 10),
+                Container(height: 40,width: 1,color: fontColor),
+                commonHorizontalSpacing(spacing: 10),
+                Expanded(child: selectedFile == null ? Image.network(editTimeImgURL,
+                    height: 100) : Image.file(selectedFile, height: 100))
+              ],
+            ),
+          )
+              : Container(
             height: productImage == null ? 50 : 100,
             padding: const EdgeInsets.all(10),
             decoration: neurmorphicBoxDecoration,
@@ -94,7 +182,9 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                           productImage = File(pickedFile!.path);
                         });
                       } catch (e) {
-                        print(e);
+                        if (kDebugMode) {
+                          print(e);
+                        }
                       }
                     },
                     child: commonHeaderTitle(
@@ -265,9 +355,11 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                         });
                       },
                       child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
-                    )),
+                    )
+                ),
               ],
-            )),
+            )
+        ),
         commonVerticalSpacing(spacing: 20),
         InkWell(
             onTap: (){
@@ -287,9 +379,23 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
               isChangeColor: selectedItemType.isEmpty ? true : false,
             )
         ),
+        selectedItemType == "Others" ? CommonTextFiled(
+            fieldTitleText: "Other Item Type *",
+            hintText: "Other Item Type *",
+            // isBorderEnable: false,
+            isChangeFillColor: true,
+            textEditingController: otherItemTypeController,
+            onChangedFunction: (String value){
+            },
+            validationFunction: (String value) {
+              return value.toString().isEmpty
+                  ? notEmptyFieldMessage
+                  : null;
+            }) : Container(),
+        commonVerticalSpacing(spacing: selectedItemType == "Others" ? 20 : 0),
         CommonTextFiled(
-            fieldTitleText: "Product Requisition * ",
-            hintText: "Product Requisition * ",
+            fieldTitleText: "Po No",
+            hintText: "Po No",
             // isBorderEnable: false,
             isChangeFillColor: true,
             textEditingController: poNoController,
@@ -406,7 +512,6 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                                       if(selectedItemType.isNotEmpty){
                                         if(itemDescriptionController.text.isNotEmpty){
                                           if(requiredQuantityController.text.isNotEmpty){
-                                            if(productImage != null){
                                               ProductRequisitionRequest productRequisitionRequest = ProductRequisitionRequest();
                                               productRequisitionRequest.poNo = poNoController.text;
                                               productRequisitionRequest.userId = getLoginData()!.userdata!.first.id.toString();
@@ -416,16 +521,17 @@ class _AddProductRequisitionViewState extends State<AddProductRequisitionView> {
                                               productRequisitionRequest.subDepartmentId = selectedSubDepartment!.departmentId.toString();
                                               productRequisitionRequest.machineId = machineData?.machineId.toString();
                                               productRequisitionRequest.itemId = selectedItemType == "Others" ? "" : selectedItemType;
-                                              productRequisitionRequest.otherItem = selectedItemType == "Others" ? "Others" : "";
+                                              productRequisitionRequest.otherItem = selectedItemType == "Others" ? otherItemTypeController.text : "";
                                               productRequisitionRequest.requiredIn = "1";
                                               productRequisitionRequest.itemDescription = itemDescriptionController.text;
                                               productRequisitionRequest.quantity = requiredQuantityController.text;
                                               productRequisitionRequest.remarks = remarksController.text;
                                               productRequisitionRequest.productImage = productImage;
-                                              ProductRequisitionController.to.addProductRequisition(productRequisitionRequest: productRequisitionRequest);
-                                            }else{
-                                              showSnackBar(title: ApiConfig.error, message: "Please choose product image");
-                                            }
+                                              productRequisitionRequest.updateId = widget.isEdit ? widget.requisitionId : "";
+                                              ProductRequisitionController.to.addProductRequisition(
+                                                  productRequisitionRequest: productRequisitionRequest,
+                                                  isEdit: widget.isEdit,
+                                                  pillarId: widget.pillarId);
                                           }else{
                                             showSnackBar(title: ApiConfig.error, message: "Please enter quantity");
                                           }
@@ -494,5 +600,6 @@ class ProductRequisitionRequest{
   String? requiredIn;
   String? itemDescription;
   String? quantity;
+  String? updateId;
   File? productImage;
 }

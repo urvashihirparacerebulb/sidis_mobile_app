@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:my_projects/common_widgets/common_widget.dart';
 import 'package:my_projects/utility/color_utility.dart';
 import 'package:my_projects/utility/screen_utility.dart';
 
 import '../../common_widgets/common_textfield.dart';
+import '../../configurations/config_file.dart';
+import '../../controllers/authentication_controller.dart';
 import '../../utility/assets_utility.dart';
+import '../../utility/common_methods.dart';
 import '../../utility/constants.dart';
 
 class ForgotPasswordView extends StatefulWidget {
@@ -38,7 +42,11 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   commonVerticalSpacing(),
-                  Center(child: Image(image: forgotPasswordImage,height: getScreenWidth(context) /2.3,width: getScreenWidth(context)/2.3)),
+                  Center(
+                      child: Image(image: forgotPasswordImage,
+                      height: getScreenWidth(context) /2.5,
+                      width: getScreenWidth(context)/2.5)
+                  ),
                   commonVerticalSpacing(spacing: 30),
                   commonHeaderTitle(title: registerEmailMsg,color: blackColor,fontSize: 1.3,fontWeight: 2),
                   commonVerticalSpacing(spacing: 15),
@@ -57,7 +65,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       return value.toString().isEmpty
                           ? notEmptyFieldMessage
                           : null;
-                    },),
+                    }),
                   commonVerticalSpacing(spacing: 60),
                   commonFillButtonView(
                       context: context,
@@ -65,13 +73,18 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                       width: getScreenWidth(context) - 40,
                       height: 50,
                       tapOnButton: () {
-
+                        if(emailController.text.isNotEmpty && GetUtils.isEmail(emailController.text)) {
+                          AuthenticationController.to.forgotPasswordAPI(
+                              emailController.text);
+                        }else{
+                          showSnackBar(title: ApiConfig.error, message: "Please enter proper email");
+                        }
                       },
                       isLoading: false)
                 ],
               ),
             )
-          ],
+          ]
         )
     );
   }

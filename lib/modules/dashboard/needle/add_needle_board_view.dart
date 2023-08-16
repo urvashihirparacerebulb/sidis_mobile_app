@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:my_projects/controllers/needle_controller.dart';
@@ -160,14 +162,24 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                     alignment: Alignment.centerRight,
                     child: InkWell(
                       onTap: () {
-                        openCalendarView(
-                          context,
-                          initialDate: DateTime.now().toString(),
-                        ).then((value) {
-                          setState(() {
-                            selectedDate = DateFormat("dd-MM-yyyy hh:mm").format(value);
-                          });
-                        });
+                        DatePicker.showDateTimePicker(context, showTitleActions: true,
+                            onChanged: (date) {
+                              if (kDebugMode) {
+                                print('change $date in time zone ${date.timeZoneOffset.inHours}');
+                              }
+                            }, onConfirm: (date) {
+                              setState(() {
+                                selectedDate = DateFormat("dd-MM-yyyy hh:mm").format(date);
+                              });
+                            }, currentTime: DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day, TimeOfDay.now().hour, TimeOfDay.now().minute, 00));
+                        // openCalendarView(
+                        //   context,
+                        //   initialDate: DateTime.now().toString(),
+                        // ).then((value) {
+                        //   setState(() {
+                        //     selectedDate = DateFormat("dd-MM-yyyy hh:mm").format(value);
+                        //   });
+                        // });
                       },
                       child: Icon(Icons.calendar_month, color: blackColor.withOpacity(0.4)),
                     )),
@@ -271,8 +283,16 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                             selectedBoard.selectedOldBoard!.add(board);
                             NeedleController.to.machineLocationList[index].selectedOldBoard = selectedBoard;
                           }else{
-                            NeedleController.to.machineLocationList[index].selectedOldBoard!.locationId = NeedleController.to.machineLocationList[index].locationId;
-                            NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.add(board);
+                            List<NeedleBoardNumber> data = NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.where((element) => element.boardId == board.boardId).toList();
+                            if(data.isEmpty) {
+                              NeedleController.to.machineLocationList[index]
+                                  .selectedOldBoard!.locationId =
+                                  NeedleController.to.machineLocationList[index]
+                                      .locationId;
+                              NeedleController.to.machineLocationList[index]
+                                  .selectedOldBoard!.selectedOldBoard!.add(
+                                  board);
+                            }
                           }
                           newSetState((){});
                         }));
@@ -297,10 +317,25 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                                   borderRadius: BorderRadius.circular(10)
                               ),
                               padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                              child: Text('${i.boardNo}',style: const TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14
-                              )),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('${i.boardNo}',style: const TextStyle(
+                                      color: blackColor,
+                                      fontSize: 14
+                                  )),
+                                  commonHorizontalSpacing(),
+                                  InkWell(
+                                      onTap: (){
+                                        newSetState(() {
+                                          NeedleController.to.machineLocationList[index]
+                                              .selectedOldBoard?.selectedOldBoard!.remove(i);
+                                        });
+                                      },
+                                      child: const Icon(Icons.clear,color: blackColor)
+                                  )
+                                ],
+                              ),
                             )).toList(),
                           )),
                           commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedOldBoard == null ? 0 :NeedleController.to.machineLocationList[index].selectedOldBoard!.selectedOldBoard!.isEmpty ? 0 : 20),
@@ -325,8 +360,16 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                             selectedBoard.selectedNewBoard!.add(board);
                             NeedleController.to.machineLocationList[index].selectedNewBoard = selectedBoard;
                           }else{
-                            NeedleController.to.machineLocationList[index].selectedNewBoard?.locationId = NeedleController.to.machineLocationList[index].locationId;
-                            NeedleController.to.machineLocationList[index].selectedNewBoard?.selectedNewBoard!.add(board);
+                            List<NeedleBoardNumber> data = NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.where((element) => element.boardId == board.boardId).toList();
+                            if(data.isEmpty) {
+                              NeedleController.to.machineLocationList[index]
+                                  .selectedNewBoard?.locationId =
+                                  NeedleController.to.machineLocationList[index]
+                                      .locationId;
+                              NeedleController.to.machineLocationList[index]
+                                  .selectedNewBoard?.selectedNewBoard!
+                                  .add(board);
+                            }
                           }
                           newSetState((){});
                         }));
@@ -350,11 +393,25 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                                   color: Colors.grey.shade300,
                                   borderRadius: BorderRadius.circular(10)
                               ),
-                              padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 10),
-                              child: Text('${i.boardNo}',style: const TextStyle(
-                                  color: blackColor,
-                                  fontSize: 14
-                              )),
+                              padding: const EdgeInsets.all(10),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text('${i.boardNo}',style: const TextStyle(
+                                      color: blackColor,
+                                      fontSize: 14
+                                  )),
+                                  commonHorizontalSpacing(),
+                                  InkWell(
+                                    onTap: (){
+                                      newSetState(() {
+                                        NeedleController.to.machineLocationList[index]
+                                            .selectedNewBoard?.selectedNewBoard!.remove(i);
+                                      });
+                                    },
+                                      child: const Icon(Icons.clear,color: blackColor,))
+                                ],
+                              ),
                             )).toList(),
                           )),
                           commonVerticalSpacing(spacing: NeedleController.to.machineLocationList[index].selectedNewBoard== null ? 0 : NeedleController.to.machineLocationList[index].selectedNewBoard!.selectedNewBoard!.isEmpty ? 0 : 20),
@@ -390,7 +447,8 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                   tapOnButton: () {
                     Get.back();
                   },
-                  isLoading: false)),
+                  isLoading: false)
+              ),
               commonHorizontalSpacing(),
               Expanded(child: commonFillButtonView(
                   context: context,
@@ -430,7 +488,8 @@ class _AddNeedleBoardViewState extends State<AddNeedleBoardView> {
                       showSnackBar(title: ApiConfig.error, message: "Please select business");
                     }
                   },
-                  isLoading: false)),
+                  isLoading: false)
+              ),
             ],
           ),
         ),

@@ -30,69 +30,155 @@ class _NeedleRecordFormListState extends State<NeedleRecordFormList> {
   }
 
   Widget needleRecordView({NeedleRecord? needleRecord}){
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
-      decoration: neurmorphicBoxDecoration,
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: needleRecord?.boardNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: needleRecord?.companyShortName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: needleRecord?.bussinessName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: needleRecord?.plantShortName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                commonHeaderTitle(title: "Status: ${needleRecord?.machineDetail}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                commonHorizontalSpacing(),
-                commonHeaderTitle(title: needleRecord?.recordDate ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
-              ],
-            ),
-            commonVerticalSpacing(),
-            Row(
-              children: [
-                Expanded(
-                  flex: 6,
-                  child: commonHeaderTitle(title: "Consumed Needle : ${needleRecord?.consumedNeedle}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                ),
+    return InkWell(
+      onTap: (){
+        showDialog(context: context, builder: (BuildContext context) => detailView(needleRecord: needleRecord));
+      },
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 20,left: 16,right: 16),
+        decoration: neurmorphicBoxDecoration,
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: needleRecord?.boardNo ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: needleRecord?.companyShortName ?? "",fontWeight: 3,fontSize: isTablet() ? 1.5 : 1.2)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: needleRecord?.bussinessName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: needleRecord?.plantShortName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  commonHeaderTitle(title: "Status: ${needleRecord?.machineDetail}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  commonHorizontalSpacing(),
+                  commonHeaderTitle(title: needleRecord?.recordDate ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90)
+                ],
+              ),
+              commonVerticalSpacing(),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 6,
+                    child: commonHeaderTitle(title: "Consumed Needle : ${needleRecord?.consumedNeedle}",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                  ),
 
-                Expanded(flex: 1,child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: GestureDetector(
-                        onTapDown: (TapDownDetails details) {
-                          _showPopupMenu(details.globalPosition,needleRecord!.needleRecordId!.toString());
-                        },
-                        child: Container(
-                            padding: const EdgeInsets.all(5.0),
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Color(0xffD9D9D9)
-                            ),
-                            child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
-                    )
-                ))
-              ],
-            )
-          ],
+                  Expanded(flex: 1,child: Align(
+                      alignment: Alignment.bottomRight,
+                      child: GestureDetector(
+                          onTapDown: (TapDownDetails details) {
+                            _showPopupMenu(details.globalPosition,needleRecord!.needleRecordId!.toString());
+                          },
+                          child: Container(
+                              padding: const EdgeInsets.all(5.0),
+                              decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Color(0xffD9D9D9)
+                              ),
+                              child: Icon(Icons.more_vert_rounded,size: isTablet() ? 28 : 20))
+                      )
+                  ))
+                ]
+              )
+            ],
+          ),
         ),
       ),
     );
   }
+
+  detailView({NeedleRecord? needleRecord}){
+    return Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16.0)),
+      elevation: 0.0,
+      backgroundColor: Colors.transparent,
+      child: Stack(
+        children: [
+          Container(
+            margin: const EdgeInsets.only(left: 0.0,right: 0.0),
+            child: Container(
+              padding: const EdgeInsets.only(top: 18.0,),
+              margin: const EdgeInsets.only(top: 13.0,right: 8.0),
+              decoration: BoxDecoration(
+                  color: whiteColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(16.0),
+                  boxShadow: const <BoxShadow>[
+                    BoxShadow(
+                      color: Colors.black26,
+                      blurRadius: 0.0,
+                      offset: Offset(0.0, 0.0),
+                    ),
+                  ]),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    commonHeaderTitle(
+                        title: "Board Detail",
+                        color: blackColor,
+                        isChangeColor: true,
+                        fontSize: 1.7,
+                        height: 1.4,
+                        fontWeight: 2,align: TextAlign.center
+                    ),
+                    commonVerticalSpacing(spacing: 20),
+                    commonDetailRowView(title: "Board No",subTitle: needleRecord?.boardNo ?? "-"),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Needle Record Date",subTitle: needleRecord?.recordDate),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Business Name",subTitle: needleRecord?.bussinessName ?? "-"),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Plant Name",subTitle: needleRecord?.plantShortName ?? "-"),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Company Name",subTitle: needleRecord?.companyShortName ?? "-"),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Machine Detail",subTitle: needleRecord?.machineDetail ?? "-"),
+                    commonVerticalSpacing(),
+                    commonDetailRowView(title: "Consumed Needle",subTitle: needleRecord?.consumedNeedle ?? "-"),
+                    commonVerticalSpacing(spacing: 20),
+                  ],
+                ),
+              ),
+            ),
+          ),
+
+          Positioned(
+            right: 0.0,
+            child: GestureDetector(
+              onTap: (){
+                Get.back();
+              },
+              child: const Align(
+                alignment: Alignment.topRight,
+                child: CircleAvatar(
+                  radius: 14.0,
+                  backgroundColor: blackColor,
+                  child: Icon(Icons.close, color: whiteColor),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
 
   void _showPopupMenu(Offset offset,String boardRecordId) async {
     double left = offset.dx;

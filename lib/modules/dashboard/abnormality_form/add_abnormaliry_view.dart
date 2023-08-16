@@ -423,12 +423,12 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                           hintText: "Part Name",
                                           machineId: subMachineLists.isNotEmpty ? subMachineLists.last.machineId.toString() : machineData!.machineId.toString(),
                                           myItems: PartController.to.allPartList,
-                                          selectionCallBack: (
-                                              PartArray part) {
+                                          selectionCallBack: (PartArray part) {
                                             setState(() {
                                               selectedPart = part;
                                             });
-                                          }));
+                                          })
+                                  );
                               },
                               child: commonDecoratedTextView(
                                 title: selectedPart == null ? "Part Name*" : selectedPart!.partName ?? "",
@@ -449,7 +449,7 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                               return value.toString().isEmpty
                                   ? notEmptyFieldMessage
                                   : null;
-                            },),
+                            }),
                           commonVerticalSpacing(spacing: 20),
                           InkWell(
                               onTap: (){
@@ -460,7 +460,8 @@ class _AddAbnormalityFormViewState extends State<AddAbnormalityFormView> {
                                               AbnormalityType type) {
                                             selectedAbnormalityType = type;
                                             setState(() {});
-                                          }));
+                                          })
+                                  );
                               },
                               child: commonDecoratedTextView(
                                 title: selectedAbnormalityType == null ? "Abnormality Type" : selectedAbnormalityType!.typeName ?? "",
