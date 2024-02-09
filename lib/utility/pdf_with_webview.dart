@@ -26,7 +26,7 @@ class _PDFViewWithWebViewState extends State<PDFViewWithWebView> {
     return Scaffold(
       appBar: commonAppbar(context: context,title: 'PDF View'),
       body: WebView(
-        initialUrl: 'http://sidis.skapsindia.com/test/api/kaizen-pdf/${widget.kaizenId}/${getLoginData()!.userdata!.first.id.toString()}',
+        initialUrl: 'https://sidis.skapsindia.com/test/api/kaizen-pdf/${widget.kaizenId}/${getLoginData()!.userdata!.first.id.toString()}',
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
         },

@@ -19,6 +19,7 @@ class Themes {
         caption: TextStyle(color: Colors.white, fontFamily: 'Poppins')),
     visualDensity: VisualDensity.adaptivePlatformDensity,
   );
+
   static final dark = ThemeData(
     backgroundColor: blackColor,
     unselectedWidgetColor: whiteColor,

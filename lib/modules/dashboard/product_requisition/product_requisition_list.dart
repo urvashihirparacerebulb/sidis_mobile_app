@@ -106,7 +106,8 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                       )
                   ))
                 ],
-              )
+              ),
+
             ],
           ),
         ),
@@ -335,6 +336,8 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                     commonVerticalSpacing(),
                     commonDetailRowView(title: "Item Type",subTitle: productRequisition?.itemType ?? ""),
                     commonVerticalSpacing(),
+                    commonDetailRowView(title: "Item Description",subTitle: productRequisition?.itemDesc ?? ""),
+                    commonVerticalSpacing(),
                     commonDetailRowView(title: "Quantity",subTitle: productRequisition?.quantity.toString() ?? ""),
                     commonVerticalSpacing(),
                     commonDetailRowView(title: "Required In",subTitle: productRequisition?.requiredIn ?? ""),
@@ -342,6 +345,16 @@ class _ProductRequisitionListState extends State<ProductRequisitionList> {
                     commonDetailRowView(title: "Item Status",subTitle: productRequisition?.itemStatus ?? ""),
                     commonVerticalSpacing(),
                     commonDetailRowView(title: "Requested By",subTitle: productRequisition?.username ?? ""),
+                    commonVerticalSpacing(),
+                    productRequisition?.img != null && productRequisition?.img != "" ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        commonHeaderTitle(title: "Product Image: ",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
+                        commonVerticalSpacing(),
+                        Expanded(child: Image.network((productRequisition?.img ?? ""),
+                            height: 100))
+                      ],
+                    ) : Container(),
                     commonVerticalSpacing(spacing: 20),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
@@ -185,6 +186,7 @@ void handleAuthentication() {
   // }
 }
 
+
 int serviceCallCount = 0;
 
 showErrorMessage(
@@ -369,5 +371,13 @@ apiAlertDialog(
       transitionCurve: Curves.easeInCubic,
       transitionDuration: const Duration(milliseconds: 400),
     );
+  }
+}
+
+class MyHttpOverrides extends HttpOverrides{
+  @override
+  HttpClient createHttpClient(SecurityContext? context){
+    return super.createHttpClient(context)
+      ..badCertificateCallback = (X509Certificate cert, String host, int port)=> true;
   }
 }

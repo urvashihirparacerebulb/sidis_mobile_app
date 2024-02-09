@@ -1,7 +1,7 @@
 class ApiConfig {
 
   // static const String baseURL = "https://sidis.cerebulb.com/api/";
-  static const String baseURL = "http://sidis.skapsindia.com/test/api/";
+  static const String baseURL = "https://sidis.skapsindia.com/test/api/";
   static const String loginURL = "${baseURL}ajax-login";
   static const String forgotPassURL = "${baseURL}forget-password";
   static const String businessListURL = "${baseURL}fetch-bussiness";

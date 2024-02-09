@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:my_projects/theme/theme_service.dart';
 import 'package:my_projects/utility/constants.dart';
 import 'package:my_projects/utility/firebase_notification_service.dart';
 import '../utility/common_methods.dart';
+import 'configurations/api_service.dart';
 import 'controllers/app_binding/app_binding_controllers.dart';
 import 'controllers/general_controller.dart';
 import 'modules/dashboard/dashboard_listing/common_dashboard.dart';
@@ -39,6 +41,7 @@ Future<void> main() async {
       ThemeService().saveThemeToBox(false);
     }
   }
+  HttpOverrides.global = MyHttpOverrides();
   await configureApp();
   runApp(const MyApp()
     // DevicePreview(

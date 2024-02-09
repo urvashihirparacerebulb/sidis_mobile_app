@@ -8,6 +8,7 @@ import '../theme/convert_theme_colors.dart';
 import '../utility/assets_utility.dart';
 import '../utility/screen_utility.dart';
 import '../utility/theme_utility.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 double commonHorizontalPadding = 10.0;
 BorderRadius commonButtonBorderRadius = BorderRadius.circular(10.0);
@@ -204,7 +205,7 @@ commonHorizontalSpacing({double spacing = 10}){
   return SizedBox(width: spacing);
 }
 
-commonDetailRowView({String title = "", subTitle}){
+commonDetailRowView({String title = "", subTitle, bool isHtml = false}){
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
     children: [
@@ -216,7 +217,7 @@ commonDetailRowView({String title = "", subTitle}){
           fontWeight: 2
       ),
       commonHorizontalSpacing(spacing: 20),
-      Expanded(child: commonHeaderTitle(
+      Expanded(child: isHtml ? Html(data:"""$subTitle""",) : commonHeaderTitle(
           title: subTitle,
           fontWeight: 1,
           fontSize: isTablet() ? 1.11 : 0.90,align: TextAlign.end

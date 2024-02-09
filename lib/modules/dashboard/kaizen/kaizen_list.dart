@@ -135,10 +135,11 @@ class _KaizenListViewState extends State<KaizenListView> {
                   ]),
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
+                child: ListView(
+                  shrinkWrap: true,
+                  // mainAxisSize: MainAxisSize.min,
+                  // crossAxisAlignment: CrossAxisAlignment.center,
+                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     commonHeaderTitle(
                         title: "Kaizen Detail",
@@ -175,9 +176,9 @@ class _KaizenListViewState extends State<KaizenListView> {
                     commonVerticalSpacing(),
                     commonDetailRowView(title: "Idea",subTitle: kaizenDetail?.idea ?? "-"),
                     commonVerticalSpacing(),
-                    commonDetailRowView(title: "Present Problem",subTitle: kaizenDetail?.presentProblem ?? "-"),
+                    commonDetailRowView(title: "Present Problem",subTitle: kaizenDetail?.presentProblem ?? "-",isHtml: true),
                     commonVerticalSpacing(),
-                    commonDetailRowView(title: "Countermeasure",subTitle: kaizenDetail?.countermeasure ?? "-"),
+                    commonDetailRowView(title: "Countermeasure",subTitle: kaizenDetail?.countermeasure ?? "-",isHtml: true),
                     commonVerticalSpacing(spacing: 20),
                   ],
                 ),

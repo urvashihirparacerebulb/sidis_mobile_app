@@ -43,12 +43,13 @@ dependencies:
   connectivity_plus: ^2.3.0
   intl:
   speech_to_text: ^5.6.1
+  flutter_html: ^2.2.0
   image_picker: ^0.8.6
-  flutter_svg: ^1.1.6
+  flutter_svg: any
   syncfusion_flutter_charts: ^20.2.45
   flutter_barcode_scanner: ^2.0.0
   flutter_datetime_picker: ^1.5.1
-  webview_flutter: ^3.0.4
+  webview_flutter: ^2.0.4
   firebase_core: ^1.23.0
   firebase_messaging: ^13.0.0
   flutter_local_notifications:

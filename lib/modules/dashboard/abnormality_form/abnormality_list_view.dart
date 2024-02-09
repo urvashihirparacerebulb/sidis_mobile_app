@@ -73,7 +73,7 @@ class _AbnormalityListViewState extends State<AbnormalityListView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   commonHeaderTitle(title: abnormality.findUserName ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90),
-                  commonHeaderTitle(title: abnormality.assignUserData ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90,color: Colors.purple,isChangeColor: true)
+                  Expanded(child: commonHeaderTitle(title: abnormality.assignUserData ?? "",fontWeight: 1,fontSize: isTablet() ? 1.11 : 0.90,color: Colors.purple,isChangeColor: true,align: TextAlign.end))
                 ],
               ),
               commonVerticalSpacing(),

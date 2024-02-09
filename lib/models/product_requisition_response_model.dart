@@ -54,7 +54,7 @@ class ProductRequisition {
     this.itemStatus,
     this.username,
     this.quantity,
-    this.itemType,
+    this.itemType,this.itemDesc,
     this.requestedUserId
   });
 
@@ -68,6 +68,7 @@ class ProductRequisition {
   String? itemStatus;
   String? username;
   String? itemType;
+  String? itemDesc;
   num? quantity;
   int? requestedUserId;
 
@@ -83,6 +84,7 @@ class ProductRequisition {
     username: json["username"],
     quantity: json["quantity"],
     itemType: json["item_type"],
+    itemDesc: json["itemdescription"],
     requestedUserId: json["requested_user_id"],
   );
 
@@ -98,6 +100,7 @@ class ProductRequisition {
     "username": username,
     "quantity": quantity,
     "item_type": itemType,
+    "itemdescription": itemDesc,
     "requested_user_id": requestedUserId,
   };
 }
